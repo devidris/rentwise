@@ -11,14 +11,14 @@
 }
 
 .link-primary {
-  color: #0d6efd;
+  color: #008080;
 }
 .link-primary:hover, .link-primary:focus {
   color: #0a58ca;
 }
 
 .link-secondary {
-  color: #6c757d;
+  color: #FFD700;
 }
 .link-secondary:hover, .link-secondary:focus {
   color: #565e64;
@@ -464,11 +464,11 @@
 }
 
 .border-primary {
-  border-color: #0d6efd !important;
+  border-color: #008080 !important;
 }
 
 .border-secondary {
-  border-color: #6c757d !important;
+  border-color: #FFD700 !important;
 }
 
 .border-success {
@@ -1341,7 +1341,7 @@
 
 .text-muted {
   --bs-text-opacity: 1;
-  color: #6c757d !important;
+  color: #FFD700 !important;
 }
 
 .text-black-50 {
