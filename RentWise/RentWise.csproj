@@ -7,7 +7,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="bootstrap" Version="5.3.2" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\RentWise.Models\RentWise.Models.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\css\shared\Nav.css" />
   </ItemGroup>
 
 </Project>
