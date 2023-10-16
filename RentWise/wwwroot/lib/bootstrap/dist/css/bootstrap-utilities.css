@@ -32,7 +32,7 @@
 }
 
 .link-info {
-  color: #0dcaf0;
+  color: #4B0082;
 }
 .link-info:hover, .link-info:focus {
   color: #3dd5f3;
@@ -53,7 +53,7 @@
 }
 
 .link-light {
-  color: #f8f9fa;
+  color: #4B0082;
 }
 .link-light:hover, .link-light:focus {
   color: #f9fafb;
@@ -476,7 +476,7 @@
 }
 
 .border-info {
-  border-color: #0dcaf0 !important;
+  border-color: #4B0082 !important;
 }
 
 .border-warning {
@@ -488,7 +488,7 @@
 }
 
 .border-light {
-  border-color: #f8f9fa !important;
+  border-color: #4B0082 !important;
 }
 
 .border-dark {
