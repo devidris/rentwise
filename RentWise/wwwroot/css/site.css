@@ -25,6 +25,7 @@ body {
 .f{
     display:flex;
     gap:3rem;
+    justify-content:space-around;
 }
 .f-wrap{
     flex-wrap:wrap;
