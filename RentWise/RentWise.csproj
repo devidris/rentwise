@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="wwwroot\css\shared\Nav.css" />
+    <None Include="wwwroot\css\shared\_Nav.css" />
   </ItemGroup>
 
 </Project>

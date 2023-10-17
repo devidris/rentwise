@@ -203,6 +203,19 @@ body {
     -webkit-tap-highlight-color: transparent
 }
 
+.button{
+    width:fit-content;
+    padding:1rem 2rem;
+    font-size:20px;
+    font-weight:700;
+}
+
+.button2 {
+    width: fit-content;
+    padding: 1rem 2rem;
+    font-size: 15px;
+    font-weight: 700;
+}
 hr {
     margin: 1rem 0;
     color: inherit;

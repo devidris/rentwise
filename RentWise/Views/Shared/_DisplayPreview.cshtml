@@ -1,0 +1,13 @@
+﻿<link rel="stylesheet" href="~/css/shared/_DisplayPreview.css" asp-append-version="true" />
+
+@model DisplayPreview
+<div class="display-preview">
+    <img src=@Model.Image alt="" />
+    <div class="content">
+        <h5>@Model.Name</h5>
+        <p>₵@Model.Price/Day</p>
+        <p>@Model.Rating</p>
+        <p>@Model.Location</p>
+    </div>
+
+</div>

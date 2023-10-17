@@ -22,3 +22,13 @@ body {
     margin-bottom: 60px;
 }
 
+.f{
+    display:flex;
+    gap:3rem;
+}
+.f-wrap{
+    flex-wrap:wrap;
+}
+.gray {
+    background:#F2F2F2;
+}
