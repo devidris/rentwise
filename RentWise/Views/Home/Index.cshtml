@@ -89,6 +89,59 @@
     }
          ;
 
+    List<DisplayPreview> OfilceItems = new List<DisplayPreview>()
+    {
+    new DisplayPreview
+    {
+        Image="/img/construction.png",
+        Name="Shell Forest Ghana Limited & son..",
+        Price=1000,
+        Rating=4.5,
+        Location="Accra, Ghana"
+    },
+      new DisplayPreview
+    {
+        Image="/img/construction.png",
+        Name="Shell Forest Ghana Limited & son..",
+        Price=1000,
+        Rating=4.5,
+        Location="Accra, Ghana"
+    },
+      new DisplayPreview
+    {
+        Image="/img/construction.png",
+        Name="Shell Forest Ghana Limited & son..",
+        Price=1000,
+        Rating=4.5,
+        Location="Accra, Ghana"
+    },
+      new DisplayPreview
+    {
+        Image="/img/construction.png",
+        Name="Shell Forest Ghana Limited & son..",
+        Price=1000,
+        Rating=4.5,
+        Location="Accra, Ghana"
+    },
+      new DisplayPreview
+    {
+        Image="/img/construction.png",
+        Name="Shell Forest Ghana Limited & son..",
+        Price=1000,
+        Rating=4.5,
+        Location="Accra, Ghana"
+    },
+      new DisplayPreview
+    {
+        Image="/img/construction.png",
+        Name="Shell Forest Ghana Limited & son..",
+        Price=1000,
+        Rating=4.5,
+        Location="Accra, Ghana"
+    }
+    }
+        ;
+}
 <div class="home">
     <partial name="_Hero"/> 
     <partial name="_OurServices" />
@@ -189,6 +242,19 @@
 
                 <p class="jcarousel-pagination"></p>
             </div>
+        </div>
+    </section>
+    <section class="p-5">
+        <div class="button bg-secondary rounded-pill m-auto">
+            Office Items/Personal Items
+        </div>
+        <p class="text-black-50 text-center mt-3">Rent High-quality Construction equipment available for short term and long term projects</p>
+        <div class="f f-wrap mt-5">
+            @foreach (DisplayPreview item in OfilceItems)
+            {
+                <partial name="_DisplayPreview" for="@item" />
+            }
+            <button class="button bg-secondary text-dark align-self-center rounded-pill">See More</button>
         </div>
     </section>
 </div>
