@@ -170,6 +170,43 @@
     }
     }
     ;
+
+    List<DisplayPreview> VehicleTrackers = new List<DisplayPreview>()
+    {
+    new DisplayPreview
+    {
+        Image="/img/construction.png",
+        Name="Shell Forest Ghana Limited & son..",
+        Price=1000,
+        Rating=4.5,
+        Location="Accra, Ghana"
+    },
+      new DisplayPreview
+    {
+        Image="/img/construction.png",
+        Name="Shell Forest Ghana Limited & son..",
+        Price=1000,
+        Rating=4.5,
+        Location="Accra, Ghana"
+    },
+      new DisplayPreview
+    {
+        Image="/img/construction.png",
+        Name="Shell Forest Ghana Limited & son..",
+        Price=1000,
+        Rating=4.5,
+        Location="Accra, Ghana"
+    },
+      new DisplayPreview
+    {
+        Image="/img/construction.png",
+        Name="Shell Forest Ghana Limited & son..",
+        Price=1000,
+        Rating=4.5,
+        Location="Accra, Ghana"
+    }
+    }
+        ;
 }
 <div class="home">
     <partial name="_Hero"/> 
@@ -302,6 +339,20 @@
     <section class="row p-5">
         <img src="~/img/ads-banner.png" alt="Ads banner" class="col-6"/>
         <img src="~/img/ads-banner.png" alt="Ads banner"  class="col-6"/>
+    </section>
+    
+    <section class="p-5">
+        <div class="button bg-secondary rounded-pill m-auto header">
+            Sales Of Vehicles Trackers
+        </div>
+        <p class="text-black-50 text-center mt-3">Rent High-quality Construction equipment available for short term and long term projects</p>
+        <div class="f f-wrap mt-5">
+            @foreach (DisplayPreview tracker in VehicleTrackers)
+            {
+                <partial name="_DisplayPreview" for="@tracker" />
+            }
+            <button class="button bg-secondary text-dark align-self-center rounded-pill">See More</button>
+        </div>
     </section>
 </div>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
