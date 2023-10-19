@@ -1,13 +1,18 @@
 ﻿<link rel="stylesheet" href="~/css/shared/_DisplayPreview.css" asp-append-version="true" />
 
 @model DisplayPreview
-<div class="display-preview">
-    <img src=@Model.Image alt="" />
-    <div class="content">
-        <h5>@Model.Name</h5>
-        <p>₵@Model.Price/Day</p>
-        <p>@Model.Rating</p>
-        <p>@Model.Location</p>
-    </div>
 
-</div>
+    <div class="display-preview">
+        <div class="agent d-flex gap-3 align-items-center p-3 bg-white w-auto">
+            <img src=@Model.AgentImage alt="" />
+            <p class="m-0 h6">@Model.AgentName</p>
+        </div>
+        <img src=@Model.Image alt="" />
+        <div class="content">
+            <h5>@Model.Name</h5>
+            <p><b>₵@Model.Price/Day</b></p>
+            <p><i class="bi bi-star-fill text-primary"></i>@Model.Rating</p>
+            <p><b>@Model.Location</b></p>
+        </div>
+
+    </div>

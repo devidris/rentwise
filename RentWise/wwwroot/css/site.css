@@ -22,14 +22,6 @@ body {
     margin-bottom: 60px;
 }
 
-.f{
-    display:flex;
-    gap:3rem;
-    justify-content:space-around;
-}
-.f-wrap{
-    flex-wrap:wrap;
-}
 .gray {
     background:#F2F2F2;
 }
@@ -160,4 +152,9 @@ body {
 .form-contact input::-ms-input-placeholder,
 .form-contact textarea::placeholder { /* Microsoft Edge */
     color: #fff;
+}
+
+.dropdown-item:focus, .dropdown-item:hover {
+    color: #fff;
+    background-color: var(--bs-primary);
 }

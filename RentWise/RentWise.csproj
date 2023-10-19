@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\RentWise.Models\RentWise.Models.csproj" />
+    <ProjectReference Include="..\RentWise.Utility\RentWise.Utility.csproj" />
   </ItemGroup>
 
   <ItemGroup>

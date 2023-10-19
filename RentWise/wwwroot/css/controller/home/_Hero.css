@@ -42,6 +42,7 @@
     display: grid;
     grid-template-columns: min-content 1fr min-content;
     margin: auto;
+    align-items:center;
 }
 
     .search_input i {
@@ -56,8 +57,8 @@
         grid-column: 1/-1;
         grid-row: 1/1;
         z-index: 1;
-        padding: .7rem 4rem;
-        border-radius: 1rem;
+        padding: 1rem 4rem;
+        border-radius: 2rem;
         border: none;
     }
 
@@ -65,7 +66,6 @@
         grid-column: 2/3;
         grid-row: 1/1;
         width: fit-content;
-        align-self: end;
         justify-self: end;
         z-index: 2;
         margin: .4rem 1rem;
