@@ -145,3 +145,19 @@ body {
             -moz-box-shadow: 0 0 2px #F0EFE7;
             box-shadow: 0 0 2px #F0EFE7;
         }
+
+.form-contact input::placeholder,
+.form-contact textarea::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+    color: #fff;
+    opacity: 1; /* Firefox */
+}
+
+.form-contact input:-ms-input-placeholder,
+.form-contact textarea::placeholder { /* Internet Explorer 10-11 */
+    color: #fff;
+}
+
+.form-contact input::-ms-input-placeholder,
+.form-contact textarea::placeholder { /* Microsoft Edge */
+    color: #fff;
+}
