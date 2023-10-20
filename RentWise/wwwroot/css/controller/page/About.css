@@ -1,0 +1,33 @@
+﻿.stat{
+    
+}
+    .stat div {
+        border-radius: 8px;
+        border: 1px solid rgba(26, 26, 26, 0.50);
+        width:200px;
+        height:200px;
+        text-align:center;
+
+        display:grid;
+        place-content:center;
+    }
+
+        .stat div p:first-of-type {
+            color: rgba(26, 26, 26, 0.50);
+            text-align: center;
+            font-family: Inter;
+            font-size: 48px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: normal;
+        }
+        .stat div p:last-of-type {
+            color: #1A1A1A;
+            text-align: center;
+            font-family: Inter;
+            font-size: 18px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: normal;
+            letter-spacing: 5.4px;
+        }
