@@ -131,7 +131,7 @@ namespace RentWise.Controllers
     },
     }
 ;
-            ViewBag.CategoryName = Lookup.Value[Id];
+            ViewBag.CategoryName = Lookup.Categories[Id];
             return View(CategoryData);
         }
     }
