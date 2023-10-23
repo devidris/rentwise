@@ -20,3 +20,7 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.rb-border {
+    border-radius: 10px 10px 100px 10px
+}
