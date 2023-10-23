@@ -27,12 +27,18 @@ else
                Register
             </button>
             <!-- Modal -->
-            @Html.Partial("_Register", authenticationModel);
+            @Html.Partial("_Register", authenticationModel)
           
     </li>
-    <li class="nav-item">
-        <a class="nav-link text-light" id="login" asp-area="Identity" asp-page="/Account/Login">Login</a>
-    </li>
+        <li class="nav-item">
+            @* <a class="nav-link text-light" id="login" asp-area="Identity" asp-page="/Account/Login">Login</a> *@
+            <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#login">
+                Login
+            </button>
+            <!-- Modal -->
+            @Html.Partial("_Login", authenticationModel)
+
+        </li>
 }
 </ul>
 

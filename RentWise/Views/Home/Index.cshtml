@@ -215,7 +215,7 @@
         <div class="button bg-secondary rounded-pill m-auto header">
             Construction Equipments
         </div>
-        <p class="text-black-50 text-center mt-3">Rent High-quality Construction equipment available for short term and long term projects</p>
+        <p class="text-black-50 text-center justify-content-center mt-3">Rent High-quality Construction equipment available for short term and long term projects</p>
         <div class="d-flex flex-wrap mt-5">
             @foreach (DisplayPreview construction in Constructions )
             {
@@ -225,11 +225,11 @@
         </div>
     </section>
     <section class="p-5">
-        <div class="button bg-secondary rounded-pill m-auto">
+        <div class="button bg-secondary rounded-pill m-auto header">
             Car Rentals
         </div>
         <p class="text-black-50 text-center mt-3">Rent High-quality Construction equipment available for short term and long term projects</p>
-        <div class="d-flex flex-wrap mt-5">
+        <div class="d-flex flex-wrap justify-content-center mt-5">
             @foreach (DisplayPreview car in CarRentals)
             {
                 <partial name="_DisplayPreview" for="@car" />
@@ -311,11 +311,11 @@
         </div>
     </section>
     <section class="p-5 header">
-        <div class="button bg-secondary rounded-pill m-auto accordion-header">
+        <div class="button bg-secondary rounded-pill m-auto header">
             Office Items/Personal Items
         </div>
-        <p class="text-black-50 text-center mt-3">Rent High-quality Construction equipment available for short term and long term projects</p>
-        <div class="d-flex flex-wrap mt-5">
+        <p class="text-black-50 text-center justify-content-center mt-3">Rent High-quality Construction equipment available for short term and long term projects</p>
+        <div class="d-flex flex-wrap justify-content-center mt-5">
             @foreach (DisplayPreview item in OfilceItems)
             {
                 <partial name="_DisplayPreview" for="@item" />
@@ -327,7 +327,7 @@
         <div class="button bg-secondary rounded-pill m-auto header">
             Events/ Equipment Rentals
         </div>
-        <p class="text-black-50 text-center mt-3">Rent High-quality Construction equipment available for short term and long term projects</p>
+        <p class="text-black-50 text-center justify-content-center mt-3">Rent High-quality Construction equipment available for short term and long term projects</p>
         <div class="d-flex flex-wrap mt-5">
             @foreach (DisplayPreview eventRental in EventRentals)
             {
@@ -346,7 +346,7 @@
             Sales Of Vehicles Trackers
         </div>
         <p class="text-black-50 text-center mt-3">Rent High-quality Construction equipment available for short term and long term projects</p>
-        <div class="d-flex flex-wrap mt-5">
+        <div class="d-flex flex-wrap justify-content-center mt-5">
             @foreach (DisplayPreview tracker in VehicleTrackers)
             {
                 <partial name="_DisplayPreview" for="@tracker" />
