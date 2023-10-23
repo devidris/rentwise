@@ -7,7 +7,7 @@ using System.Text.Encodings.Web;
 using System.Text;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-
+using RentWise.Utility;
 
 namespace RentWise.Controllers
 {
@@ -57,7 +57,7 @@ namespace RentWise.Controllers
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");
-
+                    await _userManager.AddToRoleAsync(user, Lookup.Roles[3]);
                     var userId = await _userManager.GetUserIdAsync(user);
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
