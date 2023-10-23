@@ -1,6 +1,6 @@
-﻿@model RentWise.Models.Identity.AuthenticationLogin
+﻿@model AuthenticationLogin
 
-<form id="loginForm" asp-route-returnUrl="" method="post" class="w-50 m-auto p-5">
+<form id="loginForm" asp-route-returnUrl="/Home/Index" method="post" class="w-50 m-auto p-5">
     <h2>Login to your account</h2>
     <hr />
     <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>

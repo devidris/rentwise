@@ -1,6 +1,6 @@
-﻿@model RentWise.Models.Identity.Authentication;
+﻿@model Authentication;
 <div class="modal fade" id="register" tabindex="-1" aria-labelledby="registerLabel" aria-hidden="true">
-    <form class="modal-dialog modal-dialog-centered" id="registerForm" asp-route-returnUrl="~" method="post" asp-action="Register" asp-controller="Auth">
+    <form class="modal-dialog modal-dialog-centered" id="registerForm" asp-route-returnUrl="/Home/Index" method="post" asp-action="Register" asp-controller="Auth">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="registerLabel">Create a new account</h5>

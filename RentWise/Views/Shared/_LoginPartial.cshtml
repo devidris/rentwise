@@ -4,7 +4,8 @@
 @inject UserManager<IdentityUser> UserManager
 
 @{
-    var authenticationModel = new RentWise.Models.Identity.Authentication(); // or null if you want to pass null
+    Authentication authentication = new Authentication(); // or null if you want to pass null
+    AuthenticationLogin authenticationLogin = new AuthenticationLogin();
 }
 <link rel="stylesheet" href="~/css/shared/_LoginPartial.css" asp-append-version="true" />
 <ul class="navbar-nav">
@@ -27,7 +28,7 @@ else
                Register
             </button>
             <!-- Modal -->
-            @Html.Partial("_Register", authenticationModel)
+            @Html.Partial("_Register", authentication)
           
     </li>
         <li class="nav-item">
@@ -36,7 +37,7 @@ else
                 Login
             </button>
             <!-- Modal -->
-            @Html.Partial("_Login", authenticationModel)
+            @Html.Partial("_Login", authenticationLogin)
 
         </li>
 }

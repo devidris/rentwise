@@ -47,13 +47,8 @@ namespace RentWise.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(Authentication model)
         {
-            model.ReturnUrl = "/Home/Index";
             if (ModelState.IsValid)
             {
-
-               
-
-
                 var user = CreateUser();
 
                 await _userStore.SetUserNameAsync(user, model.Email, CancellationToken.None);
@@ -72,7 +67,7 @@ namespace RentWise.Controllers
                     {
                         await _signInManager.SignInAsync(user, isPersistent: false);
 
-                        return LocalRedirect("/Home/Index");
+                        return LocalRedirect(model.ReturnUrl);
 
                     }
                 }
@@ -110,7 +105,6 @@ namespace RentWise.Controllers
         public async Task<IActionResult> Login(AuthenticationLogin model)
         {
          
-                model.ReturnUrl = "/Home/Index";
             
             if (ModelState.IsValid)
             {
