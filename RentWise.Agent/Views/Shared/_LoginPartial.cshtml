@@ -1,0 +1,47 @@
+﻿@using Microsoft.AspNetCore.Identity
+
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+
+@{
+    Authentication authentication = new Authentication(); // or null if you want to pass null
+    AuthenticationLogin authenticationLogin = new AuthenticationLogin();
+}
+<ul class="navbar-nav">
+@if (SignInManager.IsSignedIn(User))
+{
+    <li class="nav-item">
+        <a id="manage" class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @UserManager.GetUserName(User)!</a>
+    </li>
+    <li class="nav-item">
+        <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+            <button id="logout" type="submit" class="nav-link btn btn-link text-dark border-0">Logout</button>
+        </form>
+    </li>
+}
+else
+{
+        <li class="nav-item">
+            @* <a class="nav-link text-light" id="register" asp-area="Identity" asp-page="/Account/Register">Register</a> *@
+            <button type="button" class="btn btn-outline-secondary rounded-pill px-5" data-toggle="modal" data-target="#register">
+                Register
+            </button>
+            <!-- Modal -->
+            @Html.Partial("_Register", authentication)
+
+        </li>
+        <li class="nav-item">
+            @* <a class="nav-link text-light" id="login" asp-area="Identity" asp-page="/Account/Login">Login</a> *@
+            <button type="button" class="btn btn-secondary text-dark rounded-pill px-5" data-toggle="modal" data-target="#login">
+                Login
+            </button>
+            <!-- Modal -->
+            @Html.Partial("_Login", authenticationLogin)
+
+        </li>
+}
+</ul>
+<!-- Bootstrap JavaScript (and jQuery) -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

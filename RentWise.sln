@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RentWise.DataAccess", "Rent
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RentWise.Models", "RentWise.Models\RentWise.Models.csproj", "{B2A1BC3F-51C4-4023-ADBA-A0959558F462}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RentWise.Utility", "RentWise.Utility\RentWise.Utility.csproj", "{0D1E2171-B795-4942-880D-8F9E65E50AD5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RentWise.Utility", "RentWise.Utility\RentWise.Utility.csproj", "{0D1E2171-B795-4942-880D-8F9E65E50AD5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RentWise.Agent", "RentWise.Agent\RentWise.Agent.csproj", "{DB7505C7-ECB2-47FC-93C2-39BF9C074301}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{0D1E2171-B795-4942-880D-8F9E65E50AD5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0D1E2171-B795-4942-880D-8F9E65E50AD5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0D1E2171-B795-4942-880D-8F9E65E50AD5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DB7505C7-ECB2-47FC-93C2-39BF9C074301}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DB7505C7-ECB2-47FC-93C2-39BF9C074301}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DB7505C7-ECB2-47FC-93C2-39BF9C074301}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DB7505C7-ECB2-47FC-93C2-39BF9C074301}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
