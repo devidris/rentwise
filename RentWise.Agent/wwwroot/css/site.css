@@ -21,6 +21,14 @@ body {
   margin-bottom: 60px;
 }
 
-.rb-lb-border {
+.rb-lg-border {
     border-radius: 10px 10px 100px 10px
+}
+
+.rb-sm-border {
+    border-radius: 10px 10px 50px 10px
+}
+
+.translate-y{
+    transform:translateY(50%)
 }
