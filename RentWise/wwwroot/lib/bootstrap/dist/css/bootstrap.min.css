@@ -39,7 +39,7 @@
     --bs-primary-rgb: 0, 128, 128;
     --bs-secondary-rgb: 255, 215, 0;
     --bs-success-rgb: 25,135,84;
-    --bs-info-rgb: 13,202,240;
+    --bs-info-rgb: 76, 0, 130;
     --bs-warning-rgb: 255,193,7;
     --bs-danger-rgb: 220,53,69;
     --bs-light-rgb: 248,249,250;
@@ -7378,7 +7378,7 @@ textarea.form-control-lg {
 
 .text-bg-info {
     color: #000 !important;
-    background-color: RGBA(var(--bs-info-rgb),var(--bs-bg-opacity,1)) !important
+    background-color: #4B0082 !important
 }
 
 .text-bg-warning {
@@ -9360,7 +9360,7 @@ textarea.form-control-lg {
 
 .bg-info {
     --bs-bg-opacity: 1;
-    background-color: rgba(var(--bs-info-rgb),var(--bs-bg-opacity)) !important
+    background-color: #4B0082 !important
 }
 
 .bg-warning {

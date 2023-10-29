@@ -4,6 +4,11 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations.Schema;
+using RentWise.Utility;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Http;
 
 namespace RentWise.Models.Identity
 {
@@ -26,9 +31,6 @@ namespace RentWise.Models.Identity
         public string ConfirmPassword { get; set; }
 
         public string ReturnUrl { get; set; }
-
-        [Display(Name = "Remember me?")]
-        public bool RememberMe { get; set; }
     }
 
     public class AuthenticationLogin
@@ -49,5 +51,59 @@ namespace RentWise.Models.Identity
 
         [Display(Name = "Remember me?")]
         public bool RememberMe { get; set; }
+    }
+
+    public class AgentRegistrationModel
+    {
+        [Key]
+        public int Id { get; set; }
+
+        [Required]
+        [Display(Name = "First Name")]
+        public string FirstName { get; set; }
+        [Required]
+        [Display(Name = "Last Name")]
+        public string LastName { get; set; }
+        [Required]
+        [Display(Name = "Phone Number")]
+        public string PhoneNumber { get; set; }
+        [Required]
+        [Display(Name = "Residential Address")]
+        public string ResidentialAddress { get; set; }
+        [Required]
+        [Display(Name = "Store Name")]
+        public string StoreName { get; set; }
+        [ValidateNever]
+        public string Slug { get; set; }
+        [Display(Name = "Store Address")]
+        public string? StoreAddress { get; set; }
+        [ValidateNever]
+        [NotMapped]
+        public string Logo { get; set; }
+        [NotMapped]
+        [ValidateNever]
+        public string Banner { get; set; }
+        [NotMapped]
+        [ValidateNever]
+        [Display(Name = "Profile Picture")]
+        public string ProfilePicture { get; set; }
+        [NotMapped]
+        [ValidateNever]
+        [Display(Name = "National Card")]
+        public string NationalCard { get; set; }
+        [NotMapped]
+        [Required]
+        public bool Privacy { get; set; }
+        [NotMapped]
+        [ValidateNever]
+        public string Passport { get; set; }
+        [ValidateNever]
+        public string UserId { get; set; }
+        [ForeignKey("UserId")]
+        [ValidateNever]
+        public IdentityUser User { get; set; }
+        [ValidateNever]
+        public bool Verified { get; set; } = false;
+
     }
 }
