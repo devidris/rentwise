@@ -9361,7 +9361,7 @@ textarea.form-control-lg {
 
 .bg-info {
     --bs-bg-opacity: 1;
-    background-color: rgba(var(--bs-info-rgb),var(--bs-bg-opacity)) !important
+    background-color: #4B0082 !important
 }
 
 .bg-warning {

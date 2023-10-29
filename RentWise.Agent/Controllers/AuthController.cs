@@ -7,7 +7,12 @@ using System.Text.Encodings.Web;
 using System.Text;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-
+using Microsoft.AspNetCore.Hosting;
+using RentWise.Utility;
+using System.Linq;
+using RentWise.DataAccess.Repository.IRepository;
+using Microsoft.EntityFrameworkCore;
+using RentWise.Agent;
 
 namespace RentWise.Controllers
 {
@@ -19,13 +24,19 @@ namespace RentWise.Controllers
         private readonly IUserStore<IdentityUser> _userStore;
         private readonly ILogger<Authentication> _logger;
         private readonly IEmailSender _emailSender;
+        private readonly IAgentRegistrationRepository _agentRegitration;
+        private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly IUnitOfWork _unitOfWork;
         public AuthController(
               UserManager<IdentityUser> userManager,
             RoleManager<IdentityRole> roleManager,
             IUserStore<IdentityUser> userStore,
             SignInManager<IdentityUser> signInManager,
             ILogger<Authentication> logger,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            IAgentRegistrationRepository agentRegistration,
+            IWebHostEnvironment webHostEnvironment,
+            IUnitOfWork unitOfWork)
 
         {
 
@@ -35,6 +46,9 @@ namespace RentWise.Controllers
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            _agentRegitration = agentRegistration;
+            _webHostEnvironment = webHostEnvironment;
+            _unitOfWork = unitOfWork;
         }
 
         public IActionResult Register()
@@ -47,13 +61,8 @@ namespace RentWise.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(Authentication model)
         {
-            model.ReturnUrl = "/Home/Index";
             if (ModelState.IsValid)
             {
-
-               
-
-
                 var user = CreateUser();
 
                 await _userStore.SetUserNameAsync(user, model.Email, CancellationToken.None);
@@ -62,7 +71,7 @@ namespace RentWise.Controllers
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");
-
+                    await _userManager.AddToRoleAsync(user, Lookup.Roles[3]);
                     var userId = await _userManager.GetUserIdAsync(user);
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
@@ -109,9 +118,7 @@ namespace RentWise.Controllers
 
         public async Task<IActionResult> Login(AuthenticationLogin model)
         {
-         
-                model.ReturnUrl = "/Home/Index";
-            
+
             if (ModelState.IsValid)
             {
                 // This doesn't count login failures towards account lockout
@@ -139,5 +146,119 @@ namespace RentWise.Controllers
             }
             return View();
         }
+
+        public async Task<IActionResult> RegisterAgent(AgentRegistrationModel model, IFormFile logo, IFormFile banner, IFormFile passport, IFormFile nationalCard, IFormFile profilePicture)
+        {
+            IdentityUser user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return RedirectToAction("Register", "Login");
+            }
+            model.UserId = user.Id;
+
+            if (logo == null)
+            {
+                ModelState.AddModelError(Lookup.AgentRegistration[1], "Logo upload is compulsory.");
+            }
+
+            if (banner == null)
+            {
+                ModelState.AddModelError(Lookup.AgentRegistration[2], "Banner upload is compulsory.");
+            }
+            if (passport == null)
+            {
+                ModelState.AddModelError(Lookup.AgentRegistration[3], "Passport upload is compulsory.");
+            }
+            if (nationalCard == null)
+            {
+                ModelState.AddModelError(string.Join("", Lookup.AgentRegistration[4].Split(" ")), "National Card upload is compulsory.");
+            }
+            if (profilePicture == null)
+            {
+                ModelState.AddModelError(string.Join("", Lookup.AgentRegistration[5].Split(" ")), "Profile Picture upload is compulsory.");
+            }
+
+            if (_unitOfWork.AgentRegistration.Get(u => u.PhoneNumber == model.PhoneNumber) != null)
+            {
+                ModelState.AddModelError(string.Join("", Lookup.AgentRegistration[5].Split(" ")), "Phone Number is already in use.");
+            }
+            if (_unitOfWork.AgentRegistration.Get(u => u.Slug == model.Slug) != null)
+            {
+                ModelState.AddModelError(Lookup.AgentRegistration[6], "Slug is already in use.");
+            }
+            if (_unitOfWork.AgentRegistration.Get(u => u.StoreName == model.StoreName) != null)
+            {
+                ModelState.AddModelError(string.Join("", Lookup.AgentRegistration[7].Split(" ")), "Store Name is already in use.");
+            }
+
+            if (ModelState.IsValid)
+            {
+                #region Saving Logo
+                string logoName = Lookup.AgentRegistration[1] + Path.GetExtension(logo.FileName);
+
+                saveImage(model.UserId, logoName, logo);
+                #endregion
+                #region Saving Banner
+                string bannerName = Lookup.AgentRegistration[2] + Path.GetExtension(banner.FileName);
+
+                saveImage(model.UserId, bannerName, banner);
+                #endregion
+                #region Saving Passport
+                string passportName = Lookup.AgentRegistration[3] + Path.GetExtension(passport.FileName);
+
+                saveImage(model.UserId, passportName, passport);
+                #endregion
+                #region Saving National Card
+                string nationalCardName = String.Join("", Lookup.AgentRegistration[4].Split(" ")) + Path.GetExtension(nationalCard.FileName);
+
+                saveImage(model.UserId, nationalCardName, nationalCard);
+                #endregion
+                #region Saving Profile Picture
+                string profilePictureName = String.Join("", Lookup.AgentRegistration[5].Split(" ")) + Path.GetExtension(profilePicture.FileName);
+
+                saveImage(model.UserId, profilePictureName, profilePicture);
+                #endregion
+                if (model.Slug == null) { model.Slug = model.UserId.ToString(); }
+
+                _unitOfWork.AgentRegistration.Add(model);
+                _unitOfWork.Save();
+
+                IList<string> userRoles = await _userManager.GetRolesAsync(user);
+                await _userManager.AddToRoleAsync(user, Lookup.Roles[2]);
+                await _userManager.RemoveFromRoleAsync(user, Lookup.Roles[3]);
+
+
+
+                return RedirectToAction("Index", "Dashboard");
+            }
+            TempData.Put("Model", model);
+            List<string> errorMessages = ModelState.Values
+          .SelectMany(v => v.Errors)
+          .Select(e => e.ErrorMessage)
+          .ToList();
+
+            TempData["ErrorMessages"] = errorMessages; // Store the error messages in TempData
+            return RedirectToAction("Index", "Home");
+        }
+
+        public void saveImage(string userId, string fileName, IFormFile file)
+        {
+            string wwwRootPath = _webHostEnvironment.WebRootPath;
+            string filePath = @"images\agent\" + userId + "\\registration";
+            string finalPath = Path.Combine(wwwRootPath, filePath);
+
+            if (!Directory.Exists(finalPath))
+            {
+                Directory.CreateDirectory(finalPath);
+            }
+
+            using (FileStream fileStream = new FileStream(Path.Combine(finalPath, fileName), FileMode.Create))
+            {
+                file.CopyTo(fileStream);
+            }
+
+        }
+
+
     }
 }

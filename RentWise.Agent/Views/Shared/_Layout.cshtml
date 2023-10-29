@@ -15,9 +15,37 @@
             @RenderBody()
         </main>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2023 - RentWise.Agent - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+    <footer class="row bg-primary p-5 text-white ">
+        <div class="col-4">
+            <h3 class="m-0">Rent Wise</h3>
+            <p>@@ Rgistered company</p>
+            <p class="mb-3"><b>Follow us at</b> <i class="bi bi-instagram"></i></p>
+            <ul class="list-unstyled mt-4">
+                <li><a href="" class="link-light text-decoration-none">Equal Housing Opportunity</a></li>
+                <li><a href="" class="link-light text-decoration-none">About Us</a></li>
+                <li><a href="" class="link-light text-decoration-none">Sitemap</a></li>
+                <li><a href="" class="link-light text-decoration-none">Contact Us</a></li>
+                <li><a href="" class="link-light text-decoration-none">Legal Terms & Privacy Policy</a></li>
+                <li><a href="" class="link-light text-decoration-none">Accessibility</a></li>
+                <li><a href="" class="link-light text-decoration-none">Advertise</a></li>
+                <li><a href="" class="link-light text-decoration-none">Avoid Scams and Fraud</a></li>
+            </ul>
+        </div>
+        <div class="col-4">
+            <ul>
+                <li><a href="" class="link-light text-decoration-none">Register as Cusotmer</a></li>
+                <li><a href="" class="link-light text-decoration-none">Become an Agent</a></li>
+                <li><a href="" class="link-light text-decoration-none">Login</a></li>
+            </ul>
+        </div>
+        <div class="col-4">
+            <h3 class="mb-3">Get In Touch</h3>
+            <form class="d-flex flex-column gap-4 form-contact">
+                <input type="text" placeholder="Name" value="" class="border-0 border-bottom bg-transparent text-light p-2" />
+                <input type="text" placeholder="Email" value="" class="border-0 border-bottom bg-transparent text-light p-2" />
+                <textarea placeholder="Message" class="border-0 border-bottom bg-transparent text-light p-2"></textarea>
+                <button class="btn btn-secondary rounded-pill text-dark w-auto">Submit</button>
+            </form>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

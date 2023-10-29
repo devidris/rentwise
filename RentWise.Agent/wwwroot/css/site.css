@@ -32,3 +32,19 @@ body {
 .translate-y{
     transform:translateY(50%)
 }
+.bg-tertiary {
+    background: #4B0082 !important;
+}
+.bg-tertiary-subtle {
+    background: rgba(75, 0, 130, 0.20) !important;
+}
+
+.dashboard-list li p, .dashboard-list li span {
+    margin: 0;
+    margin-left: 1rem;
+}
+
+.dashboard-list li:not(:first-of-type){
+    display:grid;
+    grid-template-columns:1fr 1fr;
+}
