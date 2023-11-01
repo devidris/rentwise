@@ -2087,8 +2087,8 @@ progress {
 }
 
 .table-primary {
-    --bs-table-color: #000;
-    --bs-table-bg: #cfe2ff;
+    --bs-table-color: #fff;
+   --bs-table-bg: #008080;
     --bs-table-border-color: #a6b5cc;
     --bs-table-striped-bg: #c5d7f2;
     --bs-table-striped-color: #000;

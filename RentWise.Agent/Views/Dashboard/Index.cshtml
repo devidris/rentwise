@@ -46,8 +46,8 @@
     </nav>
 
 
-    <div class="row mt-5">
-        <div class="col-2 px-5 ">
+    <div class="row mt-5 bg-light px-5">
+        <div class="col-2 pl-5 ">
             <ul class="d-flex flex-column text-light list-unstyled w-100 justify-content-evenly  lead text-center  bg-dark py-3 rounded sidebar">
                 <li onclick="onToggle(1)">
                     <i class="bi bi-columns-gap"></i>
@@ -59,17 +59,17 @@
                     <span>Messages</span>
                 </li>
                 <hr />
-                <li>
+                <li onclick="onToggle(3)">
                     <i class="bi bi-calendar-event-fill"></i>
                     <span>Report</span>
                 </li>
                 <hr />
-                <li>
+                <li onclick="onToggle(4)">
                     <i class="bi bi-bookmark-dash-fill"></i>
                     <span>Orders</span>
                 </li>
                 <hr />
-                <li>
+                <li onclick="onToggle(5)">
                     <i class="bi bi-list-check"></i>
                     <span>Review</span>
                 </li>
@@ -103,8 +103,14 @@
                 </li>
             </ul>
         </div>
-        <div class="col-10">
+        <div class="col-10 pr-3">
             <partial name="_Dashboard" />
+            <partial name="_Chat" />
+            <partial name="_Reports" />
+            <partial name="_Orders" />
+            <partial name="_Reviews" />
+
+
         </div>
     </div>
 </div>
@@ -118,12 +124,47 @@
         .sidebar li:hover {
             background: var(--bs-primary)
         }
+
+    .display-none {
+        display: none
+    }
+
+    .search_input {
+        display: grid;
+        grid-template-columns: min-content 1fr min-content;
+        margin: auto;
+        align-items: center;
+    }
+
+        .search_input i {
+            grid-column: 1/1;
+            grid-row: 1/1;
+            z-index: 2;
+            justify-self: center;
+            padding: .5rem 1.5rem;
+        }
+
+        .search_input input {
+            grid-column: 1/-1;
+            grid-row: 1/1;
+            z-index: 1;
+            padding: .5rem 4rem;
+            border-radius: 2rem;
+            border: none;
+        }
+
+</style>
+<style>
+
 </style>
 <script>
     function onToggle(contentNo) {
         document.querySelectorAll(".content").forEach((content) => {
-            content.style.display = "none"
+            content.classList.add("display-none");
         })
-        document.querySelector(".content-"+contentNo).style.display = "block"
+
+        document.querySelector(".content-" + contentNo).classList.remove("display-none");
     }
+
+    onToggle(1);
 </script>

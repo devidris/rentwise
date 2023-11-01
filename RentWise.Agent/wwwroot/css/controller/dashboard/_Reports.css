@@ -1,0 +1,11 @@
+﻿.reports div {
+    cursor: pointer;
+}
+
+    .reports div:hover {
+        color: var(--bs-primary);
+    }
+
+.report-active {
+    color: var(--bs-primary);
+}
