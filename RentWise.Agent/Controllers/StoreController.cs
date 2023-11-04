@@ -8,5 +8,10 @@ namespace RentWise.Agent.Controllers
         {
             return View();
         }
+
+        public IActionResult Upsert()
+        {
+            return View();
+        }
     }
 }
