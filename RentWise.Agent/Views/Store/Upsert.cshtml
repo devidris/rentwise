@@ -1,8 +1,8 @@
 ﻿@model ProductModel;
 <div>
     <partial name="_Nav2" />
-    <form class="p-5" method="post" asp-action="RegisterAgent" asp-controller="Auth" enctype="multipart/form-data">
-        @* <div asp-validation-summary="All" class="text-danger" role="alert"></div> *@
+    <form class="p-5" method="post"  enctype="multipart/form-data">
+        <div asp-validation-summary="All" class="text-danger" role="alert"></div>
         <input class="category-input d-none" hidden aria-required="true" asp-for="@Model.LkpCategory" />
         <div class="content content-1 text-center">
             <h3 class="mt-5">List your property on <span class="font-ilalic">Rent Wise</span> and start welcoming renters in no time!</h3>
@@ -88,7 +88,7 @@
                             trackers with outstanding proficiency
                         </p>
                         <button class="btn btn-primary text-white px-3" type="button" onclick="setCategory(5)">Proceed</button>
-                    </div><img src="~/img/banner.png" />
+                    </div>
                 </div>
             </div>
         </div>
@@ -101,36 +101,45 @@
                     <span class="text-danger" asp-validation-for="@Model.Name"></span>
                 </div>
 
-                <divc class="d-flex gap-3">
+                <divc class="row">
 
-                    <div class="input-group mb-3">
-                        <div class="input-group-prepend ">
-                            <span class="input-group-text text-white">$</span>
+                    <div class="col-4">
+                         <label class="form-label" asp-for="@Model.PriceDay">Daily Rental Price</label>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend ">
+                                <span class="input-group-text text-white">$</span>
+                            </div>
+                            <input class="form-control" aria-label="Price / Day" asp-for="@Model.PriceDay" placeholder="Price / Day" value="0">
+                            <span class="text-danger" asp-validation-for="@Model.PriceDay"></span>
                         </div>
-                        <input type="text" class="form-control" aria-label="Price / Day" asp-for="@Model.PriceDay" name="price" placeholder="Price / Day">
-                        <span class="text-danger" asp-validation-for="@Model.PriceDay"></span>
                     </div>
 
-                    <div class="input-group mb-3">
-                        <div class="input-group-prepend ">
-                            <span class="input-group-text text-white">$</span>
+                    <div class="col-4">
+                        <label class="form-label" asp-for="@Model.PriceWeekend">Weekend Rental Price</label>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend ">
+                                <span class="input-group-text text-white">$</span>
+                            </div>
+                            <input class="form-control" aria-label="Price / Weekend" asp-for="@Model.PriceWeekend" placeholder="Price / Weekend" value="0">
+                            <span class="text-danger" asp-validation-for="@Model.PriceWeekend"></span>
                         </div>
-                        <input type="text" class="form-control" aria-label="Price / Weekend" asp-for="@Model.PriceWeekend" name="price" placeholder="Price / Weekend">
-                        <span class="text-danger" asp-validation-for="@Model.PriceWeekend"></span>
                     </div>
 
-                    <div class="input-group mb-3">
-                        <div class="input-group-prepend ">
-                            <span class="input-group-text text-white">$</span>
+                    <div class="col-4">
+                        <label class="form-label" asp-for="@Model.PriceWeek">Weekly Rental Price</label>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend ">
+                                <span class="input-group-text text-white">$</span>
+                            </div>
+                            <input class="form-control" aria-label="Price / Week" asp-for="@Model.PriceWeek" placeholder="Price / Week" value="0">
+                            <span class="text-danger" asp-validation-for="@Model.PriceWeek"></span>
                         </div>
-                        <input type="text" class="form-control" aria-label="Price / Week" asp-for="@Model.PriceWeek" name="price" placeholder="Price / Week">
-                        <span class="text-danger" asp-validation-for="@Model.PriceWeek"></span>
                     </div>
                 </divc>
                 <div class="form-floating mb-3">
-                    <input class="form-control" aria-required="true" type="file" accept="image/*" name="Main Image" />
-                    <label class="form-label">Main Image</label>
-                    <span class="text-danger"></span>
+                    <input class="form-control" aria-required="true" type="file" accept="image/*" name="mainImage" asp-for="@Model.MainImage"/>
+                    <label class="form-label" asp-for="@Model.MainImage">Main Image</label>
+                    <span class="text-danger" asp-validation-for="@Model.MainImage"></span>
                 </div>
 
                 <div class="w-fit ml-auto">
@@ -146,24 +155,25 @@
                 <h5>Images</h5>
                 <div class="w-100 d-flex flex-wrap gap-3 p-4" id="imageContainer">
                     <div class="fs-1 p-5 cursor-pointer">
-                        <input class="form-control" aria-required="true" type="file" accept="image/*" hidden name="images" id="images" multiple="multiple" />
+                        <input class="form-control d-none" aria-required="true" type="file" accept="image/*" hidden name="images" id="images" multiple="multiple" />
+                        <input class="form-control d-none" aria-required="true" type="file" accept="image/*" hidden name="AllImages" id="allimages" multiple="multiple" asp-for="@Model.OtherImages"/>
                         <label class="form-label" for="images">
-                            <i class="bi bi-plus-circle-fill"></i>
+                            <i class="bi bi-plus-circle-fill  cursor-pointer"></i>
                         </label>
                     </div>
                 </div>
 
                 <h5 class="mb-4">This products includes</h5>
+                    <textarea class="form-control d-none includes-value" hidden asp-for="@Model.InputIncludes" aria-required="true"></textarea>
                 <div class="includesContainer">
                     <div class="fs-5 cursor-pointer" onclick="addIncludes()">  <i class="bi bi-plus-circle-fill"></i> Add More</div>
                 </div>
-                <div class="mt-3">
+                <div class="mt-5">
                     <button class="btn btn-outline-primary text-primary" type="button" onclick="onToggle(2)">Back</button>
                     <button class="btn btn-primary text-white" type="button" onclick="onToggle(4)">Save changes and Continue</button>
                 </div>
             </div>
         </div>
-
         <div class="content content-4 d-none">
 
             <div class="item p-5">
@@ -172,18 +182,20 @@
                     <label class="form-label" asp-for="@Model.Description">Product Description</label>
                     <span class="text-danger" asp-validation-for="@Model.Description"></span>
                 </div>
-                <h5 class="mb-4">This products includes</h5>
+                <h5 class="mb-4">Rules</h5>
+                <textarea class="form-control d-none rules-value rules-value" hidden asp-for="@Model.InputRules" aria-required="true"></textarea>
             <div class="rulesContainer">
                 <div class="fs-5 cursor-pointer" onclick="addRules()">  <i class="bi bi-plus-circle-fill"></i> Add More</div>
             </div>
 
             <div class="form-floating mb-3">
-                <input class="form-control" aria-required="true" type="file" accept="image/*" name="Main Image" />
-                <label class="form-label">Cancellation Policy</label>
-                <span class="text-danger"></span>
+                <input class="form-control" aria-required="true" type="file" accept="image/*" asp-for="@Model.CancellationPolicy" name="CancellationPolicy"/>
+                    <label class="form-label" asp-for="@Model.CancellationPolicy">Cancellation Policy</label>
+                <span class="text-danger" asp-validation-for="@Model.CancellationPolicy"></span>
             <div class="mt-3">
                 <button class="btn btn-outline-primary text-primary" type="button" onclick="onToggle(3)">Back</button>
-                <button class="btn btn-primary text-white" type="button" onclick="onToggle(4)">Save changes and Preview</button>
+                <button class="btn btn-primary text-white" type="button" onclick="saveChanges()">Save changes and Preview</button>
+                <button type="submit" class="d-none save">Save</button>
             </div>
             </div>
             </div>
@@ -203,7 +215,7 @@
 </style>
 <script defer>
     function setCategory(lkpcategory) {
-        $('.category-input').value = lkpcategory
+        $('.category-input').val(lkpcategory)
         $('.categories').text(categories[lkpcategory])
         onToggle(2)
     }
@@ -215,20 +227,22 @@
         document.querySelector(".content-" + contentNo).classList.remove("d-none");
     }
     const categories = [
-        "Car Rentals",
         "Construction Equipments",
+        "Car Rentals",
         "Office Items/Personal Items",
         "Events/ Equipment Rentals",
         "Sales Of Vehicles Trackers"
     ];
 
-    const uploadedImages = []
+    const fileList = new DataTransfer();
     $("#images").change(function (e) {
 
         Array.from(e.target.files).forEach((file) => {
-            uploadedImages.push(file)
+            fileList.items.add(file)
             displayImage(file)
         });
+
+        $('#allimages')[0].files = fileList.files
     })
 
     function displayImage(file) {
@@ -251,13 +265,35 @@
     }
 
     function addIncludes() {
-        const input = `<input type="text" placeholder="Your porduct include" class="form-control mb-4"/>`
+        const input = `<input type="text" placeholder="Your porduct include" class="form-control mb-4 include-input"/>`
         $('.includesContainer').prepend(input)
     }
 
     function addRules() {
-        const input = `<input type="text" placeholder="Rule" class="form-control mb-4"/>`
+        const input = `<input type="text" placeholder="Rule" class="form-control mb-4 rule-input"/>`
         $('.rulesContainer').prepend(input)
     }
-    onToggle(3);
+
+    function saveChanges(){
+       let concatenatedInputIncludes = ''
+        $('.include-input').each(function () {
+            if (!$(this).val() || $(this).val() == '') return
+            concatenatedInputIncludes += $(this).val() + ',,concatenatedInput,,';
+        });
+        $('.includes-value').val('')
+        $('.includes-value').val(concatenatedInputIncludes)
+
+        let concatenatedInputRules = ''
+        $('.rule-input').each(function () {
+            if (!$(this).val() || $(this).val() == '') return
+            console.log($(this).val())
+            concatenatedInputRules += $(this).val() + ',,concatenatedInput,,';
+        });
+        $('.rules-value').val('')
+        $('.rules-value').val(concatenatedInputRules)
+
+        $('.save').click()
+       
+    }
+    onToggle(1);
 </script>
