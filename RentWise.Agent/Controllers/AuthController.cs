@@ -154,67 +154,71 @@ namespace RentWise.Controllers
             {
                 return RedirectToAction("Register", "Login");
             }
+            if (!model.Privacy)
+            {
+                ModelState.AddModelError("Privacy", "You have to accept terms and conditions.");
+            }
             model.UserId = user.Id;
 
             if (logo == null)
             {
-                ModelState.AddModelError(Lookup.AgentRegistration[1], "Logo upload is compulsory.");
+                ModelState.AddModelError(Lookup.Upload[1], "Logo upload is compulsory.");
             }
 
             if (banner == null)
             {
-                ModelState.AddModelError(Lookup.AgentRegistration[2], "Banner upload is compulsory.");
+                ModelState.AddModelError(Lookup.Upload[2], "Banner upload is compulsory.");
             }
             if (passport == null)
             {
-                ModelState.AddModelError(Lookup.AgentRegistration[3], "Passport upload is compulsory.");
+                ModelState.AddModelError(Lookup.Upload[3], "Passport upload is compulsory.");
             }
             if (nationalCard == null)
             {
-                ModelState.AddModelError(string.Join("", Lookup.AgentRegistration[4].Split(" ")), "National Card upload is compulsory.");
+                ModelState.AddModelError(string.Join("", Lookup.Upload[4].Split(" ")), "National Card upload is compulsory.");
             }
             if (profilePicture == null)
             {
-                ModelState.AddModelError(string.Join("", Lookup.AgentRegistration[5].Split(" ")), "Profile Picture upload is compulsory.");
+                ModelState.AddModelError(string.Join("", Lookup.Upload[5].Split(" ")), "Profile Picture upload is compulsory.");
             }
 
             if (_unitOfWork.AgentRegistration.Get(u => u.PhoneNumber == model.PhoneNumber) != null)
             {
-                ModelState.AddModelError(string.Join("", Lookup.AgentRegistration[5].Split(" ")), "Phone Number is already in use.");
+                ModelState.AddModelError(string.Join("", Lookup.Upload[5].Split(" ")), "Phone Number is already in use.");
             }
             if (_unitOfWork.AgentRegistration.Get(u => u.Slug == model.Slug) != null)
             {
-                ModelState.AddModelError(Lookup.AgentRegistration[6], "Slug is already in use.");
+                ModelState.AddModelError(Lookup.Upload[6], "Slug is already in use.");
             }
             if (_unitOfWork.AgentRegistration.Get(u => u.StoreName == model.StoreName) != null)
             {
-                ModelState.AddModelError(string.Join("", Lookup.AgentRegistration[7].Split(" ")), "Store Name is already in use.");
+                ModelState.AddModelError(string.Join("", Lookup.Upload[7].Split(" ")), "Store Name is already in use.");
             }
 
             if (ModelState.IsValid)
             {
                 #region Saving Logo
-                string logoName = Lookup.AgentRegistration[1] + Path.GetExtension(logo.FileName);
+                string logoName = Lookup.Upload[1] + Path.GetExtension(logo.FileName);
 
                 saveImage(model.UserId, logoName, logo);
                 #endregion
                 #region Saving Banner
-                string bannerName = Lookup.AgentRegistration[2] + Path.GetExtension(banner.FileName);
+                string bannerName = Lookup.Upload[2] + Path.GetExtension(banner.FileName);
 
                 saveImage(model.UserId, bannerName, banner);
                 #endregion
                 #region Saving Passport
-                string passportName = Lookup.AgentRegistration[3] + Path.GetExtension(passport.FileName);
+                string passportName = Lookup.Upload[3] + Path.GetExtension(passport.FileName);
 
                 saveImage(model.UserId, passportName, passport);
                 #endregion
                 #region Saving National Card
-                string nationalCardName = String.Join("", Lookup.AgentRegistration[4].Split(" ")) + Path.GetExtension(nationalCard.FileName);
+                string nationalCardName = String.Join("", Lookup.Upload[4].Split(" ")) + Path.GetExtension(nationalCard.FileName);
 
                 saveImage(model.UserId, nationalCardName, nationalCard);
                 #endregion
                 #region Saving Profile Picture
-                string profilePictureName = String.Join("", Lookup.AgentRegistration[5].Split(" ")) + Path.GetExtension(profilePicture.FileName);
+                string profilePictureName = String.Join("", Lookup.Upload[5].Split(" ")) + Path.GetExtension(profilePicture.FileName);
 
                 saveImage(model.UserId, profilePictureName, profilePicture);
                 #endregion
