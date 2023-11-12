@@ -34,7 +34,7 @@ namespace RentWise.Agent.Controllers
             bool isUser = await _userManager.IsInRoleAsync(user, Lookup.Roles[3]);
             if (!isUser)
             {
-                return RedirectToAction("Index", "Dashboard");
+                return RedirectToAction("Index", "Store");
             }
             ViewBag.UserId = user.Id;
             AgentRegistrationModel model = new AgentRegistrationModel();

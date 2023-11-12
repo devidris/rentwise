@@ -15,6 +15,8 @@ public class ApplicationDbContext : IdentityDbContext<IdentityUser>
 
     public DbSet<ApplicationUser> ApplicationUsers { get; set; }
     public DbSet<AgentRegistrationModel> AgentRegistrations { get; set; }
+
+    public DbSet<ProductModel> Products { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);

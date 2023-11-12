@@ -91,6 +91,7 @@ namespace RentWise.Models.Identity
         [ValidateNever]
         [Display(Name = "National Card")]
         public string NationalCard { get; set; }
+        public DateTime RegistrationDate { get; set; } = DateTime.Now;
         [NotMapped]
         [Required]
         public bool Privacy { get; set; }

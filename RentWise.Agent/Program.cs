@@ -25,7 +25,6 @@ namespace RentWise.Agent
             builder.Services.AddScoped<IAgentRegistrationRepository, AgentRegistrationRepository>();
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
-
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

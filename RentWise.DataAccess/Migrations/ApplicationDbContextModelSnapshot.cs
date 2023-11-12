@@ -248,6 +248,9 @@ namespace RentWise.DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<DateTime>("RegistrationDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("ResidentialAddress")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -284,6 +287,62 @@ namespace RentWise.DataAccess.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("AgentRegistrations");
+                });
+
+            modelBuilder.Entity("RentWise.Models.Identity.ProductModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
+
+                    b.Property<string>("Includes")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("LkpCategory")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("NoOfImages")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PriceDay")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PriceWeek")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PriceWeekend")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ProductId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("RegistrationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Rules")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Products");
                 });
 
             modelBuilder.Entity("RentWise.Models.Identity.ApplicationUser", b =>
@@ -345,6 +404,17 @@ namespace RentWise.DataAccess.Migrations
                 });
 
             modelBuilder.Entity("RentWise.Models.Identity.AgentRegistrationModel", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("RentWise.Models.Identity.ProductModel", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
                         .WithMany()

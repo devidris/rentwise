@@ -61,8 +61,15 @@ namespace RentWise.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(Authentication model)
         {
+
             if (ModelState.IsValid)
             {
+                if (!_roleManager.RoleExistsAsync(Lookup.Roles[1]).GetAwaiter().GetResult())
+                {
+                    _roleManager.CreateAsync(new IdentityRole(Lookup.Roles[1])).GetAwaiter().GetResult();
+                    _roleManager.CreateAsync(new IdentityRole(Lookup.Roles[2])).GetAwaiter().GetResult();
+                    _roleManager.CreateAsync(new IdentityRole(Lookup.Roles[3])).GetAwaiter().GetResult();
+                }
                 var user = CreateUser();
 
                 await _userStore.SetUserNameAsync(user, model.Email, CancellationToken.None);
@@ -233,7 +240,7 @@ namespace RentWise.Controllers
 
 
 
-                return RedirectToAction("Index", "Dashboard");
+                return RedirectToAction("Index", "Store");
             }
             TempData.Put("Model", model);
             List<string> errorMessages = ModelState.Values

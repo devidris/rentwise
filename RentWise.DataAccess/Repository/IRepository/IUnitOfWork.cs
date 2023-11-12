@@ -9,6 +9,7 @@ namespace RentWise.DataAccess.Repository.IRepository
     public interface IUnitOfWork
     {
         IAgentRegistrationRepository AgentRegistration { get; }
+        IProductRepository Product { get; }
         void Save();
     }
 }

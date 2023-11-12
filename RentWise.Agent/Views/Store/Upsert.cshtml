@@ -156,7 +156,7 @@
                 <div class="w-100 d-flex flex-wrap gap-3 p-4" id="imageContainer">
                     <div class="fs-1 p-5 cursor-pointer">
                         <input class="form-control d-none" aria-required="true" type="file" accept="image/*" hidden name="images" id="images" multiple="multiple" />
-                        <input class="form-control d-none" aria-required="true" type="file" accept="image/*" hidden name="AllImages" id="allimages" multiple="multiple" asp-for="@Model.OtherImages"/>
+                        <input class="form-control d-none" aria-required="true" type="file" accept="image/*" hidden name="otherImages" id="allimages" multiple="multiple"/>
                         <label class="form-label" for="images">
                             <i class="bi bi-plus-circle-fill  cursor-pointer"></i>
                         </label>
@@ -164,7 +164,7 @@
                 </div>
 
                 <h5 class="mb-4">This products includes</h5>
-                    <textarea class="form-control d-none includes-value" hidden asp-for="@Model.InputIncludes" aria-required="true"></textarea>
+                    <textarea class="form-control d-none includes-value" hidden asp-for="@Model.Includes" aria-required="true"></textarea>
                 <div class="includesContainer">
                     <div class="fs-5 cursor-pointer" onclick="addIncludes()">  <i class="bi bi-plus-circle-fill"></i> Add More</div>
                 </div>
@@ -178,18 +178,18 @@
 
             <div class="item p-5">
                 <div class="form-floating mb-3">
-                    <textarea class="form-control" asp-for="@Model.Description" aria-required="true" ></textarea>
+                    <textarea class="form-control" asp-for="@Model.Description" aria-required="true" rows="10" ></textarea>
                     <label class="form-label" asp-for="@Model.Description">Product Description</label>
                     <span class="text-danger" asp-validation-for="@Model.Description"></span>
                 </div>
                 <h5 class="mb-4">Rules</h5>
-                <textarea class="form-control d-none rules-value rules-value" hidden asp-for="@Model.InputRules" aria-required="true"></textarea>
-            <div class="rulesContainer">
+                <textarea class="form-control d-none rules-value rules-value" hidden asp-for="@Model.Rules" aria-required="true"></textarea>
+            <div class="rulesContainer mb-5">
                 <div class="fs-5 cursor-pointer" onclick="addRules()">  <i class="bi bi-plus-circle-fill"></i> Add More</div>
             </div>
 
             <div class="form-floating mb-3">
-                <input class="form-control" aria-required="true" type="file" accept="image/*" asp-for="@Model.CancellationPolicy" name="CancellationPolicy"/>
+                <input class="form-control" aria-required="true" type="file" accept=".pdf" asp-for="@Model.CancellationPolicy" name="cancellationPolicy"/>
                     <label class="form-label" asp-for="@Model.CancellationPolicy">Cancellation Policy</label>
                 <span class="text-danger" asp-validation-for="@Model.CancellationPolicy"></span>
             <div class="mt-3">
@@ -216,7 +216,7 @@
 <script defer>
     function setCategory(lkpcategory) {
         $('.category-input').val(lkpcategory)
-        $('.categories').text(categories[lkpcategory])
+        $('.categories').text(categories[lkpcategory-1])
         onToggle(2)
     }
     function onToggle(contentNo) {
@@ -228,7 +228,7 @@
     }
     const categories = [
         "Construction Equipments",
-        "Car Rentals",
+        "Vehicle Rentals",
         "Office Items/Personal Items",
         "Events/ Equipment Rentals",
         "Sales Of Vehicles Trackers"
@@ -263,22 +263,36 @@
         }
 
     }
-
+    let includes = 0
     function addIncludes() {
-        const input = `<input type="text" placeholder="Your porduct include" class="form-control mb-4 include-input"/>`
+        if(includes > 10){
+            toastr.error("Can add more than 10 product includes")
+            return
+        }
+        const input = `<input type="text" placeholder="Your product include" class="form-control mb-4 include-input"/>`
         $('.includesContainer').prepend(input)
+        includes++
     }
-
+    let rules = 0
     function addRules() {
+        if (rules > 10) {
+            toastr.error("Can add more than 10 product rules")
+            return
+        }
         const input = `<input type="text" placeholder="Rule" class="form-control mb-4 rule-input"/>`
         $('.rulesContainer').prepend(input)
+        rules++
     }
 
     function saveChanges(){
+        if (fileList.files.length < 7){
+            toastr.error('Minimum of 7 images')
+            return
+        }
        let concatenatedInputIncludes = ''
         $('.include-input').each(function () {
             if (!$(this).val() || $(this).val() == '') return
-            concatenatedInputIncludes += $(this).val() + ',,concatenatedInput,,';
+            concatenatedInputIncludes += $(this).val() + ',,rw,,';
         });
         $('.includes-value').val('')
         $('.includes-value').val(concatenatedInputIncludes)
@@ -286,8 +300,7 @@
         let concatenatedInputRules = ''
         $('.rule-input').each(function () {
             if (!$(this).val() || $(this).val() == '') return
-            console.log($(this).val())
-            concatenatedInputRules += $(this).val() + ',,concatenatedInput,,';
+            concatenatedInputRules += $(this).val() + ',,rw,,';
         });
         $('.rules-value').val('')
         $('.rules-value').val(concatenatedInputRules)

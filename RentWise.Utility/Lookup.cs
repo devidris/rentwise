@@ -24,7 +24,7 @@ namespace RentWise.Utility
             {3, "User" },
         };
 
-        public static Dictionary<int, string> AgentRegistration = new Dictionary<int, string>
+        public static Dictionary<int, string> Upload = new Dictionary<int, string>
         {
             {1, "Logo"},
             {2, "Banner"},
@@ -34,6 +34,9 @@ namespace RentWise.Utility
             {6, "Phone Number" },
             {7, "Slug" },
             {8, "Store Name" },
+            {9, "Main Image" },
+            {10, "Other Images" },
+            {11, "Cancellation Policy" },
         };
     }
 
