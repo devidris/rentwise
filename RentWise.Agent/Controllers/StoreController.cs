@@ -12,12 +12,15 @@ namespace RentWise.Agent.Controllers
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly IUnitOfWork _unitOfWork;
+
         public StoreController(UserManager<IdentityUser> userManager,IWebHostEnvironment webHostEnvironment,IUnitOfWork unitOfWork)
         {
             _userManager = userManager;
             _webHostEnvironment = webHostEnvironment;
             _unitOfWork = unitOfWork;
+
         }
+
         public async Task<IActionResult> Index(int id = 0)
         {
             IdentityUser user = await _userManager.GetUserAsync(User);
@@ -74,7 +77,7 @@ namespace RentWise.Agent.Controllers
                 #endregion
 
                 #region Saving Cancellation Policy
-                string cancellationPolicyName = String.Join("", Lookup.Upload[11].Split(" ")) + ".webp";
+                string cancellationPolicyName = String.Join("", Lookup.Upload[11].Split(" ")) + ".pdf";
 
                 saveImage(model.UserId, cancellationPolicyName, cancellationPolicy,model.ProductId);
                 #endregion
@@ -88,9 +91,18 @@ namespace RentWise.Agent.Controllers
                 #endregion
 
                 model.NoOfImages = otherImages.Count;
-
+                if (String.IsNullOrEmpty(model.Includes))
+                {
+                    model.Includes = ",,rw,,";
+                }
+                if (String.IsNullOrEmpty(model.Rules))
+                {
+                    model.Rules = ",,rw,,";
+                }
                 _unitOfWork.Product.Add(model);
                 _unitOfWork.Save();
+
+                return RedirectToAction("Preview", "Store",new { id = model.ProductId });
             }
             return View();
         }
@@ -113,9 +125,26 @@ namespace RentWise.Agent.Controllers
 
         }
 
-        public IActionResult Preview()
+        public async Task<IActionResult> Preview(string ?id)
         {
-            return View();
+            IdentityUser user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return RedirectToAction("Register", "Login");
+            }
+            ProductModel model = new ProductModel();
+            AgentRegistrationModel agentRegistrationModel = _unitOfWork.AgentRegistration.Get(u => u.UserId == user.Id);
+            ViewBag.StoreName = agentRegistrationModel.StoreName;
+            ViewBag.StoreAddress = agentRegistrationModel.StoreAddress;
+            ViewBag.RegistrationDate = agentRegistrationModel.RegistrationDate;
+            if(String.IsNullOrEmpty(id))
+            {
+                model = _unitOfWork.Product.Get(u => u.UserId == user.Id);
+            } else
+            {
+                model = _unitOfWork.Product.Get(u => u.ProductId == id);
+            }
+            return View(model);
         }
     }
 }
