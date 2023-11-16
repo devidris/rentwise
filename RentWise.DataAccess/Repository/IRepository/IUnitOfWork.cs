@@ -10,6 +10,7 @@ namespace RentWise.DataAccess.Repository.IRepository
     {
         IAgentRegistrationRepository AgentRegistration { get; }
         IProductRepository Product { get; }
+        IReviewRepository Review { get; }
         void Save();
     }
 }

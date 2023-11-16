@@ -13,12 +13,15 @@ namespace RentWise.DataAccess.Repository
         public IAgentRegistrationRepository AgentRegistration { get; private set; }
         public IProductRepository Product { get; private set; }
 
+        public IReviewRepository Review { get; private set; }
+
 
         public UnitOfWork(ApplicationDbContext db)
         {
             _db = db;
             AgentRegistration = new AgentRegistrationRepository(_db);
             Product = new ProductRepository(_db);
+            Review = new ReviewRepository(_db);
         }
 
         public void Save()

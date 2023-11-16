@@ -8,18 +8,19 @@ using System.Threading.Tasks;
 
 namespace RentWise.DataAccess.Repository
 {
-    public class ProductRepository : Repository<ProductModel>, IProductRepository
+
+    public class ReviewRepository : Repository<ReviewModel>, IReviewRepository
     {
         private ApplicationDbContext _db;
-        public ProductRepository(ApplicationDbContext db):base(db) 
+        public ReviewRepository(ApplicationDbContext db) : base(db)
         {
 
             _db = db;
 
         }
-        public void Update(ProductModel obj)
+        public void Update(ReviewModel obj)
         {
-            _db.Products.Update(obj);
+            _db.Reviews.Update(obj);
         }
     }
 }

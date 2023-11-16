@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using RentWise.DataAccess.Repository.IRepository;
+using RentWise.Models;
 using RentWise.Models.Identity;
 using RentWise.Utility;
 
@@ -144,7 +145,40 @@ namespace RentWise.Agent.Controllers
             {
                 model = _unitOfWork.Product.Get(u => u.ProductId == id);
             }
+            IEnumerable<ReviewModel> Reviews = _unitOfWork.Review.GetAll(u=>u.ProductId == model.ProductId);
+            ViewBag.Reviews = Reviews;
+            ViewBag.HasAddRating = Reviews.FirstOrDefault(u => u.UserId == user.Id) != null;
+            ViewBag.NoOfRating = Reviews.Count();
+            IEnumerable<ProductModel> OtherProducts = _unitOfWork.Product.GetAll(u=>u.UserId == user.Id && u.ProductId != model.ProductId);
+            ViewBag.OtherProducts = OtherProducts;
+            ViewBag.NoOfOtherProducts = OtherProducts.Count();
             return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddRating(int RatingValue, string RatingDescription, string ProductId, string AgentId)
+        {
+            IdentityUser user = await _userManager.GetUserAsync(User);
+
+            if (user == null)
+            {
+                return RedirectToAction("Register", "Login");
+            }
+
+            ReviewModel Review = new()
+            {
+                RatingValue = RatingValue,
+                RatingDescription = RatingDescription,
+                UserId = user.Id,
+                UserName = user.UserName.Split('@')[0],
+                ProductId = ProductId,
+                AgentId = AgentId
+            };
+
+            _unitOfWork.Review.Add(Review);
+            _unitOfWork.Save();
+
+            return RedirectToAction("Preview", "Store");
         }
     }
 }

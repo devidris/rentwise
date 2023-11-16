@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using RentWise.Models;
 using RentWise.Models.Identity;
 using System.Reflection.Emit;
 
@@ -17,6 +18,8 @@ public class ApplicationDbContext : IdentityDbContext<IdentityUser>
     public DbSet<AgentRegistrationModel> AgentRegistrations { get; set; }
 
     public DbSet<ProductModel> Products { get; set; }
+
+    public DbSet<ReviewModel> Reviews { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);

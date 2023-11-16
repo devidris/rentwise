@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace RentWise.DataAccess.Repository.IRepository
 {
-    public interface IProductRepository: IRepository<ProductModel>
+    public interface IReviewRepository : IRepository<ReviewModel>
     {
-        void Update(ProductModel model);
+        void Update(ReviewModel model);
     }
 }
