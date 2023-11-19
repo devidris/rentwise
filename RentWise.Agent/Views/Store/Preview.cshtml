@@ -1,0 +1,517 @@
+﻿@using RentWise.Utility;
+
+@model ProductModel
+<link href="https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="~/css/controller/store/_Calender.css">
+<link href="https://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+
+
+<div class="preview">
+    <partial name="_Nav2" />
+    <input value="@Model.PriceWeek" class="price-week" hidden />
+    <input value="@Model.PriceWeekend" class="price-weekend" hidden />
+    <input value="@Model.PriceDay" class="price-day" hidden />
+    <p class="px-5 py-2 fs-5 m-0">
+        <span>Home</span>
+        <span>></span>
+        <span>@Lookup.Categories[Model.LkpCategory]</span>
+        <span>></span>
+        <span>@Model.Name</span>
+    </p>
+
+    <div class="d-flex align-items-center px-5 justify-content-between">
+        <h2 class="m-0">@ViewBag.StoreName</h2>
+        <p class="m-0"><span class="fs-3 font-weight-bold">$@Model.PriceDay/</span><span>day</span></p>
+
+    </div>
+    <div class="d-flex align-items-center px-5 justify-content-between mb-3">
+        <p>@ViewBag.StoreAddress</p>
+        <div class="d-flex align-items-center gap-3">
+            <i class="bi bi-heart fs-4"></i>
+            <i class="bi bi-chat-left fs-4"></i>
+            <button class="btn btn-primary">Book Now</button>
+        </div>
+    </div>
+    @{
+        string imagePath = $"~/images/products/{Model.AgentId}/{Model.ProductId}/MainImage.webp";
+    }
+    <div class="p-5 text-center bg-image rounded-3" style="
+    background-image: url(@Url.Content(imagePath));
+    height: 700px;
+background-repeat:no-repeat;
+background-size:cover;
+filter:brightness(70%)
+  ">
+        <div class="mask h-100">
+            <div class="d-flex justify-content-center align-items-center h-100">
+                <div class="text-white">
+                    <h1 class="mb-3 display-3">WELCOME TO</h1>
+                    <h1 class="mb-3">@ViewBag.StoreName</h1>
+                    <a class="btn btn-light btn-lg text-white" role="button">Check Availiability</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <section class="p-5">
+        <h2 class="header">
+            More Pictures
+        </h2>
+
+        <div class="wrapper">
+            <div class="jcarousel-wrapper">
+                <div class="jcarousel">
+                    <ul>
+                        @for (int i = 0; i < Model.NoOfImages; i++)
+                        {
+
+                            string otherImagePath = $"/images/products/{Model.AgentId}/{Model.ProductId}/OtherImages-{i}.webp";
+
+                            <li>
+                                <figure style="width:250px;height:250px;object-fit:cover">
+                                    <img src="@otherImagePath" alt="Image 1" style="width:250px;height:250px;object-fit:cover">
+                                    <figcaption class="text-center">Constructions</figcaption>
+                                </figure>
+                            </li>
+                        }
+                    </ul>
+                </div>
+
+                <a href="#" class="jcarousel-control-prev">&lsaquo;</a>
+                <a href="#" class="jcarousel-control-next">&rsaquo;</a>
+
+                <p class="jcarousel-pagination"></p>
+            </div>
+        </div>
+    </section>
+    <hr />
+    <div class="px-5 py-3">
+        <h3>Overview/Details</h3>
+        <p>
+            @Model.Description
+        </p>
+    </div>
+    <hr />
+    <div class="row">
+        <div class="col-1"></div>
+        <div class="col-5">
+            <ul>
+                <h6>This includes</h6>
+
+                @{
+
+                    string[] includes = Model.Includes.Split(",,rw,,", StringSplitOptions.RemoveEmptyEntries);
+                }
+                @if (includes.Length > 0)
+                {
+                    @foreach (string include in includes)
+                    {
+
+                        if (!String.IsNullOrEmpty(include))
+                        {
+                            <li>
+                                <b>@include.ToUpper()</b>
+                            </li>
+                        }
+                    }
+
+                }
+                else
+                {
+                    <p>No includes</p>
+                }
+            </ul>
+            <hr />
+            <ul>
+                <h6>Rental Rules</h6>
+                @{
+                    string[] rules = Model.Rules.Split(",,rw,,", StringSplitOptions.RemoveEmptyEntries);
+                }
+                @if (rules.Length > 0)
+                {
+                    @foreach (string rule in rules)
+                    {
+                        if (!String.IsNullOrEmpty(rule))
+                        {
+                            <li>
+                                <b>@rule.ToUpper()</b>
+                            </li>
+                        }
+                    }
+                }
+                else
+                {
+                    <p>No extra Rules</p>
+                }
+            </ul>
+            <hr />
+            <input type="number" value="@Model.MaxRentalDays" class="maxRentalDay" hidden />
+            <p>Maximum number of rental days: @Model.MaxRentalDays</p>
+            <hr/>
+            <h5 class="mt-5">Other Items by @ViewBag.StoreName (@ViewBag.NoOfOtherProducts)</h5>
+            <div>
+                @for (int i = 0; i < Math.Min(5, ViewBag.NoOfOtherProducts); i++)
+                {
+
+                    ProductModel OtherProduct = ViewBag.otherProducts[i];
+                    string otherProductImage = $"~/images/products/{OtherProduct.AgentId}/{OtherProduct.ProductId}/MainImage.webp";
+                    <img src="@Url.Content(otherProductImage)" alt="" width="100" height="100" class="cursor-pointer" />
+    
+                } 
+                @if (@ViewBag.NoOfOtherProducts > 5)
+                {
+                    <button class="btn btn-secondary text-dark">See More</button>
+                } 
+
+               
+            </div>
+             <h5 class="mt-5">Review(@ViewBag.NoOfRating)</h5>
+            @if (ViewBag.NoOfRating > 0)
+            {
+                @foreach (ReviewModel Review in ViewBag.Reviews)
+                {
+                    <div>
+                        <div>
+                            <div>
+                                @for (int i = 1; i < 11; i +=2 )
+                                {
+                                    if (i <= Review.RatingValue)
+                                    {
+                                        <i class="bi bi-star-fill"></i>
+                                    }
+                                    else
+                                    {
+                                        <i class="bi bi-star"></i>
+                                    }
+                                }
+
+                            </div>
+                            <p class="m-0">@Review.User.UserName.Split('@')[0]</p>
+                            <textarea disabled class="p-2">@Review.RatingDescription</textarea>
+                        </div>
+                    </div>
+                }
+            } else
+            {
+               <p>No rating yet</p> 
+            }
+
+            @if (ViewBag.HasAddRating == null || ViewBag.HasAddRating == false)
+            {
+                <form asp-controller="Store" asp-action="AddRating">
+                    <h5 class="mt-5">Add Your Review</h5>
+                    <div class="insert-rating w-fit mr-auto my-3"></div>
+                    <input type="number" value="0" hidden name="RatingValue" class="rating-value" />
+                    <textarea cols="70" rows="7" name="RatingDescription" class="p-2" placeholder="Write your review"></textarea><br />
+                    <input type="text" value="@Model.ProductId" hidden name="ProductId" />
+                    <input type="text" value="@Model.AgentId" hidden name="AgentId" />
+                    <button class="btn btn-primary" type="submit">Submit</button>
+                </form>
+            }
+        </div>
+        <div class="col-6 px-5">
+            @{
+                string agentImage = $"/images/agent/{Model.AgentId}/registration/ProfilePicture.png";
+            }
+            <div class="profile px-5 py-3">
+                <img src="@Url.Content(agentImage)" alt="" width="50" height="50" class="rounded-circle"/>
+                <h6>@ViewBag.StoreName</h6>
+                <p>
+                    Member since @ViewBag.RegistrationDate.ToString("dd/MM/yy")
+                </p>
+
+                @* <a href="">Message</a> *@
+
+            </div>
+            @* <img src="~/img/map.png" alt="" class="mt-3" /> *@
+            <section class="ftco-section">
+                <div class="">
+                    <div class="calendar calendar-first" id="calendar_first">
+                        <div class="calendar_header">
+                            <button class="switch-month switch-left"> <i class="fa fa-chevron-left"></i></button>
+                            <h2></h2>
+                            <button class="switch-month switch-right"> <i class="fa fa-chevron-right"></i></button>
+                        </div>
+                        <div class="calendar_weekdays"></div>
+                        <div class="calendar_content"></div>
+                    </div>
+                </div>
+
+
+            </section>
+            <div class="price-breakdown w-75 m-auto p-4 mt-5 rounded-1">
+                <h3 class="mb-3">Price Breakdown</h3>
+                <div class="fw-bold">
+                    <div class="d-flex justify-content-between day">
+                        <p>$42/Day * 10 Day * 1 Product</p>
+                        <p>$420</p>
+                    </div>
+                    <div class="d-flex justify-content-between weekend">
+                        <p>$42/Weekend * 10 Weekend * 1 Product</p>
+                        <p>$420</p>
+                    </div>
+                    <div class="d-flex justify-content-between week">
+                        <p>$42/Week * 10 Week * 1 Product</p>
+                        <p>$420</p>
+                    </div>
+                </div>
+                <div class="d-flex gap-3 align-items-center">
+                    <i class="bi bi-file-plus-fill fs-3 text-primary cursor-pointer" onclick="setNoOfProduct('add')"></i>
+                    <p class="m-0 no-of-product">1</p>
+                    <i class="bi bi-file-minus-fill fs-3 text-primary cursor-pointer" onclick="setNoOfProduct('minus')"></i>
+                    <p class="m-0 no-of-product-2">(1 item(s) added)</p>
+                </div>
+                <hr />
+                <div class="d-flex justify-content-between fw-bold">
+                    <p class="m-0">Total</p>
+                    <p class="m-0 total-price">$420</p>
+                </div>
+                <hr />
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <p><b>Pickup Pickup Date</b></p>
+                        <p class="start-date">May 5th,2023</p>
+                    </div>
+                    <div>
+                        <p><b>Return Pickup Date</b></p>
+                        <p class="end-date">May 5th,2023</p>
+                    </div>
+                </div>
+            </div>
+            <div>
+                @{
+                    string policy = $"/images/products/{Model.AgentId}/{Model.ProductId}/CancellationPolicy.pdf";
+                    string fileName = $"CancellationPolicy-{Model.Name}.pdf";
+                }
+                <a class="btn btn-primary d-block w-100 m-auto mt-3 py-2" href="@policy" download="@fileName">Cancellation Policy</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jcarousel/0.3.6/jquery.jcarousel.min.js"></script>
+
+<style>
+    .profile {
+        display: grid;
+        grid-template-columns: auto max-content;
+        grid-template-rows: min-content min-content min-content;
+        width: fit-content;
+        align-items: center;
+        justify-items: center;
+        column-gap: 1rem;
+        box-shadow: 0px 1px 4px 1px rgba(0, 0, 0, 0.25);
+        margin: auto;
+        margin-bottom: 2rem;
+    }
+
+        .profile > * {
+            margin: 0
+        }
+
+        .profile img {
+            grid-row: 1/-1;
+        }
+
+    .price-breakdown {
+        box-shadow: 0px 1px 4px 1px rgba(0, 0, 0, 0.25);
+    }
+</style>
+<script src="~/js/controller/store/_Rating.js"></script>
+<script>
+    (function ($) {
+        $(function () {
+            var jcarousel = $('.jcarousel');
+
+            jcarousel
+                .on('jcarousel:reload jcarousel:create', function () {
+                    var carousel = $(this),
+                        width = carousel.innerWidth();
+
+                    if (width >= 600) {
+                        width = width / 7;
+                    } else if (width >= 350) {
+                        width = width / 2;
+                    }
+
+                    carousel.jcarousel('items').css('width', Math.ceil(width) + 'px');
+                })
+                .jcarousel({
+                    wrap: 'circular'
+                });
+
+            $('.jcarousel-control-prev')
+                .jcarouselControl({
+                    target: '-=1'
+                });
+
+            $('.jcarousel-control-next')
+                .jcarouselControl({
+                    target: '+=1'
+                });
+
+            $('.jcarousel-pagination')
+                .on('jcarouselpagination:active', 'a', function () {
+                    $(this).addClass('active');
+                })
+                .on('jcarouselpagination:inactive', 'a', function () {
+                    $(this).removeClass('active');
+                })
+                .on('click', function (e) {
+                    e.preventDefault();
+                })
+                .jcarouselPagination({
+                    perPage: 1,
+                    item: function (page) {
+                        return '<a href="#' + page + '">' + page + '</a>';
+                    }
+                });
+        });
+    })(jQuery);
+    let noOfProduct = 1;
+    let datesSelected = {}
+    function calculatePrice(selectedDates) {
+        datesSelected = selectedDates
+        let weekdaysCount = 0;
+        let weekendsCount = 0;
+        let weeksCount
+        let firstDate = null;
+        let lastDate = null;
+
+        // Assuming a simple price calculation based on the number of selected dates
+        var days = Object.keys(selectedDates).reduce(function (total, year) {
+            return total + Object.keys(selectedDates[year]).reduce(function (yearTotal, month) {
+                return yearTotal + selectedDates[year][month].reduce(function (monthTotal, day) {
+                    var iterDate = new Date(year, month, day);
+                    var dayOfWeek = iterDate.getDay();
+
+                    if (firstDate === null || iterDate < firstDate) {
+                        firstDate = iterDate;
+                    }
+                    if (lastDate === null || iterDate > lastDate) {
+                        lastDate = iterDate;
+                    }
+
+                    if (dayOfWeek >= 1 && dayOfWeek <= 5) {
+                        // Weekday (Monday to Friday)
+                        weekdaysCount++;
+                    } else {
+                        // Weekend (Saturday or Sunday)
+                        weekendsCount++;
+                    }
+
+                    return monthTotal + 1; // Increment the total count
+                }, 0);
+            }, 0);
+        }, 0);
+        if (days > $('.maxRentalDay').val()) {
+            toastr.error($('.maxRentalDay').val() + "days is the maximum allowed rental date")
+            return
+        }
+        weeksCount = Math.floor(weekdaysCount / 5);
+        weekdaysCount = weekdaysCount - (weeksCount * 5)
+
+        const priceDay = $('.price-day').val()
+        const totalDayPrice = priceDay * weekdaysCount * noOfProduct
+        const calDaysPrice = `
+                <p>
+                $${priceDay}/Day * ${weekdaysCount} Day * ${noOfProduct} Product
+                </p>
+                <p>
+                $${totalDayPrice}
+                </p>
+                `
+        $('.day').html(calDaysPrice)
+
+
+        const priceWeekend = $('.price-weekend').val()
+        const totalWeekendPrice =
+            priceWeekend * weekendsCount * noOfProduct
+        const calWeekendPrice = `
+                    <p>
+                        $${priceWeekend}/Day * ${weekendsCount} Weekend * ${noOfProduct} Product
+                    </p>
+                    <p>
+                        $${totalWeekendPrice}
+                    </p>
+                    `
+        $('.weekend').html(calWeekendPrice)
+
+        const priceWeek = $('.price-week').val()
+        const totalWeekPrice = priceWeek * weeksCount * noOfProduct
+        const calWeekPrice = `
+                        <p>
+                            $${priceWeek}/Day * ${weeksCount} Week * ${noOfProduct} Product
+                        </p>
+                        <p>
+                            $${totalWeekPrice}
+                        </p>
+                        `
+        $('.week').html(calWeekPrice)
+
+        $('.total-price').text('$' + (totalDayPrice + totalWeekendPrice + totalWeekPrice))
+        $('.start-date').text(formatDate(firstDate))
+        $('.end-date').text(formatDate(lastDate))
+    }
+    function setNoOfProduct(action) {
+        if (action == 'add') {
+            noOfProduct++
+        } else {
+            if (noOfProduct - 1 < 0) {
+
+            } else {
+                noOfProduct
+            }
+        }
+        $('.no-of-product').text(noOfProduct)
+        $('.no-of-product-2').text(`(${noOfProduct} item(s) added)`)
+        calculatePrice(datesSelected)
+
+
+    }
+    // Function to format date as "Month Day, Year" (e.g., "May 6, 2023")
+    function formatDate(date) {
+        if (date === null) {
+            return "N/A";
+        }
+
+        var monthNames = [
+            "January", "February", "March",
+            "April", "May", "June", "July",
+            "August", "September", "October",
+            "November", "December"
+        ];
+
+        var month = monthNames[date.getMonth()];
+        var day = date.getDate();
+        var year = date.getFullYear();
+
+        return month + ' ' + day + ', ' + year;
+    }
+
+    $('.insert-rating').starRating(
+        {
+            starSize: 1,
+            showInfo: false
+        });
+
+    $(document).on('change', '.insert-rating',
+        function (e, stars, index) {
+            $('.rating-value').val(stars*2);
+        });
+    $(document).ready(function () {
+        $("form").submit(function (event) {
+            const ratingValue = $(".rating-value").val();
+            const ratingDescription = $("textarea").val();
+
+            if (ratingValue === "0" || ratingDescription.trim() === "" || ratingDescription.split(' ').length > 250) {
+                toastr.error("Please provide a valid rating and description (not more than 250 words).");
+                event.preventDefault(); // Prevent form submission
+            }
+        });
+    });
+</script>
+<script src="~/js/controller/store/_Calender.js"></script>

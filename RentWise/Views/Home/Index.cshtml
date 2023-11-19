@@ -1,8 +1,189 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
+﻿<div class="home">
+    <partial name="_Hero" />
+    <partial name="_OurServices" />
+    <section class="p-5 gray">
+        <div class="button bg-secondary rounded-pill m-auto header">
+            Construction Equipments
+        </div>
+        <p class="text-black-50 text-center justify-content-center mt-3">Rent High-quality Construction equipment available for short term and long term projects</p>
+        <div class="d-flex flex-wrap justify-content-center mt-5">
+            @if (ViewBag.ConstructionCount > 0)
+            {
+                @foreach (ProductModel construction in ViewBag.Construction)
+                {
+                    <partial name="_DisplayPreview" for="@construction" />
+                }
+                <button class="button bg-secondary text-dark align-self-center rounded-pill">See More</button>
+            }
+            else
+            {
+                <h2 class="text-center">No Product in this category</h2>
+            }
+        </div>
+    </section>
+    <section class="p-5">
+        <div class="button bg-secondary rounded-pill m-auto header">
+            Car Rentals
+        </div>
+        <p class="text-black-50 text-center mt-3">Rent High-quality Construction equipment available for short term and long term projects</p>
+        <div class="d-flex flex-wrap justify-content-center mt-5">
+            @if (ViewBag.CarRentalCount > 0)
+            {
+                @foreach (ProductModel car in ViewBag.CarRental)
+                {
+                    <partial name="_DisplayPreview" for="@car" />
+                }
+                <button class="button bg-secondary text-dark align-self-center rounded-pill">See More</button>
+            }
+            else
+            {
+                <h2 class="text-center">No Product in this category</h2>
+            }
+        </div>
+    </section>
+    @*  <section class="p-5">
+    <h2 class="header">
+    Popular Search
+    </h2>
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <div class="wrapper">
+    <div class="jcarousel-wrapper">
+    <div class="jcarousel">
+    <ul>
+    <li>
+    <figure>
+    <img src="/img/popular-search.png" alt="Image 1">
+    <figcaption class="text-center">Constructions</figcaption>
+    </figure>
+    </li>
+    <li>
+    <figure>
+    <img src="/img/popular-search.png" alt="Image 1">
+    <figcaption class="text-center">Constructions</figcaption>
+    </figure>
+    </li>
+    <li>
+    <figure>
+    <img src="/img/popular-search.png" alt="Image 1">
+    <figcaption class="text-center">Constructions</figcaption>
+    </figure>
+    </li>
+    <li>
+    <figure>
+    <img src="/img/popular-search.png" alt="Image 1">
+    <figcaption class="text-center">Constructions</figcaption>
+    </figure>
+    </li>
+    <li>
+    <figure>
+    <img src="/img/popular-search.png" alt="Image 1">
+    <figcaption class="text-center">Constructions</figcaption>
+    </figure>
+    </li>
+    <li>
+    <figure>
+    <img src="/img/popular-search.png" alt="Image 1">
+    <figcaption class="text-center">Constructions</figcaption>
+    </figure>
+    </li>
+    <li>
+    <figure>
+    <img src="/img/popular-search.png" alt="Image 1">
+    <figcaption class="text-center">Constructions</figcaption>
+    </figure>
+    </li>
+    <li>
+    <figure>
+    <img src="/img/popular-search.png" alt="Image 1">
+    <figcaption class="text-center">Constructions</figcaption>
+    </figure>
+    </li>
+    <li>
+    <figure>
+    <img src="/img/popular-search.png" alt="Image 1">
+    <figcaption class="text-center">Constructions</figcaption>
+    </figure>
+    </li>
+    </ul>
+    </div>
+
+    <a href="#" class="jcarousel-control-prev">&lsaquo;</a>
+    <a href="#" class="jcarousel-control-next">&rsaquo;</a>
+
+    <p class="jcarousel-pagination"></p>
+    </div>
+    </div>
+    </section> *@
+    <section class="p-5">
+        <div class="button bg-secondary rounded-pill m-auto header">
+            Office Items/Personal Items
+        </div>
+        <p class="text-black-50 text-center mt-3">Rent High-quality Construction equipment available for short term and long term projects</p>
+        <div class="d-flex flex-wrap justify-content-center mt-5">
+            @if (ViewBag.OfficeItemCount > 0)
+            {
+                @foreach (ProductModel item in ViewBag.OfficeItem)
+                {
+                    <partial name="_DisplayPreview" for="@item" />
+                }
+                <button class="button bg-secondary text-dark align-self-center rounded-pill">See More</button>
+            }
+            else
+            {
+                <h2 class="text-center">No Product in this category</h2>
+            }
+
+
+        </div>
+    </section>
+    <section class="p-5">
+        <div class="button bg-secondary rounded-pill m-auto header">
+            Events/ Equipment Rentals
+        </div>
+        <p class="text-black-50 text-center justify-content-center mt-3">Rent High-quality Construction equipment available for short term and long term projects</p>
+        <div class="d-flex flex-wrap justify-content-center mt-5">
+            @if (ViewBag.EventsCount > 0)
+            {
+                @foreach (ProductModel eventRental in ViewBag.Events)
+                {
+                    <partial name="_DisplayPreview" for="@eventRental" />
+                }
+                <button class="button bg-secondary text-dark align-self-center rounded-pill">See More</button>
+            }
+            else
+            {
+                <h2 class="text-center">No Product in this category</h2>
+            }
+
+        </div>
+    </section>
+    <section class="row p-5">
+        <img src="~/img/ads-banner.png" alt="Ads banner" class="col-6" />
+        <img src="~/img/ads-banner.png" alt="Ads banner" class="col-6" />
+    </section>
+
+    <section class="p-5">
+        <div class="button bg-secondary rounded-pill m-auto header">
+            Sales Of Vehicles Trackers
+        </div>
+        <p class="text-black-50 text-center mt-3">Rent High-quality Construction equipment available for short term and long term projects</p>
+        <div class="d-flex flex-wrap justify-content-center mt-5">
+            @if (ViewBag.CarTrackerCount > 0)
+            {
+                @foreach (ProductModel tracker in ViewBag.CarTracker)
+                {
+                    <partial name="_DisplayPreview" for="@tracker" />
+                }
+                <button class="button bg-secondary text-dark align-self-center rounded-pill">See More</button>
+            }
+            else
+            {
+                <h2 class="text-center">No Product in this category</h2>
+            }
+
+        </div>
+    </section>
 </div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jcarousel/0.3.6/jquery.jcarousel.min.js"></script>
+<script src="~/js/controller/home/Index.js"></script>

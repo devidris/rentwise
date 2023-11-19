@@ -1,0 +1,72 @@
+﻿@model List<ProductModel>;
+<link rel="stylesheet" href="~/css/controller/category/Category.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/controller/category/Index.css" asp-append-version="true" />
+<section class="category bg-light">
+    <div class="row p-5">
+        <div class="col-8 px-5">
+            <div>
+                <div class="d-flex">
+                    <div class="search_input mb-2 ml-5">
+                        <i class="bi bi-search text-muted"></i>
+                        <input type="search" value="" placeholder="@ViewBag.CategoryName" class="search-input" onclick="search()"/>
+                    </div>
+                    <div class="search_input mb-2">
+
+                        <i class="bi bi-geo-alt"></i>
+                        <input type="search" value="" placeholder="Search" />
+                        <button class="btn rouded-pill btn-info text-white search-button">Search</button>
+                    </div>
+                </div>
+            </div>
+        <span class="d-block filter-text mt-2">Use the filters to refine your search</span>
+            <div class="mt-4 sort">
+                <h6>Sort By</h6>
+                <select class="form-select w-auto" onchange="search()">
+                    <option value="relevance">Relevance</option>
+                    <option value="pricelth">Price: Low to High</option>
+                    <option value="pricehtl">Price: High to Low</option>
+                    <option value="rating">Rating</option>
+                </select>
+            </div>
+            <div class="d-flex flex-wrap justify-content-around mt-3">
+                @if (Model.Count() > 0)
+                {
+                    @foreach (ProductModel category in Model.Take(3))
+                    {
+                        <partial name="_DisplayPreview" for="@category" />
+                    }
+                } else
+                {
+                    <h2>No rental found</h2>
+                }
+            </div>
+        </div>
+        <div class="col-4">
+            @* <img src="~/img/map.png" alt="" /> *@
+        </div>
+    </div>
+    <div class="d-flex flex-wrap justify-content-evenly gap-5 mt-3 p-5">
+        @foreach (ProductModel category in Model.Skip(3))
+        {
+            <partial name="_DisplayPreview" for="@category" />
+        }
+    </div>
+</section>
+<script defer>
+    $("document").ready(function () {
+        const url = new URL(location.href)
+        const param = new URLSearchParams(url.search)
+        const sort = param.get('sort')
+        const name = param.get('name')
+        if(name) $(".search-input").val(name)
+        if (sort) $(".form-select").val(sort)
+
+
+    })
+        function search (){
+            const searchText = $(".search-input").val()
+            const formSelect = $(".form-select").val()
+     const link = `${location.href.split('?')[0]}?sort=${formSelect}&name=${searchText}`
+            location.replace(link)
+        }
+</script>

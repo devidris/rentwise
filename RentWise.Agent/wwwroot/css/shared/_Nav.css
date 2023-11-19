@@ -1,0 +1,11 @@
+﻿.navbar-nav .nav-link {
+    color: #ffffff; /* Set the color to white */
+}
+.icon{
+    font-size:30px;
+    color:#fff;
+}
+
+.navbar-nav li{
+    margin-right:2.5rem;
+}

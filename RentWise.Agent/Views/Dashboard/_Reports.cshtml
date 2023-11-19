@@ -1,0 +1,180 @@
+﻿<link rel="stylesheet" href="~/css/controller/dashboard/_Reports.css"/>
+<div class="content content-3">
+    <h1 class="h2">Reports</h1>
+    <hr />
+
+    <div class="d-flex gap-3 reports">
+        <div class="border border-1 px-4 py-2 report-tab-1 report-tab" onclick="onToggleReport(1)">Overview</div>
+        <div class="border border-1 px-4 py-2 report-tab-2 report-tab" onclick="onToggleReport(2)">Sales per day</div>
+        <div class="border border-1 px-4 py-2 report-tab-3 report-tab" onclick="onToggleReport(3)">Top Selling</div>
+        <div class="border border-1 px-4 py-2 report-tab-4 report-tab" onclick="onToggleReport(4)">Top Earning</div>
+    </div>
+    <div class="row mt-5 report report-1">
+        <div class="col-4">
+            <ul class="list-unstyled border border-1 text-center py-3">
+                <li>
+                    <p>$0</p>
+                    <p>Sales in this period</p>
+                </li>
+                <hr />
+                <li>
+                    <p>$0</p>
+                    <p>Average daily sales</p>
+                </li>
+                <hr />
+                <li>
+                    <p>0<p>
+                    <p>Orders placed</p>
+                </li>
+                <hr />
+                <li>
+                    <p>0</p>
+                    <p>Items purchased</p>
+                </li>
+                <hr />
+                <li>
+                    <p>0</p>
+                    <p>Orders placed</p>
+                </li>
+            </ul>
+        </div>
+        <div class="col-6">
+            <div>
+                <canvas id="overview-report" width="470" height="250"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-5 report report-2">
+        <div class="col-4">
+            <div class="mb-5 d-flex gap-3 align-items-center">
+                <div>
+                    <label for="from">From:</label>
+                    <input type="date" id="from" class="p-1" />
+                </div>
+                <div>
+                    <label for="to">To:</label>
+                    <input type="date" id="to" class="p-1" />
+                </div>
+                <button class="btn btn-primary">Show</button>
+            </div>
+            <ul class="list-unstyled border border-1 text-center py-3">
+                <li>
+                    <p>$0</p>
+                    <p>Sales in this period</p>
+                </li>
+                <hr />
+                <li>
+                    <p>$0</p>
+                    <p>Average daily sales</p>
+                </li>
+                <hr />
+                <li>
+                    <p>0<p>
+                    <p>Orders placed</p>
+                </li>
+                <hr />
+                <li>
+                    <p>0</p>
+                    <p>Items purchased</p>
+                </li>
+                <hr />
+                <li>
+                    <p>0</p>
+                    <p>Orders placed</p>
+                </li>
+            </ul>
+        </div>
+        <div class="col-6">
+            <div>
+                <canvas id="overview-report-2" width="470" height="250"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="report mt-5 report-3">
+        <div class="mb-5 d-flex gap-3 align-items-center">
+            <div>
+                <label for="from">From:</label>
+                <input type="date" id="from" class="p-1" />
+            </div>
+            <div>
+                <label for="to">To:</label>
+                <input type="date" id="to" class="p-1" />
+            </div>
+            <button class="btn btn-primary">Show</button>
+        </div>
+        <table class="table">
+            <thead class="table-primary">
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">First</th>
+                    <th scope="col">Last</th>
+                    <th scope="col">Handle</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th scope="row">1</th>
+                    <td>Mark</td>
+                    <td>Otto</td>
+                    <td>@@mdo</td>
+                </tr>
+                <tr>
+                    <th scope="row">2</th>
+                    <td>Jacob</td>
+                    <td>Thornton</td>
+                    <td>@@fat</td>
+                </tr>
+                <tr>
+                    <th scope="row">3</th>
+                    <td>Larry</td>
+                    <td>the Bird</td>
+                    <td>@@twitter</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="report mt-5 report-4">
+        <div class="mb-5 d-flex gap-3 align-items-center">
+            <div>
+                <label for="from">From:</label>
+                <input type="date" id="from" class="p-1" />
+            </div>
+            <div>
+                <label for="to">To:</label>
+                <input type="date" id="to" class="p-1" />
+            </div>
+            <button class="btn btn-primary">Show</button>
+        </div>
+        <table class="table">
+            <thead class="table-primary">
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">First</th>
+                    <th scope="col">Last</th>
+                    <th scope="col">Handle</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th scope="row">1</th>
+                    <td>Mark</td>
+                    <td>Otto</td>
+                    <td>@@mdo</td>
+                </tr>
+                <tr>
+                    <th scope="row">2</th>
+                    <td>Jacob</td>
+                    <td>Thornton</td>
+                    <td>@@fat</td>
+                </tr>
+                <tr>
+                    <th scope="row">3</th>
+                    <td>Larry</td>
+                    <td>the Bird</td>
+                    <td>@@twitter</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<script src="~/js/controller/dashboard/_Reports.js"></script>

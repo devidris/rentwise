@@ -1,0 +1,27 @@
+﻿<link rel="stylesheet" href="~/css/shared/_DisplayPreview.css" asp-append-version="true" />
+
+@model ProductModel
+@{
+    string imagePath = $"{ViewBag.Link}/images/products/{Model.AgentId}/{Model.ProductId}/MainImage.webp";
+    string profile = $"{ViewBag.Link}/images/agent/{Model.AgentId}/registration/ProfilePicture.png";
+}
+    <div class="display-preview cursor-pointer" onclick="navigate('@Model.ProductId')">
+        <div class="agent d-flex gap-3 align-items-center p-3 bg-white w-auto">
+            <img src=@profile alt="" />
+            <p class="m-0 h6">@Model.Agent.FirstName</p>
+        </div>
+        <img src=@imagePath alt="" />
+        <div class="content">
+            <h5>@Model.Name</h5>
+            <p><b>₵@Model.PriceDay/Day</b></p>
+            <p><i class="bi bi-star-fill text-primary"></i>@Model.Rating</p>
+            <p><b></b></p>
+        </div>
+
+    </div> 
+    <script>
+        function navigate(id) {
+            const link = `https://${location.host}/Category/View/${id}`
+        location.href = link
+        }
+    </script>

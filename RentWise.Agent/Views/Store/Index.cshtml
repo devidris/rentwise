@@ -1,0 +1,115 @@
+﻿@model IEnumerable<ProductModel>;
+<link rel="stylesheet" href="~/css/controller/store/Index.css" />
+<div>
+    <partial name="_Nav2" />
+    <img src="~/img/banner.png" alt="banner" class="w-100" />
+    <div class="row align-items-center mt-3">
+        <div class="col-3"></div>
+        <div class="search_input col-3">
+            <i class="bi bi-search text-muted"></i>
+            <input type="search" value="" placeholder="Search" />
+            <button class="btn rouded-pill btn-info text-white"> <i class="bi bi-search text-muted text-white"></i>Search</button>
+        </div>
+        
+        <div class="col-3 d-flex align-items-center gap-3">
+            <p class="m-0">
+                <b>Product</b>
+            </p>
+                <div class="vr"></div>
+            <p class="m-0">
+                <b>Review</b>
+            </p>
+            <div class="vr"></div>
+            <p class="m-0">
+                <b>Share</b>
+                <i class="bi bi-share-fill"></i>
+            </p>
+        </div>
+        <div class="col-3 d-flex gap-2">
+            <i class="bi bi-heart"></i>
+            <p>0</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-3 px-5">
+            <div class="card">
+                <div class="card-body">
+                    <p class="card-title bg-primary bg-opacity-25 p-2 text-center">Store Details</p>
+                    <ul class="card-text list-unstyled d-flex flex-column gap-3  ">
+                        <li class="d-flex gap-2"><i class="bi bi-person-circle"></i> <span>Registration: @ViewBag.RegistrationDate</span></li>
+                        <li class="d-flex gap-2"><i class="bi bi-heart"></i><span>Product Votes: 0</span></li>
+                        <li class="d-flex gap-2"><i class="bi bi-shop"></i><span>Total Submitted: 0</span></li>
+                    </ul>
+           
+                </div>
+            </div>
+            <div class="card mt-3">
+                <div class="card-body">
+                    <p class="card-title bg-primary bg-opacity-25 p-2 text-center ">Store Product Category</p>
+                    <ul class="card-text list-unstyled d-flex flex-column gap-3  ">
+                        <li class="d-flex gap-2"> <input type="radio" name="category" value="0" class="0" onclick="filterCategory(0)" id="all"/> <label for="all">Select All</label></li>
+                        <li class="d-flex gap-2"> <input type="radio" name="category" value="2" class="2" onclick="filterCategory(2)" id="vehicle-rental" /> <label for="vehicle-rental">Vehicle Rentals</label></li>
+                        <li class="d-flex gap-2"> <input type="radio" name="category" value="1" class="1" onclick="filterCategory(1)" id="construction" /> <label for="construction">Construction Equipment Rental</label></li>
+                        <li class="d-flex gap-2"> <input type="radio" name="category" value="3" class="3" onclick="filterCategory(3)" id="personal" /> <label for="personal">Personal/office Rental</label></li>
+                        <li class="d-flex gap-2"> <input type="radio" name="category" value="4" class="4" onclick="filterCategory(4)" id="props" /><label for="props">Props/Event Rental</label></li>
+                        <li class="d-flex gap-2"> <input type="radio" name="category" value="5" class="5" onclick="filterCategory(5)" id="vehicle-tracker" /><label for="vehicle-tracker">Vehicle Trackers</label></li>
+                    </ul>
+
+                </div>
+            </div>
+            <button class="p-3 mt-5 bg-dark text-white w-100 d-flex gap-1 justify-content-center"><i class="bi bi-columns-gap"></i><span>Dashboard</span></button>
+        </div>
+        <div class="col-9">
+            <div class="d-flex flex-wrap w-10 mt-5 mb-3">
+                @if(Model.Count() > 0)
+                {
+                    @foreach (ProductModel product in Model)
+                    {
+                        <div class="container">
+                            <div class="button-container">
+                                @{
+                                    string imagePath = $"~/images/products/{ViewBag.UserId}/{product.ProductId}/MainImage.webp";
+                                    string previewPath = $"/Store/Preview/{product.ProductId}";
+                                }
+                                <img src="@Url.Content(imagePath)" alt="Product Image">
+                                <div class="button-overlay">
+                                    <a class="bg-dark text-white py-2 px-5 rounded-3 no-underline d-block">Edit</a>
+                                    <a class="bg-dark text-white py-2 px-5 rounded-3 mt-2 no-underline d-block" href="@Url.Content(previewPath)">Preview</a>
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                } else
+                {
+                    @if (ViewBag.Id == 0)
+                    {
+                        
+                        <h1 class="text-center mb-5">You don't have a product currently</h1>
+
+                    }
+                    else
+                    {
+                        <h1 class="text-center mb-5">You don't have any product in this category </h1>
+                    }
+                }
+
+            </div>
+            <a class="mt-5 p-3 bg-dark text-white no-underline" href="/Store/Upsert">
+                <i class="bi bi-plus-circle-fill"></i> <span>Add A New Product</span>
+            </a>
+        </div>
+    </div>
+</div>
+
+<script>
+  function filterCategory(lkpCategory){
+        lkpCategory == 0 ? location.replace(`/Store/Index`) : location.replace(`/Store/Index/${lkpCategory}`)
+    }
+    const lkpCategory = location.href.split('/').reverse()[0]
+    if (lkpCategory.toLowerCase() == 'store' || lkpCategory.toLowerCase() == 'index') {
+        $('.0').prop('checked', true)
+    } else {
+    $('.'+lkpCategory).prop('checked',true)
+    }
+</script>

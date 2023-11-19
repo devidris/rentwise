@@ -1,0 +1,43 @@
+﻿<nav class="navbar navbar-expand-lg navbar-light bg-primary py-3 px-2">
+    <div class="container-fluid">
+        <a class="nav-link" href="#">RentWise</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-center">
+                <li class="nav-item">
+                    <a class="nav-link link-light" aria-current="page" asp-controller="Home" asp-action="Index">Home</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle link-light" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Category
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <li class="m-0"><a class="dropdown-item" asp-controller="Category" asp-action="Index" asp-route-id="1">Construction Equipments</a></li>
+                        <li class="m-0"><a class="dropdown-item" asp-controller="Category" asp-action="Index" asp-route-id="2">Car Rentals</a></li>
+                        <li class="m-0"><a class="dropdown-item" asp-controller="Category" asp-action="Index" asp-route-id="3">Office Items/Personal Items</a></li>
+                        <li class="m-0"><a class="dropdown-item" asp-controller="Category" asp-action="Index" asp-route-id="4">Events/ Equipment Rentals</a></li>
+                        <li class="m-0"><hr class="dropdown-divider"></li>
+                        <li class="m-0"><a class="dropdown-item" asp-controller="Category" asp-action="Index" asp-route-id="5">Sales Of Vehicles Trackers</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link link-light" asp-controller="Page" asp-action="About">About Us</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link link-light" asp-controller="Page" asp-action="How">How it works</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link link-light" href="#">Contact us</a>
+                </li>
+                @*   <li>
+                <i class="bi bi-cart4 icon"></i>
+                </li> *@
+                <li>
+                    <partial name="_LoginPartial" />
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>

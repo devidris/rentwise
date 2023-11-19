@@ -1,0 +1,118 @@
+﻿<link rel="stylesheet" href="~/css/controller/home/_Hero.css" asp-append-version="true" />
+<header class="hero row justify-content-center align-items-center text-center text-white">
+    <div class="col-md-9 col-sm-12">
+        <h1 class="display-3">Now it's <em>easier</em> than </h1>
+        <h1 class="mb-5">ever to <span class="text-secondary">Rent</span> a product</h1>
+        <div class="search_input mb-2">
+            <i class="bi bi-search text-muted"></i>
+            <input type="search" value="" placeholder="Search" class="search-text"/>
+            <button class="btn rouded-pill btn-info text-white" onclick="search('name')"> <i class="bi bi-search text-muted text-white"></i><span class="d-none d-md-inline">Search</span></button>
+        </div>
+            <span>Need a car now? Check out our   <a>Quick Delivery</a> or  <a>View Communities</a> Near you </span>
+        <ul class="search-lists pl-0 mt-5 list-unstyled d-flex justify-content-center flex-wrap">
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="bi bi-funnel-fill"></i>
+                    Category
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <li class="dropdown-item cursor-pointer category-item" data-value="1">Construction Equipments</li>
+                    <li class="dropdown-item cursor-pointer category-item" data-value="2">Car Rentals</li>
+                    <li class="dropdown-item cursor-pointer category-item" data-value="3">Office/Personal Items</li>
+                    <li class="dropdown-item cursor-pointer category-item" data-value="4">Event/Equpment Rentals</li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li class="dropdown-item cursor-pointer" data-value="5">Sales Of Vehicle Trackers</li>
+                </ul>
+            </li>
+
+           @*   <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="bi bi-houses-fill"></i>
+                        City
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item" href="#">Action</a></li>
+                        <li><a class="dropdown-item" href="#">Another action</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="#">Something else here</a></li>
+                    </ul>
+                </li> *@
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="bi bi-tags-fill"></i>
+                    Price Range
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <li class="dropdown-item price-item" data-value="1t10">$1-$10</li>
+                    <li class="dropdown-item  price-item" data-value="10t20">$10-$20</li>
+                    <li class="dropdown-item  price-item" data-value="20t50">$20-$50</li>
+                    <li class="dropdown-item  price-item" data-value="50t100">$50-$100</li>
+                    <li class="dropdown-item  price-item" data-value="100t200">$100-$200</li>
+                    <li class="dropdown-item  price-item" data-value="200t500"> $200-$500</li>
+                    <li class="dropdown-item  price-item" data-value="500t1000">$500-$1000</li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li class="dropdown-item  price-item" data-value="1000+">$1000+</li>
+                </ul>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="bi bi-calendar3"></i>
+                    Days
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <li class="dropdown-item day-item" data-value="1t5">1-5 days</li>
+                    <li class="dropdown-item day-item" data-value="5t10">5-10 days</li>
+                    <li class="dropdown-item day-item" data-value="10t20">10-20 days</li>
+                    <li class="dropdown-item day-item" data-value="20t30">20-30 days</li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li class="dropdown-item day-item" data-value="1month">1 month+</li>
+                </ul>
+            </li>
+     @*        <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="bi bi-people-fill"></i>
+                    Avail
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <li><a class="dropdown-item" href="#">Action</a></li>
+                    <li><a class="dropdown-item" href="#">Another action</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="#">Something else here</a></li>
+                </ul>
+            </li> *@
+            <button class="btn btn-info text-white px-3" onclick="search('others')"><i class="bi bi-search"></i></button>
+        </ul>
+    </div>
+</header>
+<script defer>
+    function search(type) {
+        if (type == 'name') {
+            const link = `${location.href.split('?')[0]}Category/Index?name=${$('.search-text').val()}`
+            location.href = link
+        } else {
+            let link = `${location.href.split('?')[0]}Category/Index/${category}?pricerange=${priceRange}&maxday=${day}`
+            location.href = link
+        }
+    }
+    let category = 0
+    let priceRange = ""
+    let day = ""
+    $(".category-item").on("click", function () {
+        $(".category-item").removeClass("active");
+        $(this).addClass("active");
+        category = $(this).data("value");
+    });
+
+    $(".price-item").on("click", function () {
+        $(".price-item").removeClass("active");
+        $(this).addClass("active");
+        priceRange = $(this).data("value");
+    });
+
+    $(".day-item").on("click", function () {
+        $(".day-item").removeClass("active");
+        $(this).addClass("active");
+        day = $(this).data("value");
+    });
+
+</script>
