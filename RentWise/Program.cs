@@ -27,7 +27,7 @@ namespace RentWise
             builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
             //builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<ApplicationDbContext>();
             builder.Services.AddScoped<IEmailSender, EmailSender>();
-            builder.Services.AddScoped<IDbInitializer, DbInitializer>(); 
+            builder.Services.AddScoped<IDbInitializer, DbInitializer>();
             builder.Services.AddRazorPages();
             builder.Services.AddScoped<IAgentRegistrationRepository, AgentRegistrationRepository>();
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
@@ -65,5 +65,6 @@ namespace RentWise
                     dbInitializer.Initialize();
                 }
             }
+        }
     }
 }
