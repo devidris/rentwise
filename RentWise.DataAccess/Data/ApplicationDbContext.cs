@@ -14,7 +14,7 @@ public class ApplicationDbContext : IdentityDbContext<IdentityUser>
     {
     }
 
-    public DbSet<ApplicationUser> ApplicationUsers { get; set; }
+    public DbSet<ApplicationUser> ApplicationUser { get; set; }
     public DbSet<AgentRegistrationModel> AgentRegistrations { get; set; }
 
     public DbSet<ProductModel> Products { get; set; }
@@ -23,11 +23,9 @@ public class ApplicationDbContext : IdentityDbContext<IdentityUser>
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-
-
         modelBuilder.Entity<AgentRegistrationModel>()
-            .HasIndex(u => u.PhoneNumber)
-        .IsUnique();
+     .HasIndex(u => u.PhoneNumber)
+ .IsUnique();
 
         modelBuilder.Entity<AgentRegistrationModel>()
             .HasIndex(u => u.StoreName)

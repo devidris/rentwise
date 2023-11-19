@@ -26,9 +26,9 @@ namespace RentWise.Agent.Controllers
         {
             if (!_signInManager.IsSignedIn(User))
             {
-             return RedirectToAction("Register","Auth");
+                return RedirectToAction("Register", "Auth");
             }
-          
+
 
             IdentityUser user = await _userManager.GetUserAsync(User);
             bool isUser = await _userManager.IsInRoleAsync(user, Lookup.Roles[3]);

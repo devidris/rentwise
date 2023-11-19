@@ -32,4 +32,8 @@
     <ProjectReference Include="..\RentWise.Utility\RentWise.Utility.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Resources\" />
+  </ItemGroup>
+
 </Project>

@@ -101,9 +101,9 @@
                     <span class="text-danger" asp-validation-for="@Model.Name"></span>
                 </div>
 
-                <divc class="row">
+                <div class="row">
 
-                    <div class="col-4">
+                    <div class="col-3">
                          <label class="form-label" asp-for="@Model.PriceDay">Daily Rental Price</label>
                         <div class="input-group mb-3">
                             <div class="input-group-prepend ">
@@ -114,7 +114,7 @@
                         </div>
                     </div>
 
-                    <div class="col-4">
+                    <div class="col-3">
                         <label class="form-label" asp-for="@Model.PriceWeekend">Weekend Rental Price</label>
                         <div class="input-group mb-3">
                             <div class="input-group-prepend ">
@@ -125,7 +125,7 @@
                         </div>
                     </div>
 
-                    <div class="col-4">
+                    <div class="col-3">
                         <label class="form-label" asp-for="@Model.PriceWeek">Weekly Rental Price</label>
                         <div class="input-group mb-3">
                             <div class="input-group-prepend ">
@@ -135,7 +135,17 @@
                             <span class="text-danger" asp-validation-for="@Model.PriceWeek"></span>
                         </div>
                     </div>
-                </divc>
+                    <div class="col-3">
+                        <label class="form-label" asp-for="@Model.MaxRentalDays">Maximum Rental Days</label>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend ">
+                                <span class="input-group-text text-white">Days</span>
+                            </div>
+                            <input class="form-control" aria-label="Max Rental Days" asp-for="@Model.MaxRentalDays" placeholder="Maximum Rental Days" value="0">
+                            <span class="text-danger" asp-validation-for="@Model.MaxRentalDays"></span>
+                        </div>
+                    </div>
+                </div>
                 <div class="form-floating mb-3">
                     <input class="form-control" aria-required="true" type="file" accept="image/*" name="mainImage" asp-for="@Model.MainImage"/>
                     <label class="form-label" asp-for="@Model.MainImage">Main Image</label>

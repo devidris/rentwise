@@ -9,6 +9,7 @@ using RentWise.Utility;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 
 namespace RentWise.Models.Identity
 {
@@ -53,11 +54,11 @@ namespace RentWise.Models.Identity
         public bool RememberMe { get; set; }
     }
 
-    public class AgentRegistrationModel
+    public class AgentRegistrationModel : DefaultModel
     {
         [Key]
-        public int Id { get; set; }
-
+        [ValidateNever]
+        public string Id { get; set; }
         [Required]
         [Display(Name = "First Name")]
         public string FirstName { get; set; }
@@ -91,20 +92,12 @@ namespace RentWise.Models.Identity
         [ValidateNever]
         [Display(Name = "National Card")]
         public string NationalCard { get; set; }
-        public DateTime RegistrationDate { get; set; } = DateTime.Now;
         [NotMapped]
         [Required]
         public bool Privacy { get; set; }
         [NotMapped]
         [ValidateNever]
         public string Passport { get; set; }
-        [ValidateNever]
-        public string UserId { get; set; }
-        [ForeignKey("UserId")]
-        [ValidateNever]
-        public IdentityUser User { get; set; }
-        [ValidateNever]
-        public bool Verified { get; set; } = false;
 
     }
 }

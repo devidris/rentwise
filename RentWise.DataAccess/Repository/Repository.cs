@@ -27,18 +27,13 @@ namespace RentWise.DataAccess.Repository
 
         public T Get(Expression<Func<T, bool>> filter, string? includeProperties = null, bool tracked = false)
         {
-            IQueryable<T> query;
-            if (tracked)
-            {
-                query = dbSet;
+            IQueryable<T> query = dbSet;
 
-            }
-            else
+            if (filter != null)
             {
-                query = dbSet.AsNoTracking();
+                query = query.Where(filter);
             }
 
-            query = query.Where(filter);
             if (!string.IsNullOrEmpty(includeProperties))
             {
                 foreach (var includeProp in includeProperties
@@ -47,8 +42,8 @@ namespace RentWise.DataAccess.Repository
                     query = query.Include(includeProp);
                 }
             }
-            return query.FirstOrDefault();
 
+            return query.SingleOrDefault();
         }
 
         public IEnumerable<T> GetAll(Expression<Func<T, bool>>? filter, string? includeProperties = null)

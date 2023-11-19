@@ -1,227 +1,24 @@
-﻿@{
-    List<DisplayPreview> Constructions = new List<DisplayPreview>()
-    {
-    new DisplayPreview
-    {
-        Image="/img/construction.png",
-        Name="Shell Forest",
-        Price=1000,
-        Rating=4.5,
-        Location="Accra, Ghana"
-    },
-      new DisplayPreview
-    {
-        Image="/img/construction.png",
-        Name="Shell Forest",
-        Price=1000,
-        Rating=4.5,
-        Location="Accra, Ghana"
-    },
-      new DisplayPreview
-    {
-        Image="/img/construction.png",
-        Name="Shell Forest",
-        Price=1000,
-        Rating=4.5,
-        Location="Accra, Ghana"
-    },
-      new DisplayPreview
-    {
-        Image="/img/construction.png",
-        Name="Shell Forest",
-        Price=1000,
-        Rating=4.5,
-        Location="Accra, Ghana"
-    },
-      new DisplayPreview
-    {
-        Image="/img/construction.png",
-        Name="Shell Forest",
-        Price=1000,
-        Rating=4.5,
-        Location="Accra, Ghana"
-    },
-      new DisplayPreview
-    {
-        Image="/img/construction.png",
-        Name="Shell Forest",
-        Price=1000,
-        Rating=4.5,
-        Location="Accra, Ghana"
-    },
-      new DisplayPreview
-    {
-        Image="/img/construction.png",
-        Name="Shell Forest",
-        Price=1000,
-        Rating=4.5,
-        Location="Accra, Ghana"
-    }
-    }
-    ;
-
-    List<DisplayPreview> CarRentals = new List<DisplayPreview>()
-    {
-    new DisplayPreview
-    {
-        Image="/img/construction.png",
-        Name="Shell Forest",
-        Price=1000,
-        Rating=4.5,
-        Location="Accra, Ghana"
-    },
-      new DisplayPreview
-    {
-        Image="/img/construction.png",
-        Name="Shell Forest",
-        Price=1000,
-        Rating=4.5,
-        Location="Accra, Ghana"
-    },
-      new DisplayPreview
-    {
-        Image="/img/construction.png",
-        Name="Shell Forest",
-        Price=1000,
-        Rating=4.5,
-        Location="Accra, Ghana"
-    }
-    }
-         ;
-
-    List<DisplayPreview> OfilceItems = new List<DisplayPreview>()
-    {
-    new DisplayPreview
-    {
-        Image="/img/construction.png",
-        Name="Shell Forest",
-        Price=1000,
-        Rating=4.5,
-        Location="Accra, Ghana"
-    },
-      new DisplayPreview
-    {
-        Image="/img/construction.png",
-        Name="Shell Forest",
-        Price=1000,
-        Rating=4.5,
-        Location="Accra, Ghana"
-    },
-      new DisplayPreview
-    {
-        Image="/img/construction.png",
-        Name="Shell Forest",
-        Price=1000,
-        Rating=4.5,
-        Location="Accra, Ghana"
-    },
-      new DisplayPreview
-    {
-        Image="/img/construction.png",
-        Name="Shell Forest",
-        Price=1000,
-        Rating=4.5,
-        Location="Accra, Ghana"
-    },
-      new DisplayPreview
-    {
-        Image="/img/construction.png",
-        Name="Shell Forest",
-        Price=1000,
-        Rating=4.5,
-        Location="Accra, Ghana"
-    },
-      new DisplayPreview
-    {
-        Image="/img/construction.png",
-        Name="Shell Forest",
-        Price=1000,
-        Rating=4.5,
-        Location="Accra, Ghana"
-    }
-    }
-        ;
-
-    List<DisplayPreview> EventRentals = new List<DisplayPreview>()
-    {
-    new DisplayPreview
-    {
-        Image="/img/construction.png",
-        Name="Shell Forest",
-        Price=1000,
-        Rating=4.5,
-        Location="Accra, Ghana"
-    },
-      new DisplayPreview
-    {
-        Image="/img/construction.png",
-        Name="Shell Forest",
-        Price=1000,
-        Rating=4.5,
-        Location="Accra, Ghana"
-    },
-      new DisplayPreview
-    {
-        Image="/img/construction.png",
-        Name="Shell Forest",
-        Price=1000,
-        Rating=4.5,
-        Location="Accra, Ghana"
-    }
-    }
-    ;
-
-    List<DisplayPreview> VehicleTrackers = new List<DisplayPreview>()
-    {
-    new DisplayPreview
-    {
-        Image="/img/construction.png",
-        Name="Shell Forest",
-        Price=1000,
-        Rating=4.5,
-        Location="Accra, Ghana"
-    },
-      new DisplayPreview
-    {
-        Image="/img/construction.png",
-        Name="Shell Forest",
-        Price=1000,
-        Rating=4.5,
-        Location="Accra, Ghana"
-    },
-      new DisplayPreview
-    {
-        Image="/img/construction.png",
-        Name="Shell Forest",
-        Price=1000,
-        Rating=4.5,
-        Location="Accra, Ghana"
-    },
-      new DisplayPreview
-    {
-        Image="/img/construction.png",
-        Name="Shell Forest",
-        Price=1000,
-        Rating=4.5,
-        Location="Accra, Ghana"
-    }
-    }
-        ;
-}
-<div class="home">
-    <partial name="_Hero"/> 
+﻿<div class="home">
+    <partial name="_Hero" />
     <partial name="_OurServices" />
     <section class="p-5 gray">
         <div class="button bg-secondary rounded-pill m-auto header">
             Construction Equipments
         </div>
         <p class="text-black-50 text-center justify-content-center mt-3">Rent High-quality Construction equipment available for short term and long term projects</p>
-        <div class="d-flex flex-wrap mt-5">
-            @foreach (DisplayPreview construction in Constructions )
+        <div class="d-flex flex-wrap justify-content-center mt-5">
+            @if (ViewBag.ConstructionCount > 0)
             {
-                <partial name="_DisplayPreview" for="@construction"/>
+                @foreach (ProductModel construction in ViewBag.Construction)
+                {
+                    <partial name="_DisplayPreview" for="@construction" />
+                }
+                <button class="button bg-secondary text-dark align-self-center rounded-pill">See More</button>
             }
-            <button class="button bg-secondary text-dark align-self-center rounded-pill">See More</button>
+            else
+            {
+                <h2 class="text-center">No Product in this category</h2>
+            }
         </div>
     </section>
     <section class="p-5">
@@ -230,97 +27,113 @@
         </div>
         <p class="text-black-50 text-center mt-3">Rent High-quality Construction equipment available for short term and long term projects</p>
         <div class="d-flex flex-wrap justify-content-center mt-5">
-            @foreach (DisplayPreview car in CarRentals)
+            @if (ViewBag.CarRentalCount > 0)
             {
-                <partial name="_DisplayPreview" for="@car" />
+                @foreach (ProductModel car in ViewBag.CarRental)
+                {
+                    <partial name="_DisplayPreview" for="@car" />
+                }
+                <button class="button bg-secondary text-dark align-self-center rounded-pill">See More</button>
             }
-            <button class="button bg-secondary text-dark align-self-center rounded-pill">See More</button>
+            else
+            {
+                <h2 class="text-center">No Product in this category</h2>
+            }
         </div>
     </section>
+    @*  <section class="p-5">
+    <h2 class="header">
+    Popular Search
+    </h2>
+
+    <div class="wrapper">
+    <div class="jcarousel-wrapper">
+    <div class="jcarousel">
+    <ul>
+    <li>
+    <figure>
+    <img src="/img/popular-search.png" alt="Image 1">
+    <figcaption class="text-center">Constructions</figcaption>
+    </figure>
+    </li>
+    <li>
+    <figure>
+    <img src="/img/popular-search.png" alt="Image 1">
+    <figcaption class="text-center">Constructions</figcaption>
+    </figure>
+    </li>
+    <li>
+    <figure>
+    <img src="/img/popular-search.png" alt="Image 1">
+    <figcaption class="text-center">Constructions</figcaption>
+    </figure>
+    </li>
+    <li>
+    <figure>
+    <img src="/img/popular-search.png" alt="Image 1">
+    <figcaption class="text-center">Constructions</figcaption>
+    </figure>
+    </li>
+    <li>
+    <figure>
+    <img src="/img/popular-search.png" alt="Image 1">
+    <figcaption class="text-center">Constructions</figcaption>
+    </figure>
+    </li>
+    <li>
+    <figure>
+    <img src="/img/popular-search.png" alt="Image 1">
+    <figcaption class="text-center">Constructions</figcaption>
+    </figure>
+    </li>
+    <li>
+    <figure>
+    <img src="/img/popular-search.png" alt="Image 1">
+    <figcaption class="text-center">Constructions</figcaption>
+    </figure>
+    </li>
+    <li>
+    <figure>
+    <img src="/img/popular-search.png" alt="Image 1">
+    <figcaption class="text-center">Constructions</figcaption>
+    </figure>
+    </li>
+    <li>
+    <figure>
+    <img src="/img/popular-search.png" alt="Image 1">
+    <figcaption class="text-center">Constructions</figcaption>
+    </figure>
+    </li>
+    </ul>
+    </div>
+
+    <a href="#" class="jcarousel-control-prev">&lsaquo;</a>
+    <a href="#" class="jcarousel-control-next">&rsaquo;</a>
+
+    <p class="jcarousel-pagination"></p>
+    </div>
+    </div>
+    </section> *@
     <section class="p-5">
-        <h2 class="header">
-            Popular Search
-        </h2>
-
-        <div class="wrapper">
-            <div class="jcarousel-wrapper">
-                <div class="jcarousel">
-                    <ul>
-                        <li>
-                            <figure>
-                                <img src="/img/popular-search.png" alt="Image 1">
-                                <figcaption class="text-center">Constructions</figcaption>
-                            </figure>
-                        </li>
-                        <li>
-                            <figure>
-                                <img src="/img/popular-search.png" alt="Image 1">
-                                <figcaption class="text-center">Constructions</figcaption>
-                            </figure>
-                        </li>
-                        <li>
-                            <figure>
-                                <img src="/img/popular-search.png" alt="Image 1">
-                                <figcaption class="text-center">Constructions</figcaption>
-                            </figure>
-                        </li>
-                        <li>
-                            <figure>
-                                <img src="/img/popular-search.png" alt="Image 1">
-                                <figcaption class="text-center">Constructions</figcaption>
-                            </figure>
-                        </li>
-                        <li>
-                            <figure>
-                                <img src="/img/popular-search.png" alt="Image 1">
-                                <figcaption class="text-center">Constructions</figcaption>
-                            </figure>
-                        </li>
-                        <li>
-                            <figure>
-                                <img src="/img/popular-search.png" alt="Image 1">
-                                <figcaption class="text-center">Constructions</figcaption>
-                            </figure>
-                        </li>
-                        <li>
-                            <figure>
-                                <img src="/img/popular-search.png" alt="Image 1">
-                                <figcaption class="text-center">Constructions</figcaption>
-                            </figure>
-                        </li>
-                        <li>
-                            <figure>
-                                <img src="/img/popular-search.png" alt="Image 1">
-                                <figcaption class="text-center">Constructions</figcaption>
-                            </figure>
-                        </li>
-                        <li>
-                            <figure>
-                                <img src="/img/popular-search.png" alt="Image 1">
-                                <figcaption class="text-center">Constructions</figcaption>
-                            </figure>
-                        </li>
-                    </ul>
-                </div>
-
-                <a href="#" class="jcarousel-control-prev">&lsaquo;</a>
-                <a href="#" class="jcarousel-control-next">&rsaquo;</a>
-
-                <p class="jcarousel-pagination"></p>
-            </div>
-        </div>
-    </section>
-    <section class="p-5 header">
         <div class="button bg-secondary rounded-pill m-auto header">
             Office Items/Personal Items
         </div>
-        <p class="text-black-50 text-center justify-content-center mt-3">Rent High-quality Construction equipment available for short term and long term projects</p>
+        <p class="text-black-50 text-center mt-3">Rent High-quality Construction equipment available for short term and long term projects</p>
         <div class="d-flex flex-wrap justify-content-center mt-5">
-            @foreach (DisplayPreview item in OfilceItems)
+            @if (ViewBag.OfficeItemCount > 0)
             {
-                <partial name="_DisplayPreview" for="@item" />
+                @foreach (ProductModel item in ViewBag.OfficeItem)
+                {
+                    <partial name="_DisplayPreview" for="@item" />
+                }
+                <button class="button bg-secondary text-dark align-self-center rounded-pill">See More</button>
             }
-            <button class="button bg-secondary text-dark align-self-center rounded-pill">See More</button>
+            else
+            {
+                <h2 class="text-center">No Product in this category</h2>
+            }
+
+
         </div>
     </section>
     <section class="p-5">
@@ -328,30 +141,46 @@
             Events/ Equipment Rentals
         </div>
         <p class="text-black-50 text-center justify-content-center mt-3">Rent High-quality Construction equipment available for short term and long term projects</p>
-        <div class="d-flex flex-wrap mt-5">
-            @foreach (DisplayPreview eventRental in EventRentals)
+        <div class="d-flex flex-wrap justify-content-center mt-5">
+            @if (ViewBag.EventsCount > 0)
             {
-                <partial name="_DisplayPreview" for="@eventRental" />
+                @foreach (ProductModel eventRental in ViewBag.Events)
+                {
+                    <partial name="_DisplayPreview" for="@eventRental" />
+                }
+                <button class="button bg-secondary text-dark align-self-center rounded-pill">See More</button>
             }
-            <button class="button bg-secondary text-dark align-self-center rounded-pill">See More</button>
+            else
+            {
+                <h2 class="text-center">No Product in this category</h2>
+            }
+
         </div>
     </section>
     <section class="row p-5">
-        <img src="~/img/ads-banner.png" alt="Ads banner" class="col-6"/>
-        <img src="~/img/ads-banner.png" alt="Ads banner"  class="col-6"/>
+        <img src="~/img/ads-banner.png" alt="Ads banner" class="col-6" />
+        <img src="~/img/ads-banner.png" alt="Ads banner" class="col-6" />
     </section>
-    
+
     <section class="p-5">
         <div class="button bg-secondary rounded-pill m-auto header">
             Sales Of Vehicles Trackers
         </div>
         <p class="text-black-50 text-center mt-3">Rent High-quality Construction equipment available for short term and long term projects</p>
         <div class="d-flex flex-wrap justify-content-center mt-5">
-            @foreach (DisplayPreview tracker in VehicleTrackers)
+            @if (ViewBag.CarTrackerCount > 0)
             {
-                <partial name="_DisplayPreview" for="@tracker" />
+                @foreach (ProductModel tracker in ViewBag.CarTracker)
+                {
+                    <partial name="_DisplayPreview" for="@tracker" />
+                }
+                <button class="button bg-secondary text-dark align-self-center rounded-pill">See More</button>
             }
-            <button class="button bg-secondary text-dark align-self-center rounded-pill">See More</button>
+            else
+            {
+                <h2 class="text-center">No Product in this category</h2>
+            }
+
         </div>
     </section>
 </div>

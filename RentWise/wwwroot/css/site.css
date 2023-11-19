@@ -158,3 +158,6 @@ body {
     color: #fff;
     background-color: var(--bs-primary);
 }
+.cursor-pointer {
+    cursor: pointer;
+}

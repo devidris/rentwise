@@ -165,7 +165,7 @@ namespace RentWise.Controllers
             {
                 ModelState.AddModelError("Privacy", "You have to accept terms and conditions.");
             }
-            model.UserId = user.Id;
+            model.Id = user.Id;
 
             if (logo == null)
             {
@@ -207,29 +207,29 @@ namespace RentWise.Controllers
                 #region Saving Logo
                 string logoName = Lookup.Upload[1] + Path.GetExtension(logo.FileName);
 
-                saveImage(model.UserId, logoName, logo);
+                saveImage(model.Id, logoName, logo);
                 #endregion
                 #region Saving Banner
                 string bannerName = Lookup.Upload[2] + Path.GetExtension(banner.FileName);
 
-                saveImage(model.UserId, bannerName, banner);
+                saveImage(model.Id, bannerName, banner);
                 #endregion
                 #region Saving Passport
                 string passportName = Lookup.Upload[3] + Path.GetExtension(passport.FileName);
 
-                saveImage(model.UserId, passportName, passport);
+                saveImage(model.Id, passportName, passport);
                 #endregion
                 #region Saving National Card
                 string nationalCardName = String.Join("", Lookup.Upload[4].Split(" ")) + Path.GetExtension(nationalCard.FileName);
 
-                saveImage(model.UserId, nationalCardName, nationalCard);
+                saveImage(model.Id, nationalCardName, nationalCard);
                 #endregion
                 #region Saving Profile Picture
                 string profilePictureName = String.Join("", Lookup.Upload[5].Split(" ")) + Path.GetExtension(profilePicture.FileName);
 
-                saveImage(model.UserId, profilePictureName, profilePicture);
+                saveImage(model.Id, profilePictureName, profilePicture);
                 #endregion
-                if (model.Slug == null) { model.Slug = model.UserId.ToString(); }
+                if (model.Slug == null) { model.Slug = model.Id.ToString(); }
 
                 _unitOfWork.AgentRegistration.Add(model);
                 _unitOfWork.Save();

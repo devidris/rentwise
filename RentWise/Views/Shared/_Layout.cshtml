@@ -8,8 +8,10 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/RentWise.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" integrity="sha512-vKMx8UnXk60zUwyUnUPM3HbQo8QfmNx7+ltw8Pm5zLusl1XIfwcxo8DbWCqMGKaWeNxWA8yrx5v3SaVpMvR3CA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
 </head>
-<body>
+<body style="width:100vw;overflow-x:hidden;">
     <header>
      <partial name="_Nav" />
     </header> 
@@ -17,7 +19,7 @@
             @RenderBody()
         </main>
 
-    <footer class="row bg-primary p-5 text-white ">
+  <footer class="row bg-primary p-5 text-white ">
         <div class="col-4">
                  <h3 class="m-0">Rent Wise</h3>
                 <p>@@ Rgistered company</p>
@@ -49,10 +51,12 @@
                 <button class="btn btn-secondary rounded-pill text-dark w-auto">Submit</button>
             </form>
         </div>
-    </footer>
+    </footer> 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js" integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

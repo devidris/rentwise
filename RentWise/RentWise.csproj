@@ -29,4 +29,11 @@
     <None Include="wwwroot\css\shared\_Nav.css" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="Views\Category\View.cshtml">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>

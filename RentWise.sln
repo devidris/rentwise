@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RentWise.Models", "RentWise
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RentWise.Utility", "RentWise.Utility\RentWise.Utility.csproj", "{0D1E2171-B795-4942-880D-8F9E65E50AD5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RentWise.Agent", "RentWise.Agent\RentWise.Agent.csproj", "{DB7505C7-ECB2-47FC-93C2-39BF9C074301}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RentWise.Agent", "RentWise.Agent\RentWise.Agent.csproj", "{DB7505C7-ECB2-47FC-93C2-39BF9C074301}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

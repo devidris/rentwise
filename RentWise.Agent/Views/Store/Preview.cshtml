@@ -36,7 +36,7 @@
         </div>
     </div>
     @{
-        string imagePath = $"~/images/products/{Model.UserId}/{Model.ProductId}/MainImage.webp";
+        string imagePath = $"~/images/products/{Model.AgentId}/{Model.ProductId}/MainImage.webp";
     }
     <div class="p-5 text-center bg-image rounded-3" style="
     background-image: url(@Url.Content(imagePath));
@@ -67,7 +67,7 @@ filter:brightness(70%)
                         @for (int i = 0; i < Model.NoOfImages; i++)
                         {
 
-                            string otherImagePath = $"/images/products/{Model.UserId}/{Model.ProductId}/OtherImages-{i}.webp";
+                            string otherImagePath = $"/images/products/{Model.AgentId}/{Model.ProductId}/OtherImages-{i}.webp";
 
                             <li>
                                 <figure style="width:250px;height:250px;object-fit:cover">
@@ -147,14 +147,17 @@ filter:brightness(70%)
                 }
             </ul>
             <hr />
+            <input type="number" value="@Model.MaxRentalDays" class="maxRentalDay" hidden />
+            <p>Maximum number of rental days: @Model.MaxRentalDays</p>
+            <hr/>
             <h5 class="mt-5">Other Items by @ViewBag.StoreName (@ViewBag.NoOfOtherProducts)</h5>
             <div>
                 @for (int i = 0; i < Math.Min(5, ViewBag.NoOfOtherProducts); i++)
                 {
 
                     ProductModel OtherProduct = ViewBag.otherProducts[i];
-                    string otherProductImage = $"~/images/products/{OtherProduct.UserId}/{OtherProduct.ProductId}/MainImage.webp";
-                    <img src="@Url.Content(otherProductImage)" alt="" width="100px" height="100px" class="cursor-pointer" />
+                    string otherProductImage = $"~/images/products/{OtherProduct.AgentId}/{OtherProduct.ProductId}/MainImage.webp";
+                    <img src="@Url.Content(otherProductImage)" alt="" width="100" height="100" class="cursor-pointer" />
     
                 } 
                 @if (@ViewBag.NoOfOtherProducts > 5)
@@ -164,15 +167,15 @@ filter:brightness(70%)
 
                
             </div>
+             <h5 class="mt-5">Review(@ViewBag.NoOfRating)</h5>
             @if (ViewBag.NoOfRating > 0)
             {
-                <h5 class="mt-5">Review(@ViewBag.NoOfRating)</h5>
                 @foreach (ReviewModel Review in ViewBag.Reviews)
                 {
                     <div>
                         <div>
                             <div>
-                                @for (int i = 1; i < 6; i++)
+                                @for (int i = 1; i < 11; i +=2 )
                                 {
                                     if (i <= Review.RatingValue)
                                     {
@@ -185,11 +188,14 @@ filter:brightness(70%)
                                 }
 
                             </div>
-                            <p class="m-0">@Review.UserName</p>
+                            <p class="m-0">@Review.User.UserName.Split('@')[0]</p>
                             <textarea disabled class="p-2">@Review.RatingDescription</textarea>
                         </div>
                     </div>
                 }
+            } else
+            {
+               <p>No rating yet</p> 
             }
 
             @if (ViewBag.HasAddRating == null || ViewBag.HasAddRating == false)
@@ -200,14 +206,17 @@ filter:brightness(70%)
                     <input type="number" value="0" hidden name="RatingValue" class="rating-value" />
                     <textarea cols="70" rows="7" name="RatingDescription" class="p-2" placeholder="Write your review"></textarea><br />
                     <input type="text" value="@Model.ProductId" hidden name="ProductId" />
-                    <input type="text" value="@Model.UserId" hidden name="AgentId" />
+                    <input type="text" value="@Model.AgentId" hidden name="AgentId" />
                     <button class="btn btn-primary" type="submit">Submit</button>
                 </form>
             }
         </div>
         <div class="col-6 px-5">
+            @{
+                string agentImage = $"/images/agent/{Model.AgentId}/registration/ProfilePicture.png";
+            }
             <div class="profile px-5 py-3">
-                <img src="~/img/profile.png" alt="" />
+                <img src="@Url.Content(agentImage)" alt="" width="50" height="50" class="rounded-circle"/>
                 <h6>@ViewBag.StoreName</h6>
                 <p>
                     Member since @ViewBag.RegistrationDate.ToString("dd/MM/yy")
@@ -218,8 +227,6 @@ filter:brightness(70%)
             </div>
             @* <img src="~/img/map.png" alt="" class="mt-3" /> *@
             <section class="ftco-section">
-
-
                 <div class="">
                     <div class="calendar calendar-first" id="calendar_first">
                         <div class="calendar_header">
@@ -275,8 +282,8 @@ filter:brightness(70%)
             </div>
             <div>
                 @{
-                    string policy = $"/images/products/{Model.UserId}/{Model.ProductId}/CancellationPolicy.pdf";
-                    string fileName = $"CancellationPolicy-{Guid.NewGuid().ToString()}.pdf";
+                    string policy = $"/images/products/{Model.AgentId}/{Model.ProductId}/CancellationPolicy.pdf";
+                    string fileName = $"CancellationPolicy-{Model.Name}.pdf";
                 }
                 <a class="btn btn-primary d-block w-100 m-auto mt-3 py-2" href="@policy" download="@fileName">Cancellation Policy</a>
             </div>
@@ -400,6 +407,10 @@ filter:brightness(70%)
                 }, 0);
             }, 0);
         }, 0);
+        if (days > $('.maxRentalDay').val()) {
+            toastr.error($('.maxRentalDay').val() + "days is the maximum allowed rental date")
+            return
+        }
         weeksCount = Math.floor(weekdaysCount / 5);
         weekdaysCount = weekdaysCount - (weeksCount * 5)
 
@@ -489,7 +500,7 @@ filter:brightness(70%)
 
     $(document).on('change', '.insert-rating',
         function (e, stars, index) {
-            $('.rating-value').val(stars);
+            $('.rating-value').val(stars*2);
         });
     $(document).ready(function () {
         $("form").submit(function (event) {

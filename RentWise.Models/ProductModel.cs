@@ -1,21 +1,13 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+using RentWise.Models.Identity;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace RentWise.Models
 {
-    public class ProductModel
+    public class ProductModel : DefaultModel
     {
-        [Key]
-        public int Id { get; set; }
         [Required]
         [Display(Name = "Category")]
         public int LkpCategory { get; set; }
@@ -24,6 +16,7 @@ namespace RentWise.Models
         [Required]
         [StringLength(2000, ErrorMessage = "Description cannot exceed 2000 characters")]
         public string Description { get; set; }
+        [Key]
         public string ProductId { get; set; } = Guid.NewGuid().ToString();
         [Range(1, int.MaxValue, ErrorMessage = "The daily rental price must be higher than zero")]
         [Display(Name = "Price per day")]
@@ -45,9 +38,15 @@ namespace RentWise.Models
         [NotMapped]
         public string? CancellationPolicy { get; set; }
         [ValidateNever]
-        public string UserId { get; set; }
-        [ForeignKey("UserId")]
+        public string AgentId { get; set; }
+        [ForeignKey("AgentId")]
         [ValidateNever]
-        public IdentityUser User { get; set; }
+        public AgentRegistrationModel Agent { get; set; }
+
+
+        [Range(0, 10, ErrorMessage = "Rating range is within 0 - 10")]
+        public int Rating { get; set; } = 0;
+
+        public int MaxRentalDays { get; set; } = 0;
     }
 }
