@@ -71,6 +71,9 @@ namespace RentWise.Agent.Controllers
                 ModelState.AddModelError(string.Join("", Lookup.Upload[11].Split(" ")), "Cancellation Policy upload is compulsory.");
             }
             if (ModelState.IsValid) {
+                model.Description = SharedFunctions.Capitalize(model.Description);
+                model.Name = SharedFunctions.Capitalize(model.Name);
+
                 #region Saving Main Product
                 string mainImageName = String.Join("", Lookup.Upload[9].Split(" ")) + ".webp";
 

@@ -204,6 +204,10 @@ namespace RentWise.Controllers
 
             if (ModelState.IsValid)
             {
+                model.FirstName = SharedFunctions.Capitalize(model.FirstName);
+                model.LastName = SharedFunctions.Capitalize(model.LastName);
+                model.StoreName = SharedFunctions.Capitalize(model.StoreName);
+
                 #region Saving Logo
                 string logoName = Lookup.Upload[1] + Path.GetExtension(logo.FileName);
 
@@ -267,9 +271,7 @@ namespace RentWise.Controllers
             {
                 file.CopyTo(fileStream);
             }
-
         }
-
 
     }
 }
