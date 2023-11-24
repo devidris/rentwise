@@ -77,7 +77,12 @@ namespace RentWise.Models.Identity
         [ValidateNever]
         public string Slug { get; set; }
         [Display(Name = "Store Address")]
-        public string? StoreAddress { get; set; }
+        public string StoreAddress { get; set; }
+        public string? Latitude { get; set; }
+        public string? Longitude { get; set; }
+
+        public string? Country { get; set; }
+        public string? State { get; set; }
         [ValidateNever]
         [NotMapped]
         public string Logo { get; set; }
