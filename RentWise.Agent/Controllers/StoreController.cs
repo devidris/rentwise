@@ -134,16 +134,12 @@ namespace RentWise.Agent.Controllers
                 return RedirectToAction("Register", "Login");
             }
             ProductModel model = new ProductModel();
-            AgentRegistrationModel agentRegistrationModel = _unitOfWork.AgentRegistration.Get(u => u.Id == user.Id);
-            ViewBag.StoreName = agentRegistrationModel.StoreName;
-            ViewBag.StoreAddress = agentRegistrationModel.StoreAddress;
-            ViewBag.RegistrationDate = agentRegistrationModel.CreatedAt;
             if(String.IsNullOrEmpty(id))
             {
-                model = _unitOfWork.Product.Get(u => u.AgentId == user.Id);
+                model = _unitOfWork.Product.Get(u => u.AgentId == user.Id, "Agent");
             } else
             {
-                model = _unitOfWork.Product.Get(u => u.ProductId == id);
+                model = _unitOfWork.Product.Get(u => u.ProductId == id, "Agent");
 
             }
             IEnumerable<ReviewModel> Reviews = _unitOfWork.Review.GetAll(u=>u.ProductId == model.ProductId);

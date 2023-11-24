@@ -57,12 +57,6 @@
             <span id="slugDisplay" class="mt-3"></span>
         <span asp-validation-for="@Model.Slug" class="text-danger"></span>
     </div>
-
-    <div class="form-floating mb-3">
-        <input asp-for="@Model.ResidentialAddress" class="form-control" aria-required="true" />
-        <label asp-for="@Model.ResidentialAddress" class="form-label">Residential Address</label>
-        <span asp-validation-for="@Model.ResidentialAddress" class="text-danger"></span>
-    </div>
     <div class="form-floating mb-3">
          <input  class="form-control" id="autocomplete-input" />
         <label asp-for="@Model.StoreAddress" class="form-label">Store Address</label>
@@ -149,7 +143,6 @@
                 .then(response => response.json())
                 .then(data => {
                     // Check if the response contains results
-                    console.log(data)
                     if (data.results && data.results.length > 0) {
                         // Extract country and state from the first result
                         const components = data.results[0].address_components;

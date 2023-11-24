@@ -8,9 +8,18 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
 
+<style>
+    #map {
+        height: 400px;
+        width: 100%;
+    }
+</style>
 
 <div class="preview">
     <partial name="_Nav2" />
+    <input value="@Model.Agent.Longitude" class="longitude" hidden/>
+    <input value="@Model.Agent.Latitude" class="latitude" hidden/>
+    <input value="@Model.Agent.StoreName" class="store-name" />
     <input value="@Model.PriceWeek" class="price-week" hidden />
     <input value="@Model.PriceWeekend" class="price-weekend" hidden />
     <input value="@Model.PriceDay" class="price-day" hidden />
@@ -23,12 +32,12 @@
     </p>
 
     <div class="d-flex align-items-center px-5 justify-content-between">
-        <h2 class="m-0">@ViewBag.StoreName</h2>
+        <h2 class="m-0">@Model.Agent.StoreName</h2>
         <p class="m-0"><span class="fs-3 font-weight-bold">$@Model.PriceDay/</span><span>day</span></p>
 
     </div>
     <div class="d-flex align-items-center px-5 justify-content-between mb-3">
-        <p>@ViewBag.StoreAddress</p>
+        <p>@Model.Agent.StoreAddress</p>
         <div class="d-flex align-items-center gap-3">
             <i class="bi bi-heart fs-4"></i>
             <i class="bi bi-chat-left fs-4"></i>
@@ -97,6 +106,9 @@ filter:brightness(70%)
     <div class="row">
         <div class="col-1"></div>
         <div class="col-5">
+            @* <img src="~/img/map.png" alt="" class="mt-3" /> *@
+            <div id="map"></div>
+            <hr />
             <ul>
                 <h6>This includes</h6>
 
@@ -219,13 +231,12 @@ filter:brightness(70%)
                 <img src="@Url.Content(agentImage)" alt="" width="50" height="50" class="rounded-circle"/>
                 <h6>@ViewBag.StoreName</h6>
                 <p>
-                    Member since @ViewBag.RegistrationDate.ToString("dd/MM/yy")
+                    Member since @Model.Agent.CreatedAt.ToString("dd/MM/yy")
                 </p>
 
                 @* <a href="">Message</a> *@
 
             </div>
-            @* <img src="~/img/map.png" alt="" class="mt-3" /> *@
             <section class="ftco-section">
                 <div class="">
                     <div class="calendar calendar-first" id="calendar_first">
@@ -293,6 +304,7 @@ filter:brightness(70%)
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jcarousel/0.3.6/jquery.jcarousel.min.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCM2yIul54qUYlxHgjTmvp52goQdqPcUwA&callback=initMap" async defer></script>
 
 <style>
     .profile {
@@ -513,5 +525,32 @@ filter:brightness(70%)
             }
         });
     });
+
+    function initMap() {
+        const lat = parseFloat($('.latitude').val())
+        const lng = parseFloat($('.longitude').val())
+        const storeName = $('.store-name').val()
+        // Replace with the desired latitude and longitude
+        var myLatLng = { lat, lng };
+
+        // Create a map centered at the specified location
+        var map = new google.maps.Map(document.getElementById('map'), {
+            center: myLatLng,
+            zoom: 15 // Adjust the zoom level as needed
+        });
+
+        // Create a marker with a custom label
+        var marker = new google.maps.Marker({
+            position: myLatLng,
+            map: map,
+            title: storeName, // Tooltip text
+            label: {
+                text: storeName,
+                color: 'black',
+                fontSize: '20px',
+                fontWeight: 'bold'
+            }
+        });
+    }
 </script>
 <script src="~/js/controller/store/_Calender.js"></script>

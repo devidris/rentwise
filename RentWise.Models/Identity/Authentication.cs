@@ -69,9 +69,6 @@ namespace RentWise.Models.Identity
         [Display(Name = "Phone Number")]
         public string PhoneNumber { get; set; }
         [Required]
-        [Display(Name = "Residential Address")]
-        public string ResidentialAddress { get; set; }
-        [Required]
         [Display(Name = "Store Name")]
         public string StoreName { get; set; }
         [ValidateNever]
