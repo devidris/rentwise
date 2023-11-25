@@ -83,9 +83,7 @@ namespace RentWise.Models.Identity
         [ValidateNever]
         [NotMapped]
         public string Logo { get; set; }
-        [NotMapped]
-        [ValidateNever]
-        public string Banner { get; set; }
+       
         [NotMapped]
         [ValidateNever]
         [Display(Name = "Profile Picture")]
@@ -97,9 +95,7 @@ namespace RentWise.Models.Identity
         [NotMapped]
         [Required]
         public bool Privacy { get; set; }
-        [NotMapped]
-        [ValidateNever]
-        public string Passport { get; set; }
+   
 
     }
 }

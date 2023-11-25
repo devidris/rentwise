@@ -154,7 +154,7 @@ namespace RentWise.Controllers
             return View();
         }
 
-        public async Task<IActionResult> RegisterAgent(AgentRegistrationModel model, IFormFile logo, IFormFile banner, IFormFile passport, IFormFile nationalCard, IFormFile profilePicture)
+        public async Task<IActionResult> RegisterAgent(AgentRegistrationModel model, IFormFile logo, IFormFile nationalCard, IFormFile profilePicture)
         {
             IdentityUser user = await _userManager.GetUserAsync(User);
             if (user == null)
@@ -170,15 +170,6 @@ namespace RentWise.Controllers
             if (logo == null)
             {
                 ModelState.AddModelError(Lookup.Upload[1], "Logo upload is compulsory.");
-            }
-
-            if (banner == null)
-            {
-                ModelState.AddModelError(Lookup.Upload[2], "Banner upload is compulsory.");
-            }
-            if (passport == null)
-            {
-                ModelState.AddModelError(Lookup.Upload[3], "Passport upload is compulsory.");
             }
             if (nationalCard == null)
             {
@@ -212,16 +203,6 @@ namespace RentWise.Controllers
                 string logoName = Lookup.Upload[1] + Path.GetExtension(logo.FileName);
 
                 saveImage(model.Id, logoName, logo);
-                #endregion
-                #region Saving Banner
-                string bannerName = Lookup.Upload[2] + Path.GetExtension(banner.FileName);
-
-                saveImage(model.Id, bannerName, banner);
-                #endregion
-                #region Saving Passport
-                string passportName = Lookup.Upload[3] + Path.GetExtension(passport.FileName);
-
-                saveImage(model.Id, passportName, passport);
                 #endregion
                 #region Saving National Card
                 string nationalCardName = String.Join("", Lookup.Upload[4].Split(" ")) + Path.GetExtension(nationalCard.FileName);
