@@ -11,47 +11,57 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" integrity="sha512-vKMx8UnXk60zUwyUnUPM3HbQo8QfmNx7+ltw8Pm5zLusl1XIfwcxo8DbWCqMGKaWeNxWA8yrx5v3SaVpMvR3CA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
 </head>
-<body style="width:100vw;overflow-x:hidden;">
+<body>
     <header>
-     <partial name="_Nav" />
-    </header> 
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
+        <partial name="_Nav" />
+    </header>
+    <main class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                @RenderBody()
+            </div>
+        </div>
+    </main>
 
-  <footer class="row bg-primary p-5 text-white ">
-        <div class="col-4">
-                 <h3 class="m-0">Rent Wise</h3>
-                <p>@@ Rgistered company</p>
-            <p class="mb-3"><b>Follow us at</b> <i class="bi bi-instagram"></i></p>
-            <ul class="list-unstyled mt-4">
-                <li><a href="" class="link-light text-decoration-none">Equal Housing Opportunity</a></li>
-                <li><a href="" class="link-light text-decoration-none">About Us</a></li>
-                <li><a href="" class="link-light text-decoration-none">Sitemap</a></li>
-                <li><a href="" class="link-light text-decoration-none">Contact Us</a></li>
-                <li><a href="" class="link-light text-decoration-none">Legal Terms & Privacy Policy</a></li>
-                <li><a href="" class="link-light text-decoration-none">Accessibility</a></li>
-                <li><a href="" class="link-light text-decoration-none">Advertise</a></li>
-                <li><a href="" class="link-light text-decoration-none">Avoid Scams and Fraud</a></li>
-            </ul>
+
+    <footer class="bg-primary p-5 text-white text-center">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-4 col-sm-12 mt-sm-4">
+                    <h3 class="m-0">Rent Wise</h3>
+                    <p>@@ Rgistered company</p>
+                    <p class="mb-3"><b>Follow us at</b> <i class="bi bi-instagram"></i></p>
+                    <ul class="list-unstyled mt-4">
+                        <li><a href="" class="link-light text-decoration-none">Equal Housing Opportunity</a></li>
+                        <li><a href="" class="link-light text-decoration-none">About Us</a></li>
+                        <li><a href="" class="link-light text-decoration-none">Sitemap</a></li>
+                        <li><a href="" class="link-light text-decoration-none">Contact Us</a></li>
+                        <li><a href="" class="link-light text-decoration-none">Legal Terms & Privacy Policy</a></li>
+                        <li><a href="" class="link-light text-decoration-none">Accessibility</a></li>
+                        <li><a href="" class="link-light text-decoration-none">Advertise</a></li>
+                        <li><a href="" class="link-light text-decoration-none">Avoid Scams and Fraud</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4 col-sm-12  mt-sm-4">
+                    <ul>
+                        <li><a href="" class="link-light text-decoration-none">Register as Cusotmer</a></li>
+                        <li><a href="" class="link-light text-decoration-none">Become an Agent</a></li>
+                        <li><a href="" class="link-light text-decoration-none">Login</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4 col-sm-12  mt-sm-4">
+                    <h3 class="mb-3">Get In Touch</h3>
+                    <form class="d-flex flex-column gap-4 form-contact">
+                        <input type="text" placeholder="Name" value="" class="border-0 border-bottom bg-transparent text-light p-2" />
+                        <input type="text" placeholder="Email" value="" class="border-0 border-bottom bg-transparent text-light p-2" />
+                        <textarea placeholder="Message" class="border-0 border-bottom bg-transparent text-light p-2"></textarea>
+                        <button class="btn btn-secondary rounded-pill text-dark w-auto">Submit</button>
+                    </form>
+                </div>
+            </div>
         </div>
-        <div class="col-4">
-            <ul>
-                <li><a href="" class="link-light text-decoration-none">Register as Cusotmer</a></li>
-                <li><a href="" class="link-light text-decoration-none">Become an Agent</a></li>
-                <li><a href="" class="link-light text-decoration-none">Login</a></li>
-            </ul>
-        </div>
-        <div class="col-4">
-            <h3 class="mb-3">Get In Touch</h3>
-            <form class="d-flex flex-column gap-4 form-contact">
-                <input type="text" placeholder="Name" value="" class="border-0 border-bottom bg-transparent text-light p-2"/>
-                <input type="text" placeholder="Email" value="" class="border-0 border-bottom bg-transparent text-light p-2" />
-                <textarea placeholder="Message" class="border-0 border-bottom bg-transparent text-light p-2"></textarea>
-                <button class="btn btn-secondary rounded-pill text-dark w-auto">Submit</button>
-            </form>
-        </div>
-    </footer> 
+
+    </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

@@ -68,7 +68,7 @@
                         <div class="container">
                             <div class="button-container">
                                 @{
-                                    string imagePath = $"~/images/products/{ViewBag.UserId}/{product.ProductId}/MainImage.webp";
+                                    string imagePath = $"~/images/products/{ViewBag.Id}/{product.ProductId}/MainImage.webp";
                                     string previewPath = $"/Store/Preview/{product.ProductId}";
                                 }
                                 <img src="@Url.Content(imagePath)" alt="Product Image">

@@ -170,3 +170,6 @@ body {
 .cursor-pointer {
     cursor: pointer;
 }
+.w-fit{
+    width: fit-content;
+}

@@ -18,13 +18,13 @@ namespace RentWise.Models
         public string Description { get; set; }
         [Key]
         public string ProductId { get; set; } = Guid.NewGuid().ToString();
-        [Range(1, int.MaxValue, ErrorMessage = "The daily rental price must be higher than zero")]
+        [Range(0, int.MaxValue, ErrorMessage = "The daily rental price must be higher than zero")]
         [Display(Name = "Price per day")]
         public int PriceDay { get; set; } = 0;
-        [Range(1, int.MaxValue, ErrorMessage = "The weekend rental price must be higher than zero")]
+        [Range(0, int.MaxValue, ErrorMessage = "The weekend rental price must be higher than zero")]
         [Display(Name = "Price per weekend")]
         public int PriceWeekend { get; set; } = 0;
-        [Range(1, int.MaxValue, ErrorMessage = "The weekly rental price must be higher than zero")]
+        [Range(0, int.MaxValue, ErrorMessage = "The weekly rental price must be higher than zero")]
         [Display(Name = "Price per week")]
         public int PriceWeek { get; set; } = 0;
         [NotMapped]
@@ -34,9 +34,6 @@ namespace RentWise.Models
         public string? Includes { get; set; }
         public string? Rules { get; set; }
         public DateTime RegistrationDate { get; set; } = DateTime.Now;
-        [Display(Name = "Cancellation Policy")]
-        [NotMapped]
-        public string? CancellationPolicy { get; set; }
         [ValidateNever]
         public string AgentId { get; set; }
         [ForeignKey("AgentId")]

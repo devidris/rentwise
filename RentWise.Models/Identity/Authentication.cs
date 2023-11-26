@@ -59,6 +59,9 @@ namespace RentWise.Models.Identity
         [Key]
         [ValidateNever]
         public string Id { get; set; }
+        [ForeignKey("Id")]
+        [ValidateNever]
+        public IdentityUser User { get; set; }
         [Required]
         [Display(Name = "First Name")]
         public string FirstName { get; set; }

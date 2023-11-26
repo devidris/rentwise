@@ -29,17 +29,16 @@ namespace RentWise.Agent.Controllers
             {
                 return RedirectToAction("Register", "Login");
             }
-            AgentRegistrationModel agentDetails = _unitOfWork.AgentRegistration.Get(u=>u.Id == user.Id);
+            AgentRegistrationModel agentDetails = _unitOfWork.AgentRegistration.Get(u=>u.Id == user.Id,"User");
             ViewBag.RegistrationDate = agentDetails.CreatedAt;
             ViewBag.Id = user.Id;
-            ViewBag.Id = id;
             if(id == 0)
             {
-                IEnumerable<ProductModel> userProducts = _unitOfWork.Product.GetAll(u => u.AgentId == user.Id);
+                IEnumerable<ProductModel> userProducts = _unitOfWork.Product.GetAll(u => u.AgentId == user.Id, "Agent");
                 return View(userProducts);
             }else
             {
-            IEnumerable<ProductModel> userProducts = _unitOfWork.Product.GetAll(u => u.AgentId == user.Id && u.LkpCategory == id);
+            IEnumerable<ProductModel> userProducts = _unitOfWork.Product.GetAll(u => u.AgentId == user.Id && u.LkpCategory == id,"Agent");
                 return View(userProducts);
             }
             
