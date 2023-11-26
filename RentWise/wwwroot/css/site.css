@@ -26,6 +26,15 @@ body {
     background:#F2F2F2;
 }
 
+.text-gray {
+    color: #F2F2F2;
+}
+
+.text-gray-dark {
+ color:#4D4D4D;
+}
+
+
 .jcarousel-wrapper {
     margin: 20px auto;
     position: relative;
@@ -160,4 +169,7 @@ body {
 }
 .cursor-pointer {
     cursor: pointer;
+}
+.w-fit{
+    width: fit-content;
 }

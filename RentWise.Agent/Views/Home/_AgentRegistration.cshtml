@@ -29,11 +29,6 @@
     </div>
 
     <div class="form-floating mb-3">
-        <input asp-for="@Model.ResidentialAddress" class="form-control" aria-required="true" />
-        <label asp-for="@Model.ResidentialAddress" class="form-label">Residential Address</label>
-        <span asp-validation-for="@Model.ResidentialAddress" class="text-danger"></span>
-    </div>
-    <div class="form-floating mb-3">
         <input asp-for="@Model.StoreAddress" class="form-control" aria-required="true" />
         <label asp-for="@Model.StoreAddress" class="form-label">Store Address (Optional)</label>
         <span asp-validation-for="@Model.StoreAddress" class="text-danger"></span>
@@ -42,16 +37,6 @@
         <input asp-for="@Model.Logo" class="form-control" aria-required="true" type="file" accept="image/*" name="logo"/>
         <label asp-for="@Model.Logo" class="form-label">Store Logo</label>
         <span asp-validation-for="@Model.Logo" class="text-danger"></span>
-    </div>
-    <div class="form-floating mb-3">
-        <input asp-for="@Model.Banner" class="form-control" aria-required="true" type="file" accept="image/*" name="banner" />
-        <label asp-for="@Model.Banner" class="form-label">Store Banner</label>
-        <span asp-validation-for="@Model.Banner" class="text-danger"></span>
-    </div>
-    <div class="form-floating mb-3">
-        <input asp-for="@Model.Passport" class="form-control" aria-required="true" type="file" accept="image/*" name="passport" />
-        <label asp-for="@Model.Passport" class="form-label">Passport</label>
-        <span asp-validation-for="@Model.Passport" class="text-danger"></span>
     </div>
     <div class="form-floating mb-3">
         <input asp-for="@Model.NationalCard" class="form-control" aria-required="true" type="file" accept="image/*" name="nationalCard" />

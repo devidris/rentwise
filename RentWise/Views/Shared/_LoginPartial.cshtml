@@ -8,7 +8,7 @@
     AuthenticationLogin authenticationLogin = new AuthenticationLogin();
 }
 <link rel="stylesheet" href="~/css/shared/_LoginPartial.css" asp-append-version="true" />
-<ul class="navbar-nav">
+<ul class="navbar-nav align-items-center gap-2">
 @if (SignInManager.IsSignedIn(User))
 {
     <li class="nav-item">
@@ -22,18 +22,18 @@
 }
 else
 {
-    <li class="nav-item">
+    <li class="nav-item m-0">
         @* <a class="nav-link text-light" id="register" asp-area="Identity" asp-page="/Account/Register">Register</a> *@
-            <button type="button" class="btn btn-outline-secondary" data-toggle="modal" data-target="#register">
+            <button type="button" class="btn btn-outline-secondary m-0" data-toggle="modal" data-target="#register">
                Register
             </button>
             <!-- Modal -->
             @Html.Partial("_Register", authentication)
           
     </li>
-        <li class="nav-item">
+        <li class="nav-item m-0">
             @* <a class="nav-link text-light" id="login" asp-area="Identity" asp-page="/Account/Login">Login</a> *@
-            <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#login">
+            <button type="button" class="btn btn-secondary m-0" data-toggle="modal" data-target="#login">
                 Login
             </button>
             <!-- Modal -->

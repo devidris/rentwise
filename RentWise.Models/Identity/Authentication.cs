@@ -59,6 +59,9 @@ namespace RentWise.Models.Identity
         [Key]
         [ValidateNever]
         public string Id { get; set; }
+        [ForeignKey("Id")]
+        [ValidateNever]
+        public IdentityUser User { get; set; }
         [Required]
         [Display(Name = "First Name")]
         public string FirstName { get; set; }
@@ -69,21 +72,21 @@ namespace RentWise.Models.Identity
         [Display(Name = "Phone Number")]
         public string PhoneNumber { get; set; }
         [Required]
-        [Display(Name = "Residential Address")]
-        public string ResidentialAddress { get; set; }
-        [Required]
         [Display(Name = "Store Name")]
         public string StoreName { get; set; }
         [ValidateNever]
         public string Slug { get; set; }
         [Display(Name = "Store Address")]
-        public string? StoreAddress { get; set; }
+        public string StoreAddress { get; set; }
+        public string? Latitude { get; set; }
+        public string? Longitude { get; set; }
+
+        public string? Country { get; set; }
+        public string? State { get; set; }
         [ValidateNever]
         [NotMapped]
         public string Logo { get; set; }
-        [NotMapped]
-        [ValidateNever]
-        public string Banner { get; set; }
+       
         [NotMapped]
         [ValidateNever]
         [Display(Name = "Profile Picture")]
@@ -95,9 +98,7 @@ namespace RentWise.Models.Identity
         [NotMapped]
         [Required]
         public bool Privacy { get; set; }
-        [NotMapped]
-        [ValidateNever]
-        public string Passport { get; set; }
+   
 
     }
 }

@@ -29,17 +29,16 @@ namespace RentWise.Agent.Controllers
             {
                 return RedirectToAction("Register", "Login");
             }
-            AgentRegistrationModel agentDetails = _unitOfWork.AgentRegistration.Get(u=>u.Id == user.Id);
+            AgentRegistrationModel agentDetails = _unitOfWork.AgentRegistration.Get(u=>u.Id == user.Id,"User");
             ViewBag.RegistrationDate = agentDetails.CreatedAt;
             ViewBag.Id = user.Id;
-            ViewBag.Id = id;
             if(id == 0)
             {
-                IEnumerable<ProductModel> userProducts = _unitOfWork.Product.GetAll(u => u.AgentId == user.Id);
+                IEnumerable<ProductModel> userProducts = _unitOfWork.Product.GetAll(u => u.AgentId == user.Id, "Agent");
                 return View(userProducts);
             }else
             {
-            IEnumerable<ProductModel> userProducts = _unitOfWork.Product.GetAll(u => u.AgentId == user.Id && u.LkpCategory == id);
+            IEnumerable<ProductModel> userProducts = _unitOfWork.Product.GetAll(u => u.AgentId == user.Id && u.LkpCategory == id,"Agent");
                 return View(userProducts);
             }
             
@@ -71,6 +70,9 @@ namespace RentWise.Agent.Controllers
                 ModelState.AddModelError(string.Join("", Lookup.Upload[11].Split(" ")), "Cancellation Policy upload is compulsory.");
             }
             if (ModelState.IsValid) {
+                model.Description = SharedFunctions.Capitalize(model.Description);
+                model.Name = SharedFunctions.Capitalize(model.Name);
+
                 #region Saving Main Product
                 string mainImageName = String.Join("", Lookup.Upload[9].Split(" ")) + ".webp";
 
@@ -134,16 +136,12 @@ namespace RentWise.Agent.Controllers
                 return RedirectToAction("Register", "Login");
             }
             ProductModel model = new ProductModel();
-            AgentRegistrationModel agentRegistrationModel = _unitOfWork.AgentRegistration.Get(u => u.Id == user.Id);
-            ViewBag.StoreName = agentRegistrationModel.StoreName;
-            ViewBag.StoreAddress = agentRegistrationModel.StoreAddress;
-            ViewBag.RegistrationDate = agentRegistrationModel.CreatedAt;
             if(String.IsNullOrEmpty(id))
             {
-                model = _unitOfWork.Product.Get(u => u.AgentId == user.Id);
+                model = _unitOfWork.Product.Get(u => u.AgentId == user.Id, "Agent");
             } else
             {
-                model = _unitOfWork.Product.Get(u => u.ProductId == id);
+                model = _unitOfWork.Product.Get(u => u.ProductId == id, "Agent");
 
             }
             IEnumerable<ReviewModel> Reviews = _unitOfWork.Review.GetAll(u=>u.ProductId == model.ProductId);
