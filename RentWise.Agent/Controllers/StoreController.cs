@@ -49,7 +49,7 @@ namespace RentWise.Agent.Controllers
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> Upsert(ProductModel model, IFormFile? mainImage, IFormFile? cancellationPolicy, List<IFormFile> otherImages)
+        public async Task<IActionResult> Upsert(ProductModel model, IFormFile? mainImage, List<IFormFile> otherImages)
         {
             IdentityUser user = await _userManager.GetUserAsync(User);
             if (user == null)
@@ -61,13 +61,9 @@ namespace RentWise.Agent.Controllers
             {
                 ModelState.AddModelError(string.Join("", Lookup.Upload[9].Split(" ")), "Main Image upload is compulsory.");
             }
-            if (otherImages == null || otherImages.Count < 7)
+            if (otherImages == null || otherImages.Count < 4)
             {
-                ModelState.AddModelError(string.Join("", Lookup.Upload[10].Split(" ")), "Other Images upload is compulsory and must be more than or equal to 7 images.");
-            }
-            if (cancellationPolicy == null)
-            {
-                ModelState.AddModelError(string.Join("", Lookup.Upload[11].Split(" ")), "Cancellation Policy upload is compulsory.");
+                ModelState.AddModelError(string.Join("", Lookup.Upload[10].Split(" ")), "Other Images upload is compulsory and must be more than or equal to 4 images.");
             }
             if (ModelState.IsValid) {
                 model.Description = SharedFunctions.Capitalize(model.Description);
@@ -77,12 +73,6 @@ namespace RentWise.Agent.Controllers
                 string mainImageName = String.Join("", Lookup.Upload[9].Split(" ")) + ".webp";
 
                 saveImage(model.AgentId, mainImageName, mainImage, model.ProductId);
-                #endregion
-
-                #region Saving Cancellation Policy
-                string cancellationPolicyName = String.Join("", Lookup.Upload[11].Split(" ")) + ".pdf";
-
-                saveImage(model.AgentId, cancellationPolicyName, cancellationPolicy,model.ProductId);
                 #endregion
 
                 #region Saving Other Images
