@@ -15,6 +15,11 @@ namespace RentWise.Utility
             {3, "Office Items/Personal Items"},
             {4, "Events/ Equipment Rentals"},
             {5, "Sales Of Vehicles Trackers"},
+            {6, "Bill board" },
+            {7,"Shot Stay Rooms" },
+            {8,"Motel" },
+            {9,"Boat/Yacht" },
+            {10,"Games" }
         };
 
         public static Dictionary<int, string> Roles = new Dictionary<int, string>

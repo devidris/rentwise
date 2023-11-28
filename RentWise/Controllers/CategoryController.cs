@@ -69,7 +69,7 @@ namespace RentWise.Controllers
             }
             if(Lat != 0 && Lng != 0)
             {
-                products = products.OrderBy(product => CalculateHaversineDistance(Lat, Lng, GetDoubleValue(product.Agent.Latitude), GetDoubleValue(product.Agent.Longitude))).ToList();
+                products = products.OrderBy(product => SharedFunctions.CalculateHaversineDistance(Lat, Lng, SharedFunctions.GetDoubleValue(product.Latitude), SharedFunctions.GetDoubleValue(product.Longitude))).ToList();
             }
             ViewBag.CategoryName = Id > 0 ? Lookup.Categories[Id] : "All Category" ; 
             ViewBag.Link = _config.Value.AgentWebsiteLink;
@@ -141,36 +141,7 @@ namespace RentWise.Controllers
 
             return RedirectToAction("Preview", "Store");
         }
-        private double CalculateHaversineDistance(double lat1, double lon1, double lat2, double lon2)
-        {
-            const double R = 6371; // Earth radius in kilometers
-
-            var dLat = (lat2 - lat1) * (Math.PI / 180);
-            var dLon = (lon2 - lon1) * (Math.PI / 180);
-
-            var a =
-                Math.Sin(dLat / 2) * Math.Sin(dLat / 2) +
-                Math.Cos(lat1 * (Math.PI / 180)) * Math.Cos(lat2 * (Math.PI / 180)) *
-                Math.Sin(dLon / 2) * Math.Sin(dLon / 2);
-
-            var c = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
-
-            var distance = R * c; // Distance in kilometers
-
-            return distance;
-        }
-        private double GetDoubleValue(string stringValue)
-        {
-            if (double.TryParse(stringValue, out double result))
-            {
-                return result;
-            }
-            else
-            {
-                // Handle the case where parsing fails, you might want to log an error or return a default value.
-                return 0.0; // Or any other appropriate default value
-            }
-        }
+       
     }
 
 }

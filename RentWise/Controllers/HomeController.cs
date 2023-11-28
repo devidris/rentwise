@@ -3,6 +3,7 @@ using Microsoft.Extensions.Options;
 using RentWise.DataAccess.Repository.IRepository;
 using RentWise.Models;
 using RentWise.Models.Identity;
+using RentWise.Utility;
 using System.Configuration;
 using System.Diagnostics;
 
@@ -23,11 +24,27 @@ namespace RentWise.Controllers
 
         }
 
-        public IActionResult Index(int category = 2)
+        public IActionResult Index(int Category = 2,int Min = 0,int Max = 0,double Lng = 0, double Lat = 0)
         {
-            ViewBag.Category = category;
+            ViewBag.Category = Category;
+            ViewBag.Min = Min;
+            ViewBag.Max = Max;
+            ViewBag.Lng = Lng;
+            ViewBag.Lat = Lat;
             ViewBag.Link = _config.Value.AgentWebsiteLink;
-            List<ProductModel> products = _unitOfWork.Product.GetAll(u=>u.LkpCategory == category).ToList();
+            List<ProductModel> products = _unitOfWork.Product.GetAll(u=>u.LkpCategory == Category,"Agent").ToList();
+            if(Min > 0)
+            {
+                products = products.FindAll(product => product.PriceDay >= Min).ToList();
+            }   
+            if(Max > 0)
+            {
+                products = products.FindAll(product => product.PriceDay <= Max).ToList();
+            }
+            if (Lat != 0 && Lng != 0)
+            {
+                products = products.OrderBy(product => SharedFunctions.CalculateHaversineDistance(Lat, Lng, SharedFunctions.GetDoubleValue(product.Latitude), SharedFunctions.GetDoubleValue(product.Longitude))).ToList();
+            }
             ViewBag.NoOfProducts = products.Count();
             return View(products);
         }

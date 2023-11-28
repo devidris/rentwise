@@ -45,5 +45,14 @@ namespace RentWise.Models
         public int Rating { get; set; } = 0;
 
         public int MaxRentalDays { get; set; } = 0;
+
+        [Display(Name = "Address")]
+        [Required(ErrorMessage = "Address is required")]
+        public string Address { get; set; }
+        public string? Latitude { get; set; }
+        public string? Longitude { get; set; }
+
+        public string? Country { get; set; }
+        public string? State { get; set; }
     }
 }

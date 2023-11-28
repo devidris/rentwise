@@ -1,4 +1,6 @@
-﻿<style>
+﻿@model List<ProductModel> 
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCM2yIul54qUYlxHgjTmvp52goQdqPcUwA&libraries=places"></script>
+<style>
     .category {
         color: #717171;
         cursor: pointer;
@@ -22,6 +24,10 @@
         .category:hover {
             color: #222222;
         }
+
+    .pac-container {
+        z-index: 10000 !important;
+    }
 </style>
 <div class="home">
     <input type="hidden" id="category" value="@ViewBag.Category" />
@@ -118,50 +124,58 @@
             </div>
         </div>
     </div>
-       
 
-        @* Filter Modal *@
-        <div class="modal fade" id="filter" tabindex="-1" role="dialog" aria-labelledby="filterLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="filterLabel">Filter</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="closeModel()">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="price">
-                            <div class="row">
-                                <div class="col-6">
-                                    <label class="form-label">Weekly Rental Price</label>
-                                    <div class="input-group mb-3">
-                                        <input class="form-control" placeholder="Enter Minimum Amount" min="1">
-                                    </div>
+
+    @* Filter Modal *@
+    <div class="modal fade" id="filter" tabindex="-1" role="dialog" aria-labelledby="filterLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="filterLabel">Filter</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="closeModel()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="price">
+                        <div class="row">
+                            <div class="col-6">
+                                <label class="form-label">Weekly Rental Price</label>
+                                <div class="input-group mb-3">
+                                    <input class="form-control min" type="number" placeholder="Enter Minimum Amount" min="1" value="@ViewBag.Min">
                                 </div>
-                                <div class="col-6">
-                                    <label class="form-label">Weekly Rental Price</label>
-                                    <div class="input-group mb-3">
-                                        <input class="form-control" placeholder="Enter Maximum Amount" min="1">
-                                    </div>
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label">Weekly Rental Price</label>
+                                <div class="input-group mb-3">
+                                    <input class="form-control max" type="number" placeholder="Enter Maximum Amount" min="1" value="@ViewBag.Max">
                                 </div>
                             </div>
                         </div>
-                        <label class="form-label">Location</label>
-                        <input class="form-control" id="autocomplete-input" placeholder="Enter location" />
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="closeModel()">Close</button>
-                        <button type="button" class="btn btn-primary">Filter</button>
-                    </div>
+                    <label class="form-label">Location</label>
+                    <input class="form-control" id="autocomplete-input" placeholder="Enter location" />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="closeModel()">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="filter()">Filter</button>
                 </div>
             </div>
+        </div>
 
 
     </div>
 
     <div class="my-5">
-        @if (ViewBag.NoOfProducts > 0) { }
+        @if (ViewBag.NoOfProducts > 0)
+        {
+            <div class="d-flex flex-wrap justify-content-center">
+                @foreach (ProductModel product in Model)
+                {
+                    <partial name="_DisplayPreview" for="@product" />
+                }
+            </div>
+        }
         else
         {
             <h1 class="text-center">No product in this category</h1>
@@ -171,6 +185,7 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jcarousel/0.3.6/jquery.jcarousel.min.js"></script>
 <script src="~/js/controller/home/Index.js"></script>
+@* Carousel *@
 <script>
     (function ($) {
         $(function () {
@@ -222,7 +237,9 @@
         });
     })(jQuery);
 </script>
+
 <script>
+    let lat, lng
     const category = $('#category').val()
     console.log(category)
     $('.hr').addClass('d-none')
@@ -261,7 +278,6 @@
 
         // Use jQuery to parse the URL and get the query parameters
         const params = new URLSearchParams(url);
-        console.log(params.has("category"))
         // Check if the parameter exists in the URL
         if (params.has(paramName)) {
             // Return the value of the parameter
@@ -271,4 +287,88 @@
             return null;
         }
     }
+    function filter() {
+        const min = $('.min').val()
+        const max = $('.max').val()
+        // Get the current URL
+        const currentUrl = new URL(location.href);
+
+        if (min) {
+            // Check if the 'min' parameter already exists
+            if (currentUrl.searchParams.has('min')) {
+                // If it exists, update its value
+                currentUrl.searchParams.set('min', min);
+            } else {
+                // If it doesn't exist, add the 'category' parameter
+                currentUrl.searchParams.append('min', min);
+            }
+
+        }
+
+        if (max) {
+            // Check if the 'max' parameter already exists
+            if (currentUrl.searchParams.has('max')) {
+                // If it exists, update its value
+                currentUrl.searchParams.set('max', max);
+            } else {
+                // If it doesn't exist, add the 'category' parameter
+                currentUrl.searchParams.append('max', max);
+
+            }
+        }
+        if (lat) {
+            // Check if the 'lat' parameter already exists
+            if (currentUrl.searchParams.has('lat')) {
+                // If it exists, update its value
+                currentUrl.searchParams.set('lat', lat);
+            } else {
+                // If it doesn't exist, add the 'category' parameter
+                currentUrl.searchParams.append('lat', lat);
+            }
+        } else {
+            if (currentUrl.searchParams.has('lat')) {
+                // If it exists, update its value
+                currentUrl.searchParams.set('lat', lat);
+            }
+        }
+        if (lng) {
+            // Check if the 'lng' parameter already exists
+            if (currentUrl.searchParams.has('lng')) {
+                // If it exists, update its value
+                currentUrl.searchParams.set('lng', lng);
+            } else {
+                // If it doesn't exist, add the 'category' parameter
+                currentUrl.searchParams.append('lng', lng);
+            }
+        } else {
+            // Check if the 'lng' parameter already exists
+            if (currentUrl.searchParams.has('lng')) {
+                // If it exists, update its value
+                currentUrl.searchParams.delete('lng', lng);
+            }
+        }
+
+        // Set the updated URL
+        location.href = currentUrl.toString();
+    }
+
+</script>
+@* Autocomplete Address *@
+<script>
+    // Initialize the Places Autocomplete
+    const autocomplete = new google.maps.places.Autocomplete(document.getElementById('autocomplete-input'));
+
+    // Set the types to restrict the search to addresses only
+    autocomplete.setTypes(['address']);
+
+    // Listen for the event when a place is selected
+    autocomplete.addListener('place_changed', function () {
+        const place = autocomplete.getPlace();
+        if (place.geometry && place.geometry.location) {
+            const latitude = place.geometry.location.lat();
+            const longitude = place.geometry.location.lng();
+            lat = latitude
+            lng = longitude
+        }
+    });
 </script>
