@@ -23,25 +23,13 @@ namespace RentWise.Controllers
 
         }
 
-        public IActionResult Index()
+        public IActionResult Index(int category = 2)
         {
-            IEnumerable<ProductModel> Construction = _unitOfWork.Product.GetAll(u => u.LkpCategory == 1, "Agent").Take(9);
-            IEnumerable<ProductModel> CarRental = _unitOfWork.Product.GetAll(u => u.LkpCategory == 2,"Agent").Take(9);
-            IEnumerable<ProductModel> OfficeItem = _unitOfWork.Product.GetAll(u => u.LkpCategory == 3, "Agent").Take(9);
-            IEnumerable<ProductModel> Event = _unitOfWork.Product.GetAll(u => u.LkpCategory == 4, "Agent").Take(9);
-            IEnumerable<ProductModel> CarTracker = _unitOfWork.Product.GetAll(u => u.LkpCategory == 5, "Agent").Take(9);
-            ViewBag.Construction = Construction;
-            ViewBag.ConstructionCount = Construction.Count();
-            ViewBag.CarRental = CarRental;
-            ViewBag.CarRentalCount = CarRental.Count();
-            ViewBag.OfficeItem = OfficeItem;
-            ViewBag.OfficeItemCount = OfficeItem.Count();
-            ViewBag.Events = Event;
-            ViewBag.EventsCount = Event.Count();
-            ViewBag.CarTracker = CarTracker;
-            ViewBag.CarTrackerCount = CarTracker.Count();
+            ViewBag.Category = category;
             ViewBag.Link = _config.Value.AgentWebsiteLink;
-            return View();
+            List<ProductModel> products = _unitOfWork.Product.GetAll(u=>u.LkpCategory == category).ToList();
+            ViewBag.NoOfProducts = products.Count();
+            return View(products);
         }
 
         public IActionResult Privacy()

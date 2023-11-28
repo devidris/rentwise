@@ -1,126 +1,274 @@
-﻿<div class="home">
-    <partial name="_Hero" />
-    <partial name="_OurServices" />
-    <section class="p-5 gray">
-        <div class="button bg-secondary rounded-pill m-auto header">
-            Construction Equipments
-        </div>
-        <p class="text-black-50 text-center justify-content-center mt-3">Rent High-quality Construction equipment available for short term and long term projects</p>
-        <div class="mt-5">
-            @if (ViewBag.ConstructionCount > 0)
-            {
-                <div class="d-flex flex-wrap justify-content-center">
-                    @foreach (ProductModel construction in ViewBag.Construction)
-                    {
-                        <partial name="_DisplayPreview" for="@construction" />
-                    }
+﻿<style>
+    .category {
+        color: #717171;
+        cursor: pointer;
+        transition: all .3s ease-in-out;
+        font-size: 1.1rem;
+        font-weight: 700;
+    }
+
+        .category i {
+            font-size: 1.5rem;
+        }
+
+        .category hr {
+            border: 2px solid #000;
+            width: 100px;
+            border-radius: 100vmin;
+            margin: auto;
+            margin-top: 10px;
+        }
+
+        .category:hover {
+            color: #222222;
+        }
+</style>
+<div class="home">
+    <input type="hidden" id="category" value="@ViewBag.Category" />
+    <div class="row">
+        <div class="wrapper col-11">
+            <div class="jcarousel-wrapper">
+                <div class="jcarousel">
+                    <ul>
+                        <li>
+                            <div class="d-flex flex-column align-items-center category" onclick="selectCategory(2)">
+                                <i class="bi bi-car-front-fill"></i>
+                                <span>Car</span>
+                                <hr class="2 hr" />
+                            </div>
+                        </li>
+                        <li>
+                            <div class="d-flex flex-column align-items-center category" onclick="selectCategory(1)">
+                                <i class="bi bi-building-fill-gear"></i>
+                                <span>Contruction</span>
+                                <hr class="1 hr" />
+                            </div>
+                        </li>
+                        <li>
+                            <div class="d-flex flex-column align-items-center  category" onclick="selectCategory(3)">
+                                <i class="bi bi-display-fill"></i>
+                                <span>Office</span>
+                                <hr class="3 hr" />
+                            </div>
+                        </li>
+                        <li>
+                            <div class="d-flex flex-column align-items-center  category" onclick="selectCategory(4)">
+                                <i class="bi bi-people-fill"></i>
+                                <span>Events</span>
+                                <hr class="4 hr" />
+                            </div>
+                        </li>
+                        <li>
+                            <div class="d-flex flex-column align-items-center  category" onclick="selectCategory(5)">
+                                <i class="bi bi-people-fill"></i>
+                                <span>Tracker(sales)</span>
+                                <hr class="5 hr" />
+                            </div>
+                        </li>
+                        <li>
+                            <div class="d-flex flex-column align-items-center category" onclick="selectCategory(6)">
+                                <i class="bi bi-badge-ad-fill"></i>
+                                <span>Bill Board</span>
+                                <hr class="6 hr" />
+                            </div>
+                        </li>
+                        <li>
+                            <div class="d-flex flex-column align-items-center category" onclick="selectCategory(7)">
+                                <i class="bi bi-building-fill"></i>
+                                <span>Short Stay</span>
+                                <hr class="7 hr" />
+                            </div>
+                        </li>
+                        <li>
+                            <div class="d-flex flex-column align-items-center category" onclick="selectCategory(8)">
+                                <i class="bi bi-bank2"></i>
+                                <span>Motel</span>
+                                <hr class="8 hr" />
+                            </div>
+                        </li>
+                        <li>
+                            <div class="d-flex flex-column align-items-center category" onclick="selectCategory(9)">
+                                <i class="bi bi-water"></i>
+                                <span>Boat/Yatch</span>
+                                <hr class="9 hr" />
+                            </div>
+                        </li>
+                        <li>
+                            <div class="d-flex flex-column align-items-center category" onclick="selectCategory(10)">
+                                <i class="bi bi-dpad-fill"></i>
+                                <span>Games</span>
+                                <hr class="10 hr" />
+                            </div>
+                        </li>
+
+                    </ul>
                 </div>
-                <a class="button bg-secondary text-dark rounded-pill w-fit m-auto d-block mt-3 text-decoration-none" asp-action="Index" asp-controller="Category" asp-route-id="1">See More</a>
-            }
-            else
-            {
-                <h2 class="text-center">No Product in this category</h2>
-            }
+
+                <a href="#" class="jcarousel-control-prev">&lsaquo;</a>
+                <a href="#" class="jcarousel-control-next">&rsaquo;</a>
+
+                <p class="jcarousel-pagination"></p>
+            </div>
         </div>
-    </section>
-    <section class="p-5">
-        <div class="button bg-secondary rounded-pill m-auto header">
-            Car Rentals
+        <div class="col-1">
+            <div class="vr"></div>
+            <div class="d-flex flex-column align-items-center category" onclick="openModel()">
+                <i class="bi bi-funnel-fill"></i>
+                <span>Filter</span>
+            </div>
         </div>
-        <p class="text-black-50 text-center mt-3">Rent High-quality Construction equipment available for short term and long term projects</p>
-        <div class="mt-5">
-            @if (ViewBag.CarRentalCount > 0)
-            {
-                <div class="d-flex flex-wrap justify-content-center">
-                    @foreach (ProductModel car in ViewBag.CarRental)
-                    {
-                        <partial name="_DisplayPreview" for="@car" />
-                    }
+    </div>
+       
+
+        @* Filter Modal *@
+        <div class="modal fade" id="filter" tabindex="-1" role="dialog" aria-labelledby="filterLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="filterLabel">Filter</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="closeModel()">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="price">
+                            <div class="row">
+                                <div class="col-6">
+                                    <label class="form-label">Weekly Rental Price</label>
+                                    <div class="input-group mb-3">
+                                        <input class="form-control" placeholder="Enter Minimum Amount" min="1">
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label">Weekly Rental Price</label>
+                                    <div class="input-group mb-3">
+                                        <input class="form-control" placeholder="Enter Maximum Amount" min="1">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <label class="form-label">Location</label>
+                        <input class="form-control" id="autocomplete-input" placeholder="Enter location" />
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="closeModel()">Close</button>
+                        <button type="button" class="btn btn-primary">Filter</button>
+                    </div>
                 </div>
-                <a class="button bg-secondary text-dark rounded-pill w-fit m-auto d-block mt-3 text-decoration-none" asp-action="Index" asp-controller="Category" asp-route-id="2">See More</a>
-            }
-            else
-            {
-                <h2 class="text-center">No Product in this category</h2>
-            }
-        </div>
-    </section>
-    <section class="p-5">
-        <div class="button bg-secondary rounded-pill m-auto header">
-            Office Items/Personal Items
-        </div>
-        <p class="text-black-50 text-center mt-3">Rent High-quality Construction equipment available for short term and long term projects</p>
-        <div class="mt-5">
-            @if (ViewBag.OfficeItemCount > 0)
-            {
-                <div class="d-flex flex-wrap justify-content-center">
-                    @foreach (ProductModel item in ViewBag.OfficeItem)
-                    {
-                        <partial name="_DisplayPreview" for="@item" />
-                    }
-                </div>
-                <a class="button bg-secondary text-dark rounded-pill w-fit m-auto d-block mt-3 text-decoration-none" asp-action="Index" asp-controller="Category" asp-route-id="3">See More</a>
-            }
-            else
-            {
-                <h2 class="text-center">No Product in this category</h2>
-            }
+            </div>
 
 
-        </div>
-    </section>
-    <section class="p-5">
-        <div class="button bg-secondary rounded-pill m-auto header">
-            Events/ Equipment Rentals
-        </div>
-        <p class="text-black-50 text-center justify-content-center mt-3">Rent High-quality Construction equipment available for short term and long term projects</p>
-        <div class="mt-5">
-            @if (ViewBag.EventsCount > 0)
-            {
-                <div class="d-flex flex-wrap justify-content-center">
-                    @foreach (ProductModel eventRental in ViewBag.Events)
-                    {
-                        <partial name="_DisplayPreview" for="@eventRental" />
-                    }
-                </div>
-                <a class="button bg-secondary text-dark rounded-pill w-fit m-auto d-block mt-3 text-decoration-none" asp-action="Index" asp-controller="Category" asp-route-id="4">See More</a>
-            }
-            else
-            {
-                <h2 class="text-center">No Product in this category</h2>
-            }
+    </div>
 
-        </div>
-    </section>
-    <section class="row p-5">
-        <img src="~/img/ads-banner.png" alt="Ads banner" class="col-6" />
-        <img src="~/img/ads-banner.png" alt="Ads banner" class="col-6" />
-    </section>
-
-    <section class="p-5">
-        <div class="button bg-secondary rounded-pill m-auto header">
-            Sales Of Vehicles Trackers
-        </div>
-        <p class="text-black-50 text-center mt-3">Rent High-quality Construction equipment available for short term and long term projects</p>
-        <div class="mt-5">
-            @if (ViewBag.CarTrackerCount > 0)
-            {
-                <div class="d-flex flex-wrap justify-content-center">
-                    @foreach (ProductModel tracker in ViewBag.CarTracker)
-                    {
-                        <partial name="_DisplayPreview" for="@tracker" />
-                    }
-                </div>
-                <a class="button bg-secondary text-dark rounded-pill w-fit m-auto d-block mt-3 text-decoration-none" asp-action="Index" asp-controller="Category" asp-route-id="5">See More</a>
-            }
-            else
-            {
-                <h2 class="text-center">No Product in this category</h2>
-            }
-
-        </div>
-    </section>
+    <div class="my-5">
+        @if (ViewBag.NoOfProducts > 0) { }
+        else
+        {
+            <h1 class="text-center">No product in this category</h1>
+        }
+    </div>
 </div>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jcarousel/0.3.6/jquery.jcarousel.min.js"></script>
 <script src="~/js/controller/home/Index.js"></script>
+<script>
+    (function ($) {
+        $(function () {
+            var jcarousel = $('.jcarousel');
+
+            jcarousel
+                .on('jcarousel:reload jcarousel:create', function () {
+                    var carousel = $(this),
+                        width = carousel.innerWidth();
+
+                    if (width >= 600) {
+                        width = width / 7;
+                    } else if (width >= 350) {
+                        width = width / 2;
+                    }
+
+                    carousel.jcarousel('items').css('width', Math.ceil(width) + 'px');
+                })
+                .jcarousel({
+                    wrap: 'circular'
+                });
+
+            $('.jcarousel-control-prev')
+                .jcarouselControl({
+                    target: '-=1'
+                });
+
+            $('.jcarousel-control-next')
+                .jcarouselControl({
+                    target: '+=1'
+                });
+
+            $('.jcarousel-pagination')
+                .on('jcarouselpagination:active', 'a', function () {
+                    $(this).addClass('active');
+                })
+                .on('jcarouselpagination:inactive', 'a', function () {
+                    $(this).removeClass('active');
+                })
+                .on('click', function (e) {
+                    e.preventDefault();
+                })
+                .jcarouselPagination({
+                    perPage: 1,
+                    item: function (page) {
+                        return '<a href="#' + page + '">' + page + '</a>';
+                    }
+                });
+        });
+    })(jQuery);
+</script>
+<script>
+    const category = $('#category').val()
+    console.log(category)
+    $('.hr').addClass('d-none')
+    if (category) {
+        $('.' + category).removeClass('d-none')
+    } else {
+        $('.2').removeClass('d-none')
+    }
+    function openModel() {
+        $('#filter').modal('show')
+    }
+    function closeModel() {
+        $('#filter').modal('hide')
+    }
+    function selectCategory(lkpCategory) {
+        // Get the current URL
+        const currentUrl = new URL(location.href);
+
+
+        // Check if the 'category' parameter already exists
+        if (currentUrl.searchParams.has('category')) {
+            // If it exists, update its value
+            currentUrl.searchParams.set('category', lkpCategory);
+        } else {
+            // If it doesn't exist, add the 'category' parameter
+            currentUrl.searchParams.append('category', lkpCategory);
+        }
+
+        // Set the updated URL
+        location.href = currentUrl.toString();
+    }
+    function getQueryParamValue(paramName) {
+        // Get the full URL
+        const url = window.location.href;
+        console.log(url)
+
+        // Use jQuery to parse the URL and get the query parameters
+        const params = new URLSearchParams(url);
+        console.log(params.has("category"))
+        // Check if the parameter exists in the URL
+        if (params.has(paramName)) {
+            // Return the value of the parameter
+            return params.get(paramName);
+        } else {
+            // Return null if the parameter is not found
+            return null;
+        }
+    }
+</script>
