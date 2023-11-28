@@ -286,7 +286,7 @@
                 </div>
                 <div class="form-floating mb-3">
                     <input class="form-control" id="autocomplete-input" />
-                    <label asp-for="@Model.Address" class="form-label">Store Address</label>
+                    <label asp-for="@Model.Address" class="form-label">Location</label>
                     <input asp-for="@Model.Address" class="store-address" hidden />
                     <input asp-for="@Model.Latitude" class="latitude" hidden />
                     <input asp-for="@Model.Longitude" class="longitude" hidden />
@@ -389,6 +389,7 @@
                 // Handle the click event on the delete icon
                 deleteIcon.addEventListener('click', function () {
                     // Remove the corresponding file from fileList
+                    container.remove();
                     Array.from(fileList.files).forEach((f, index) => {
                         if (f === file) {
                             fileList.items.remove(index);
@@ -396,7 +397,7 @@
                     });
 
                     // Update the input files
-                    $('#allimages')[0].files = fileList.files;
+                    // $('#allimages')[0].files = fileList.files;
                 });
             }
 
@@ -485,11 +486,11 @@
                                 const country = component.long_name;
                                 $('.country').val(country)
                             }
-
                             if (component.types.includes('administrative_area_level_1')) {
                                 const state = component.long_name;
                                 $('.state').val(state)
                             }
+                    
                         });
                     } else {
                         console.log("No results found for reverse geocoding");
