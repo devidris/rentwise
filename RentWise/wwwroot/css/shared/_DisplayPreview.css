@@ -11,7 +11,8 @@
     .display-preview img {
         width: 270px;
         height: 250px;
-        border-radius:.7rem;
+        border-radius: .7rem;
+        object-fit: cover;
     }
 
     .display-preview .content {
