@@ -1,0 +1,28 @@
+﻿.category {
+    color: #717171;
+    cursor: pointer;
+    transition: all .3s ease-in-out;
+    font-size: 1.1rem;
+    font-weight: 700;
+    display:none;
+}
+
+.category i {
+    font-size: 1.5rem;
+}
+
+.category hr {
+    border: 2px solid #000;
+    width: 100px;
+    border-radius: 100vmin;
+    margin: auto;
+    margin-top: 10px;
+}
+
+.category:hover {
+    color: #222222;
+}
+
+.pac-container {
+    z-index: 10000 !important;
+}

@@ -1,50 +1,40 @@
-﻿
-    (function ($) {
-        $(function () {
-            var jcarousel = $('.jcarousel');
+﻿let lat, lng
+const category = $('#category').val()
+$('.hr').addClass('d-none')
+if (category) {
+    $('.' + category).removeClass('d-none')
+} else {
+    $('.2').removeClass('d-none')
+}
 
-            jcarousel
-                .on('jcarousel:reload jcarousel:create', function () {
-                    var carousel = $(this),
-                        width = carousel.innerWidth();
+function selectCategory(lkpCategory) {
+    location.href = buildQueryParams('category', lkpCategory).toString();
+}
 
-                    if (width >= 600) {
-                        width = width / 7;
-                    } else if (width >= 350) {
-                        width = width / 2;
-                    }
+function filter() {
+    const min = $('.min').val()
+    const max = $('.max').val()
+    if (min >= max) {
+        toastr.error("Mimimum price must be more than or equal to maximum price");
+        return;
+    }
+    // Get the current URL
+    const currentUrl = new URL(location.href);
 
-                    carousel.jcarousel('items').css('width', Math.ceil(width) + 'px');
-                })
-                .jcarousel({
-                    wrap: 'circular'
-                });
+    let url;
 
-            $('.jcarousel-control-prev')
-                .jcarouselControl({
-                    target: '-=1'
-                });
+    if (min) {
+        url = buildQueryParams('min', min)
+    }
 
-            $('.jcarousel-control-next')
-                .jcarouselControl({
-                    target: '+=1'
-                });
+    if (max) {
+        url = buildQueryParams('max', max, url)
+    }
+    if (lat && lng) {
+        url = buildQueryParams('lat', lat, url, true)
+        url = buildQueryParams('lng', lng, url, true)
+    }
 
-            $('.jcarousel-pagination')
-                .on('jcarouselpagination:active', 'a', function () {
-                    $(this).addClass('active');
-                })
-                .on('jcarouselpagination:inactive', 'a', function () {
-                    $(this).removeClass('active');
-                })
-                .on('click', function (e) {
-                    e.preventDefault();
-                })
-                .jcarouselPagination({
-                    perPage: 1,
-                    item: function (page) {
-                        return '<a href="#' + page + '">' + page + '</a>';
-                    }
-                });
-        });
-    })(jQuery);
+    // Set the updated URL
+    location.href = url.toString();
+}
