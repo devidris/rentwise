@@ -1,34 +1,5 @@
 ﻿@model List<ProductModel> 
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCM2yIul54qUYlxHgjTmvp52goQdqPcUwA&libraries=places"></script>
-<style>
-    .category {
-        color: #717171;
-        cursor: pointer;
-        transition: all .3s ease-in-out;
-        font-size: 1.1rem;
-        font-weight: 700;
-    }
-
-        .category i {
-            font-size: 1.5rem;
-        }
-
-        .category hr {
-            border: 2px solid #000;
-            width: 100px;
-            border-radius: 100vmin;
-            margin: auto;
-            margin-top: 10px;
-        }
-
-        .category:hover {
-            color: #222222;
-        }
-
-    .pac-container {
-        z-index: 10000 !important;
-    }
-</style>
+<link rel="stylesheet" type="text/css" href="~/css/controller/home/Index.css"/>
 <div class="home">
     <input type="hidden" id="category" value="@ViewBag.Category" />
     <div class="row">
@@ -118,7 +89,7 @@
         </div>
         <div class="col-1">
             <div class="vr"></div>
-            <div class="d-flex flex-column align-items-center category" onclick="openModel()">
+            <div class="d-flex flex-column align-items-center category" onclick="openModel('filter')">
                 <i class="bi bi-funnel-fill"></i>
                 <span>Filter</span>
             </div>
@@ -132,7 +103,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="filterLabel">Filter</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="closeModel()">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="closeModel('filter')">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
@@ -157,7 +128,7 @@
                     <input class="form-control" id="autocomplete-input" placeholder="Enter location" />
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="closeModel()">Close</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="closeModel('filter')">Close</button>
                     <button type="button" class="btn btn-primary" onclick="filter()">Filter</button>
                 </div>
             </div>
@@ -184,191 +155,6 @@
 </div>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jcarousel/0.3.6/jquery.jcarousel.min.js"></script>
+<script src="~/js/jCarousel.js"></script>
 <script src="~/js/controller/home/Index.js"></script>
-@* Carousel *@
-<script>
-    (function ($) {
-        $(function () {
-            var jcarousel = $('.jcarousel');
-
-            jcarousel
-                .on('jcarousel:reload jcarousel:create', function () {
-                    var carousel = $(this),
-                        width = carousel.innerWidth();
-
-                    if (width >= 600) {
-                        width = width / 7;
-                    } else if (width >= 350) {
-                        width = width / 2;
-                    }
-
-                    carousel.jcarousel('items').css('width', Math.ceil(width) + 'px');
-                })
-                .jcarousel({
-                    wrap: 'circular'
-                });
-
-            $('.jcarousel-control-prev')
-                .jcarouselControl({
-                    target: '-=1'
-                });
-
-            $('.jcarousel-control-next')
-                .jcarouselControl({
-                    target: '+=1'
-                });
-
-            $('.jcarousel-pagination')
-                .on('jcarouselpagination:active', 'a', function () {
-                    $(this).addClass('active');
-                })
-                .on('jcarouselpagination:inactive', 'a', function () {
-                    $(this).removeClass('active');
-                })
-                .on('click', function (e) {
-                    e.preventDefault();
-                })
-                .jcarouselPagination({
-                    perPage: 1,
-                    item: function (page) {
-                        return '<a href="#' + page + '">' + page + '</a>';
-                    }
-                });
-        });
-    })(jQuery);
-</script>
-
-<script>
-    let lat, lng
-    const category = $('#category').val()
-    console.log(category)
-    $('.hr').addClass('d-none')
-    if (category) {
-        $('.' + category).removeClass('d-none')
-    } else {
-        $('.2').removeClass('d-none')
-    }
-    function openModel() {
-        $('#filter').modal('show')
-    }
-    function closeModel() {
-        $('#filter').modal('hide')
-    }
-    function selectCategory(lkpCategory) {
-        // Get the current URL
-        const currentUrl = new URL(location.href);
-
-
-        // Check if the 'category' parameter already exists
-        if (currentUrl.searchParams.has('category')) {
-            // If it exists, update its value
-            currentUrl.searchParams.set('category', lkpCategory);
-        } else {
-            // If it doesn't exist, add the 'category' parameter
-            currentUrl.searchParams.append('category', lkpCategory);
-        }
-
-        // Set the updated URL
-        location.href = currentUrl.toString();
-    }
-    function getQueryParamValue(paramName) {
-        // Get the full URL
-        const url = window.location.href;
-        console.log(url)
-
-        // Use jQuery to parse the URL and get the query parameters
-        const params = new URLSearchParams(url);
-        // Check if the parameter exists in the URL
-        if (params.has(paramName)) {
-            // Return the value of the parameter
-            return params.get(paramName);
-        } else {
-            // Return null if the parameter is not found
-            return null;
-        }
-    }
-    function filter() {
-        const min = $('.min').val()
-        const max = $('.max').val()
-        // Get the current URL
-        const currentUrl = new URL(location.href);
-
-        if (min) {
-            // Check if the 'min' parameter already exists
-            if (currentUrl.searchParams.has('min')) {
-                // If it exists, update its value
-                currentUrl.searchParams.set('min', min);
-            } else {
-                // If it doesn't exist, add the 'category' parameter
-                currentUrl.searchParams.append('min', min);
-            }
-
-        }
-
-        if (max) {
-            // Check if the 'max' parameter already exists
-            if (currentUrl.searchParams.has('max')) {
-                // If it exists, update its value
-                currentUrl.searchParams.set('max', max);
-            } else {
-                // If it doesn't exist, add the 'category' parameter
-                currentUrl.searchParams.append('max', max);
-
-            }
-        }
-        if (lat) {
-            // Check if the 'lat' parameter already exists
-            if (currentUrl.searchParams.has('lat')) {
-                // If it exists, update its value
-                currentUrl.searchParams.set('lat', lat);
-            } else {
-                // If it doesn't exist, add the 'category' parameter
-                currentUrl.searchParams.append('lat', lat);
-            }
-        } else {
-            if (currentUrl.searchParams.has('lat')) {
-                // If it exists, update its value
-                currentUrl.searchParams.set('lat', lat);
-            }
-        }
-        if (lng) {
-            // Check if the 'lng' parameter already exists
-            if (currentUrl.searchParams.has('lng')) {
-                // If it exists, update its value
-                currentUrl.searchParams.set('lng', lng);
-            } else {
-                // If it doesn't exist, add the 'category' parameter
-                currentUrl.searchParams.append('lng', lng);
-            }
-        } else {
-            // Check if the 'lng' parameter already exists
-            if (currentUrl.searchParams.has('lng')) {
-                // If it exists, update its value
-                currentUrl.searchParams.delete('lng', lng);
-            }
-        }
-
-        // Set the updated URL
-        location.href = currentUrl.toString();
-    }
-
-</script>
-@* Autocomplete Address *@
-<script>
-    // Initialize the Places Autocomplete
-    const autocomplete = new google.maps.places.Autocomplete(document.getElementById('autocomplete-input'));
-
-    // Set the types to restrict the search to addresses only
-    autocomplete.setTypes(['address']);
-
-    // Listen for the event when a place is selected
-    autocomplete.addListener('place_changed', function () {
-        const place = autocomplete.getPlace();
-        if (place.geometry && place.geometry.location) {
-            const latitude = place.geometry.location.lat();
-            const longitude = place.geometry.location.lng();
-            lat = latitude
-            lng = longitude
-        }
-    });
-</script>
+<script src="~/js/AutocompleteAddress.js"></script>
