@@ -1,27 +1,53 @@
 ﻿<link rel="stylesheet" href="~/css/shared/_DisplayPreview.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/jCarousel-single.css" asp-append-version="true" />
 
 @model ProductModel
 @{
     string imagePath = $"{ViewBag.Link}/images/products/{Model.AgentId}/{Model.ProductId}/MainImage.webp";
     string profile = $"{ViewBag.Link}/images/agent/{Model.AgentId}/registration/ProfilePicture.png";
 }
-    <div class="display-preview cursor-pointer" onclick="navigate('@Model.ProductId')">
-        <div class="agent d-flex gap-3 align-items-center p-3 bg-white w-auto">
-            <img src=@profile alt="" />
-            <p class="m-0 h6">@Model.Agent.FirstName</p>
-        </div>
-        <img src=@imagePath alt="" />
-        <div class="content">
-            <h5>@Model.Name</h5>
-            <p><b>₵@Model.PriceDay/Day</b></p>
-            <p><i class="bi bi-star-fill text-primary"></i>@Model.Rating</p>
-            <p><b>@Model.State,@Model.Country</b></p>
+@* onclick="navigate('@Model.ProductId')" *@
+<div class="display-preview cursor-pointer">
+    <div class="jcarousel-pl-wrapper">
+        <div class="jcarousel-pl">
+            <ul>
+                <li><img src=@imagePath width="270" height="250" alt=""></li>
+                @for (int i = 0; i < Model.NoOfImages; i++)
+                {
+                    string otherImagePath = $"{ViewBag.Link}/images/products/{Model.AgentId}/{Model.ProductId}/OtherImages-{i}.webp";
+                    <li><img src=@otherImagePath width="270" height="250" alt=""></li>
+                }
+            </ul>
         </div>
 
-    </div> 
-    <script>
-        function navigate(id) {
-            const link = `https://${location.host}/Category/View/${id}`
-        location.href = link
+        @*  <p class="photo-credits">
+        Photos by <a href="http://www.mw-fotografie.de">Marc Wiegelmann</a>
+        </p> *@
+
+        <a href="#" class="jcarousel-pl-control-prev">&lsaquo;</a>
+        <a href="#" class="jcarousel-pl-control-next">&rsaquo;</a>
+
+        <p class="jcarousel-pl-pagination">
+
+        </p>
+    </div>
+    @* <img src=@imagePath alt="Product Image" /> *@
+    <div class="content">
+        <h5>@Model.Name</h5>
+        <p><b>₵@Model.PriceDay</b>/Day</p>
+        <p class="d-flex gap-1"><i class="bi bi-star-fill text-primary fs-4"></i><span class="fs-5">@Model.Rating</span></p>
+        @if (Model.State != null && Model.Country != null)
+        {
+            <p>@Model.State,@Model.Country</p>
         }
-    </script>
+        else
+        {
+            <p></p>
+        }
+    </div>
+
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jcarousel/0.3.6/jquery.jcarousel.min.js"></script>
+<script src="~/js/_DisplayPreview.js"></script>
+<script src="~/js/jCarousel-single.js"></script>

@@ -1,5 +1,7 @@
 ﻿@model List<ProductModel> 
 <link rel="stylesheet" type="text/css" href="~/css/controller/home/Index.css"/>
+<link rel="stylesheet" type="text/css" href="css/jCarousel.css" />
+
 <div class="home">
     <input type="hidden" id="category" value="@ViewBag.Category" />
     <div class="row">
@@ -140,7 +142,7 @@
     <div class="my-5">
         @if (ViewBag.NoOfProducts > 0)
         {
-            <div class="d-flex flex-wrap justify-content-center">
+            <div class="d-flex flex-wrap px-5 gap-5">
                 @foreach (ProductModel product in Model)
                 {
                     <partial name="_DisplayPreview" for="@product" />
