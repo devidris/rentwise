@@ -36,4 +36,8 @@
     </Content>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\images\53ceddc1-99dd-4c55-8dd3-1e7f00bc2831\" />
+  </ItemGroup>
+
 </Project>

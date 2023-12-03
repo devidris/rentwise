@@ -1,5 +1,47 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
+﻿@model ChangePasswordModel;
+<div class="profile my-5">
+
+    <form id="change-password-form" method="post" class="w-75 m-auto" enctype="multipart/form-data">
+        <label for="image" class="d-block w-fit m-auto mb-3 cursor-pointer">
+            <img src="@Url.Content(@ViewBag.ProfilePicture)" alt="Profile Picture" width="200" class="image-display" />
+            <i class="bi bi-box-arrow-in-down fs-1 text-primary"></i>
+        </label>
+        <input type="file" accept="image/*" id="image" name="image" hidden />
+        <h1 class="my-3">Update Password</h1>
+        <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+        <div class="form-floating mb-3">
+            <input asp-for="@Model.OldPassword" class="form-control" autocomplete="current-password" aria-required="true" placeholder="Please enter your old password." />
+            <label asp-for="@Model.OldPassword" class="form-label"></label>
+            <span asp-validation-for="@Model.OldPassword" class="text-danger"></span>
+        </div>
+        <div class="form-floating mb-3">
+            <input asp-for="@Model.NewPassword" class="form-control" autocomplete="new-password" aria-required="true" placeholder="Please enter your new password." />
+            <label asp-for="@Model.NewPassword" class="form-label"></label>
+            <span asp-validation-for="@Model.NewPassword" class="text-danger"></span>
+        </div>
+        <div class="form-floating mb-3">
+            <input asp-for="@Model.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" placeholder="Please confirm your new password." />
+            <label asp-for="@Model.ConfirmPassword" class="form-label"></label>
+            <span asp-validation-for="@Model.ConfirmPassword" class="text-danger"></span>
+        </div>
+        <button type="submit" class="w-100 btn btn-lg btn-primary">Update password</button>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        $(document).ready(function () {
+            $("#image").change(function () {
+                var file = this.files[0];
+                if (file) {
+                    var reader = new FileReader();
+                    reader.onload = function (event) {
+                        $(".image-display").attr("src", event.target.result);
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        });
+    </script>
+    }
