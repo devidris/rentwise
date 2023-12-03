@@ -1,7 +1,12 @@
 ﻿@model List<ProductModel> 
 <link rel="stylesheet" type="text/css" href="~/css/controller/home/Index.css"/>
-<link rel="stylesheet" type="text/css" href="css/jCarousel.css" />
-
+<link rel="stylesheet" type="text/css" href="~/css/jCarousel.css" />
+@if (TempData["ToastMessage"] != null)
+{
+    <script>
+        toastr.success('@Html.Raw( TempData["ToastMessage"])');
+    </script>
+}
 <div class="home">
     <input type="hidden" id="category" value="@ViewBag.Category" />
     <div class="row">
@@ -158,5 +163,5 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jcarousel/0.3.6/jquery.jcarousel.min.js"></script>
 <script src="~/js/jCarousel.js"></script>
-<script src="~/js/controller/home/Index.js"></script>
 <script src="~/js/AutocompleteAddress.js"></script>
+<script src="~/js/controller/home/Index.js"></script>

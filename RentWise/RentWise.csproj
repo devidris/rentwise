@@ -30,10 +30,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Update="Views\Category\View.cshtml">
+    <Content Update="Views\Store\View.cshtml">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\images\53ceddc1-99dd-4c55-8dd3-1e7f00bc2831\" />
   </ItemGroup>
 
 </Project>

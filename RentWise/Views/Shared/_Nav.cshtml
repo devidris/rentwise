@@ -9,6 +9,7 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-center">
+                    <partial name="_LoginPartial" />
                 <li class="nav-item">
                     <a class="nav-link" asp-controller="Page" asp-action="About">About Us</a>
                 </li>
@@ -18,12 +19,7 @@
                 <li class="nav-item">
                     <a class="nav-link" asp-controller="Page" asp-action="Contact">Contact us</a>
                 </li> 
-              @*   <li>
-                    <i class="bi bi-cart4 icon"></i>
-                </li> *@
-                <li>
-                    <partial name="_LoginPartial" />
-                </li>
+
             </ul>
         </div>
     </div>

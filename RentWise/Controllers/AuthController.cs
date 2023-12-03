@@ -8,6 +8,10 @@ using System.Text;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using RentWise.Utility;
+using System.Security.Claims;
+using Microsoft.Extensions.Options;
+using RentWise.Models;
+using Microsoft.AspNetCore.Hosting;
 
 namespace RentWise.Controllers
 {
@@ -19,13 +23,15 @@ namespace RentWise.Controllers
         private readonly IUserStore<IdentityUser> _userStore;
         private readonly ILogger<Authentication> _logger;
         private readonly IEmailSender _emailSender;
+        private readonly IOptions<RentWiseConfig> _config;
+        private readonly IWebHostEnvironment _webHostEnvironment;
         public AuthController(
               UserManager<IdentityUser> userManager,
             RoleManager<IdentityRole> roleManager,
             IUserStore<IdentityUser> userStore,
             SignInManager<IdentityUser> signInManager,
             ILogger<Authentication> logger,
-            IEmailSender emailSender)
+            IEmailSender emailSender, IOptions<RentWiseConfig> config, IWebHostEnvironment webHostEnvironment)
 
         {
 
@@ -35,6 +41,8 @@ namespace RentWise.Controllers
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            _config = config;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         public IActionResult Register()
@@ -104,8 +112,8 @@ namespace RentWise.Controllers
 
         public async Task<IActionResult> Login(AuthenticationLogin model)
         {
-         
-            
+
+
             if (ModelState.IsValid)
             {
                 // This doesn't count login failures towards account lockout
@@ -133,5 +141,123 @@ namespace RentWise.Controllers
             }
             return View();
         }
+
+        public IActionResult ForgotPassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ForgotPassword(ForgetPasswordModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await _userManager.FindByEmailAsync(model.Email);
+                TempData["ToastMessage"] = "Please check your email to reset your password";
+                if (user == null)
+                {
+                    // Don't reveal that the user does not exist or is not confirmed
+                    return RedirectToAction("Index", "Home");
+                }
+
+                var code = await _userManager.GeneratePasswordResetTokenAsync(user);
+                code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+                var callbackUrl = Url.Page(
+                    "/Account/ResetPassword",
+                    pageHandler: null,
+                    values: new { area = "Identity", code },
+                    protocol: Request.Scheme);
+
+                await _emailSender.SendEmailAsync(
+                    model.Email,
+                    "Reset Password",
+                    $"Please reset your password by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+
+            }
+            return RedirectToAction("Index", "Home");
+        }
+        [Authorize]
+        public IActionResult Profile()
+        {
+            string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            string profilePicture = $"/images/{userId}/";
+            if (!Directory.Exists(profilePicture))
+            {
+                profilePicture = $"/images/{userId}/{String.Join("", Lookup.Upload[5].Split(" "))}.png";
+            }
+            else
+            {
+                profilePicture = "~/img/profile.png";
+            }
+            ViewBag.ProfilePicture = profilePicture;
+            return View();
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> Profile(ChangePasswordModel model, IFormFile? image)
+        {
+            string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (ModelState.IsValid)
+            {
+                if (image != null)
+                {
+                    #region Saving Profile Image
+                    string profileImageName = String.Join("", Lookup.Upload[5].Split(" ")) + ".png";
+                    saveImage(userId, profileImageName, image);
+                    #endregion
+                }  
+                string profilePicture = $"/images/{userId}/";
+                if (!Directory.Exists(profilePicture))
+                {
+                    profilePicture = $"/images/{userId}/{String.Join("", Lookup.Upload[5].Split(" "))}.png";
+                } else
+                {
+                    profilePicture = "~/img/profile.png";
+                }
+
+                ViewBag.ProfilePicture = profilePicture;
+
+                if(!String.IsNullOrEmpty(model.OldPassword))
+                {
+                    var user = await _userManager.GetUserAsync(User);
+                    var changePasswordResult = await _userManager.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
+                    if (!changePasswordResult.Succeeded)
+                    {
+                        foreach (var error in changePasswordResult.Errors)
+                        {
+                            ModelState.AddModelError(string.Empty, error.Description);
+                        }
+                        return View();
+                    }
+                    await _signInManager.RefreshSignInAsync(user);
+                }
+                return View();
+            }
+
+            return View();
+        }
+
+        public void saveImage(string userId, string fileName, IFormFile file)
+        {
+            string wwwRootPath = _webHostEnvironment.WebRootPath;
+            string filePath = @"images\" + userId + "\\";
+            string finalPath = Path.Combine(wwwRootPath, filePath);
+
+            if (!Directory.Exists(finalPath))
+            {
+                Directory.CreateDirectory(finalPath);
+            }
+
+            using (FileStream fileStream = new FileStream(Path.Combine(finalPath, fileName), FileMode.Create))
+            {
+                file.CopyTo(fileStream);
+            }
+
+        }
+
     }
 }

@@ -1,54 +1,70 @@
 ﻿@using RentWise.Utility;
-
 @model ProductModel
+
+@* Stylesheet import *@
 <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-<link rel="stylesheet" href="~/css/controller/category/_Calender.css">
+<link rel="stylesheet" href="~/css/controller/store/_Calender.css">
 <link href="https://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-<link rel="stylesheet" type="text/css" href="css/jCarousel.css" />
+<link rel="stylesheet" type="text/css" href="~/css/jCarousel.css" />
+<link rel="stylesheet" type="text/css" href="~/css/controller/store/View.css" />
+
+@* Hidden inputs to store values *@
+<input value="@Model.PriceWeek" class="price-week" hidden />
+<input value="@Model.PriceWeekend" class="price-weekend" hidden />
+<input value="@Model.PriceDay" class="price-day" hidden />
+<input value="@Model.ProductId" class="product-id" hidden />
 
 <div class="preview">
-    <input value="@Model.PriceWeek" class="price-week" hidden />
-    <input value="@Model.PriceWeekend" class="price-weekend" hidden />
-    <input value="@Model.PriceDay" class="price-day" hidden />
     <p class="px-5 py-2 fs-5 m-0">
-        <span>Home</span>
+        <span>
+            <a asp-controller="Home" asp-action="Index">Home</a>
+        </span>
         <span>></span>
-        <span>@Lookup.Categories[Model.LkpCategory]</span>
+        <span>
+            <a asp-controller="Home" asp-action="Index" asp-route-category="@Model.LkpCategory">@Lookup.Categories[Model.LkpCategory]</a>
+        </span>
         <span>></span>
-        <span>@Model.Name</span>
+        <span>
+            <a href="#">@Model.Name</a>
+        </span>
     </p>
-
     <div class="d-flex align-items-center px-5 justify-content-between">
-        <h2 class="m-0">@ViewBag.StoreName</h2>
+        <h2 class="m-0">@Model.Agent.StoreName</h2>
         <p class="m-0"><span class="fs-3 font-weight-bold">$@Model.PriceDay/</span><span>day</span></p>
 
     </div>
     <div class="d-flex align-items-center px-5 justify-content-between mb-3">
-        <p>@ViewBag.StoreAddress</p>
+        <p>@Model.Agent.State,@Model.Agent.Country</p>
         <div class="d-flex align-items-center gap-3">
-            <i class="bi bi-heart fs-4"></i>
+            @if (ViewBag.IsLike)
+            {
+                <i class="bi bi-heart-fill fs-4 cursor-pointer" id="like" onclick="like()"></i>
+
+            } else
+            {
+                <i class="bi bi-heart fs-4 cursor-pointer" id="like" onclick="like()"></i>
+            }
             <i class="bi bi-chat-left fs-4"></i>
-            <button class="btn btn-primary">Book Now</button>
+            <a class="btn btn-primary text-decoration-none" href="#calendar_first">Book Now</a>
         </div>
     </div>
     @{
         string imagePath = $"{ViewBag.Link}/images/products/{Model.AgentId}/{Model.ProductId}/MainImage.webp";
     }
     <div class="p-5 text-center bg-image rounded-3" style="
-    background-image: url(@Url.Content(imagePath));
+    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('@Url.Content(imagePath)');
     height: 700px;
-background-repeat:no-repeat;
-background-size:cover;
-filter:brightness(70%)
+    background-repeat:no-repeat;
+    background-size:cover;
   ">
-        <div class="mask h-100" style="filter:brightness(130%)">
+        <div class="mask h-100">
             <div class="d-flex justify-content-center align-items-center h-100">
                 <div class="text-white">
                     <h1 class="mb-3 display-3">WELCOME TO</h1>
-                    <h1 class="mb-3">@ViewBag.StoreName</h1>
-                    <a class="btn btn-light btn-lg text-white" role="button">Check Availiability</a>
+                    <h1 class="mb-3">@Model.Agent.StoreName</h1>
+                    <a class="btn btn-light btn-lg text-white" role="button" href="#calendar_first">Check Availiability</a>
                 </div>
             </div>
         </div>
@@ -148,7 +164,7 @@ filter:brightness(70%)
             <input type="number" value="@Model.MaxRentalDays" class="maxRentalDay" hidden />
             <p>Maximum number of rental days: @Model.MaxRentalDays</p>
             <hr/>
-            <h5 class="mt-5">Other Items by @ViewBag.StoreName (@ViewBag.NoOfOtherProducts)</h5>
+            <h5 class="mt-5">Other Items by @Model.Agent.StoreName (@ViewBag.NoOfOtherProducts)</h5>
             <div>
                 @for (int i = 0; i < Math.Min(5, ViewBag.NoOfOtherProducts); i++)
                 {
@@ -215,9 +231,9 @@ filter:brightness(70%)
             }
             <div class="profile px-5 py-3">
                 <img src="@Url.Content(agentImage)" alt="" width="50" height="50" class="rounded-circle"/>
-                <h6>@ViewBag.StoreName</h6>
+                <h6>@Model.Agent.StoreAddress</h6>
                 <p>
-                    Member since @ViewBag.RegistrationDate.ToString("dd/MM/yy")
+                    Member since @Model.Agent.CreatedAt.ToString("dd/MM/yy")
                 </p>
 
                 @* <a href="">Message</a> *@
@@ -290,226 +306,9 @@ filter:brightness(70%)
 </div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jcarousel/0.3.6/jquery.jcarousel.min.js"></script>
-
-<style>
-    .profile {
-        display: grid;
-        grid-template-columns: auto max-content;
-        grid-template-rows: min-content min-content min-content;
-        width: fit-content;
-        align-items: center;
-        justify-items: center;
-        column-gap: 1rem;
-        box-shadow: 0px 1px 4px 1px rgba(0, 0, 0, 0.25);
-        margin: auto;
-        margin-bottom: 2rem;
-    }
-
-        .profile > * {
-            margin: 0
-        }
-
-        .profile img {
-            grid-row: 1/-1;
-        }
-
-    .price-breakdown {
-        box-shadow: 0px 1px 4px 1px rgba(0, 0, 0, 0.25);
-    }
-</style>
-<script src="~/js/controller/category/_Rating.js"></script>
-<script>
-    (function ($) {
-        $(function () {
-            var jcarousel = $('.jcarousel');
-
-            jcarousel
-                .on('jcarousel:reload jcarousel:create', function () {
-                    var carousel = $(this),
-                        width = carousel.innerWidth();
-
-                    if (width >= 600) {
-                        width = width / 7;
-                    } else if (width >= 350) {
-                        width = width / 2;
-                    }
-
-                    carousel.jcarousel('items').css('width', Math.ceil(width) + 'px');
-                })
-                .jcarousel({
-                    wrap: 'circular'
-                });
-
-            $('.jcarousel-control-prev')
-                .jcarouselControl({
-                    target: '-=1'
-                });
-
-            $('.jcarousel-control-next')
-                .jcarouselControl({
-                    target: '+=1'
-                });
-
-            $('.jcarousel-pagination')
-                .on('jcarouselpagination:active', 'a', function () {
-                    $(this).addClass('active');
-                })
-                .on('jcarouselpagination:inactive', 'a', function () {
-                    $(this).removeClass('active');
-                })
-                .on('click', function (e) {
-                    e.preventDefault();
-                })
-                .jcarouselPagination({
-                    perPage: 1,
-                    item: function (page) {
-                        return '<a href="#' + page + '">' + page + '</a>';
-                    }
-                });
-        });
-    })(jQuery);
-    let noOfProduct = 1;
-    let datesSelected = {}
-    function calculatePrice(selectedDates) {
-        datesSelected = selectedDates
-        let weekdaysCount = 0;
-        let weekendsCount = 0;
-        let weeksCount
-        let firstDate = null;
-        let lastDate = null;
-
-        // Assuming a simple price calculation based on the number of selected dates
-        var days = Object.keys(selectedDates).reduce(function (total, year) {
-            return total + Object.keys(selectedDates[year]).reduce(function (yearTotal, month) {
-                return yearTotal + selectedDates[year][month].reduce(function (monthTotal, day) {
-                    var iterDate = new Date(year, month, day);
-                    var dayOfWeek = iterDate.getDay();
-
-                    if (firstDate === null || iterDate < firstDate) {
-                        firstDate = iterDate;
-                    }
-                    if (lastDate === null || iterDate > lastDate) {
-                        lastDate = iterDate;
-                    }
-
-                    if (dayOfWeek >= 1 && dayOfWeek <= 5) {
-                        // Weekday (Monday to Friday)
-                        weekdaysCount++;
-                    } else {
-                        // Weekend (Saturday or Sunday)
-                        weekendsCount++;
-                    }
-
-                    return monthTotal + 1; // Increment the total count
-                }, 0);
-            }, 0);
-        }, 0);
-        if (days > $('.maxRentalDay').val()) {
-            toastr.error($('.maxRentalDay').val() + "days is the maximum allowed rental date")
-            return
-        }
-        weeksCount = Math.floor(weekdaysCount / 5);
-        weekdaysCount = weekdaysCount - (weeksCount * 5)
-
-        const priceDay = $('.price-day').val()
-        const totalDayPrice = priceDay * weekdaysCount * noOfProduct
-        const calDaysPrice = `
-                <p>
-                $${priceDay}/Day * ${weekdaysCount} Day * ${noOfProduct} Product
-                </p>
-                <p>
-                $${totalDayPrice}
-                </p>
-                `
-        $('.day').html(calDaysPrice)
-
-
-        const priceWeekend = $('.price-weekend').val()
-        const totalWeekendPrice =
-            priceWeekend * weekendsCount * noOfProduct
-        const calWeekendPrice = `
-                    <p>
-                        $${priceWeekend}/Day * ${weekendsCount} Weekend * ${noOfProduct} Product
-                    </p>
-                    <p>
-                        $${totalWeekendPrice}
-                    </p>
-                    `
-        $('.weekend').html(calWeekendPrice)
-
-        const priceWeek = $('.price-week').val()
-        const totalWeekPrice = priceWeek * weeksCount * noOfProduct
-        const calWeekPrice = `
-                        <p>
-                            $${priceWeek}/Day * ${weeksCount} Week * ${noOfProduct} Product
-                        </p>
-                        <p>
-                            $${totalWeekPrice}
-                        </p>
-                        `
-        $('.week').html(calWeekPrice)
-
-        $('.total-price').text('$' + (totalDayPrice + totalWeekendPrice + totalWeekPrice))
-        $('.start-date').text(formatDate(firstDate))
-        $('.end-date').text(formatDate(lastDate))
-    }
-    function setNoOfProduct(action) {
-        if (action == 'add') {
-            noOfProduct++
-        } else {
-            if (noOfProduct - 1 < 0) {
-
-            } else {
-                noOfProduct
-            }
-        }
-        $('.no-of-product').text(noOfProduct)
-        $('.no-of-product-2').text(`(${noOfProduct} item(s) added)`)
-        calculatePrice(datesSelected)
-
-
-    }
-    // Function to format date as "Month Day, Year" (e.g., "May 6, 2023")
-    function formatDate(date) {
-        if (date === null) {
-            return "N/A";
-        }
-
-        var monthNames = [
-            "January", "February", "March",
-            "April", "May", "June", "July",
-            "August", "September", "October",
-            "November", "December"
-        ];
-
-        var month = monthNames[date.getMonth()];
-        var day = date.getDate();
-        var year = date.getFullYear();
-
-        return month + ' ' + day + ', ' + year;
-    }
-
-    $('.insert-rating').starRating(
-        {
-            starSize: 1,
-            showInfo: false
-        });
-
-    $(document).on('change', '.insert-rating',
-        function (e, stars, index) {
-            $('.rating-value').val(stars*2);
-        });
-    $(document).ready(function () {
-        $("form").submit(function (event) {
-            const ratingValue = $(".rating-value").val();
-            const ratingDescription = $("textarea").val();
-
-            if (ratingValue === "0" || ratingDescription.trim() === "" || ratingDescription.split(' ').length > 250) {
-                toastr.error("Please provide a valid rating and description (not more than 250 words).");
-                event.preventDefault(); // Prevent form submission
-            }
-        });
-    });
-</script>
-<script src="~/js/controller/category/_Calender.js"></script>
+<script src="~/js/jCarousel.js"></script>
+<script src="~/js/controller/store/_Rating.js"></script>
+<script src="~/js/controller/store/View.js"></script>
+<script src="~/js/controller/store/_Calender.js"></script>

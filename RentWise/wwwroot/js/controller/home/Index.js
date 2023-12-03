@@ -1,5 +1,6 @@
 ﻿let lat, lng
 const category = $('#category').val()
+console.log(category)
 $('.hr').addClass('d-none')
 if (category) {
     $('.' + category).removeClass('d-none')
@@ -8,7 +9,7 @@ if (category) {
 }
 
 function selectCategory(lkpCategory) {
-    location.href = buildQueryParams('category', lkpCategory).toString();
+    location.href = buildQueryParams('Category', lkpCategory).toString();
 }
 
 function filter() {

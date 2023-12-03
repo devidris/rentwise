@@ -1,6 +1,6 @@
 ﻿@model AuthenticationLogin
 
-<form id="loginForm" asp-route-returnUrl="/Home/Index" method="post" class="w-50 m-auto p-5">
+<form id="loginForm" asp-route-returnUrl="/Home/Index" method="post" class="w-50 m-auto p-5" enctype="multipart/form-data>
     <h2>Login to your account</h2>
     <hr />
     <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
@@ -28,7 +28,7 @@
             <a asp-controller="Auth" asp-action="Register">Register as a new user</a>
         </p>
         <p>
-            <a id="forgot-password" asp-area="Identity" asp-page="/Account/ForgotPassword">Forgot your password?</a>
+            <a id="forgot-password" asp-controller="Auth" asp-action="ForgotPassword">Forgot your password?</a>
 
         </p>
     </div>

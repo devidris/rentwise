@@ -101,4 +101,22 @@ namespace RentWise.Models.Identity
    
 
     }
+
+    public class ForgetPasswordModel { 
+        [Required]
+        [EmailAddress]
+        public string Email { get; set; }
+    }
+    public class ChangePasswordModel
+    {
+        [Display(Name = "Old Password")]
+        public string? OldPassword { get; set; }
+        [Display(Name = "Password")]
+        public string? NewPassword { get; set; }
+        
+        [Display(Name = "Confirm password")]
+        [Compare("NewPassword", ErrorMessage = "The password and confirmation password do not match.")]
+        public string? ConfirmPassword { get; set; }
+
+    }
 }

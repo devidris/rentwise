@@ -7,11 +7,12 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/RentWise.styles.css" asp-append-version="true" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" integrity="sha512-vKMx8UnXk60zUwyUnUPM3HbQo8QfmNx7+ltw8Pm5zLusl1XIfwcxo8DbWCqMGKaWeNxWA8yrx5v3SaVpMvR3CA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css"/>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCM2yIul54qUYlxHgjTmvp52goQdqPcUwA&libraries=places"></script>
     <script src="https://cdn.jsdelivr.net/npm/@@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js" integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 </head>
 <body>
     <header>
@@ -30,16 +31,11 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-4 col-sm-12 mt-sm-4">
-                    <h3 class="m-0">Rent Wise</h3>
-                    <p>@@ Rgistered company</p>
+
                     <p class="mb-3"><b>Follow us at</b> <i class="bi bi-instagram"></i></p>
-                    <ul class="list-unstyled mt-4">
-                        <li><a href="" class="link-light text-decoration-none">Equal Housing Opportunity</a></li>
+                    <ul class="list-unstyled mt-4">    
                         <li><a href="" class="link-light text-decoration-none">About Us</a></li>
-                        <li><a href="" class="link-light text-decoration-none">Sitemap</a></li>
-                        <li><a href="" class="link-light text-decoration-none">Contact Us</a></li>
                         <li><a href="" class="link-light text-decoration-none">Legal Terms & Privacy Policy</a></li>
-                        <li><a href="" class="link-light text-decoration-none">Accessibility</a></li>
                         <li><a href="" class="link-light text-decoration-none">Advertise</a></li>
                         <li><a href="" class="link-light text-decoration-none">Avoid Scams and Fraud</a></li>
                     </ul>
@@ -64,9 +60,13 @@
         </div>
 
     </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
+    <!-- Inside YourView.cshtml -->
+    @section Scripts {
+        <script src="~/lib/jquery/dist/jquery.min.js"></script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="~/js/site.js" asp-append-version="true"></script>
+    }
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

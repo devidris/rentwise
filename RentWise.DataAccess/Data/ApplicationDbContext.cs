@@ -20,6 +20,8 @@ public class ApplicationDbContext : IdentityDbContext<IdentityUser>
     public DbSet<ProductModel> Products { get; set; }
 
     public DbSet<ReviewModel> Reviews { get; set; }
+
+    public DbSet<LikeModel> Likes { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
