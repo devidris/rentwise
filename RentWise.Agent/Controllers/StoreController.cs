@@ -32,6 +32,8 @@ namespace RentWise.Agent.Controllers
             AgentRegistrationModel agentDetails = _unitOfWork.AgentRegistration.Get(u=>u.Id == user.Id,"User");
             ViewBag.RegistrationDate = agentDetails.CreatedAt;
             ViewBag.Id = user.Id;
+            LikeModel like = _unitOfWork.Like.Get(u=>u.UserId == user.Id);
+            ViewBag.IsLike = like;
             if(id == 0)
             {
                 IEnumerable<ProductModel> userProducts = _unitOfWork.Product.GetAll(u => u.AgentId == user.Id, "Agent");

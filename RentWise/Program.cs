@@ -31,6 +31,11 @@ namespace RentWise
             builder.Services.AddRazorPages();
             builder.Services.AddScoped<IAgentRegistrationRepository, AgentRegistrationRepository>();
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+            builder.Services.ConfigureApplicationCookie(options => {
+                options.LoginPath = $"/Auth/Login";
+                options.LogoutPath = $"/Auth/Logout";
+                options.AccessDeniedPath = $"/Auth/AccessDenied";
+            });
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
