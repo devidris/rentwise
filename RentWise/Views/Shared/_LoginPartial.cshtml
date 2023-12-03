@@ -9,40 +9,35 @@
 }
 <link rel="stylesheet" href="~/css/shared/_LoginPartial.css" asp-append-version="true" />
 <ul class="navbar-nav align-items-center gap-2">
-@if (SignInManager.IsSignedIn(User))
-{
-
-
-    <li class="nav-item">
+    @if (SignInManager.IsSignedIn(User))
+    {
+        <li class="nav-item">
             <div class="dropdown">
-                <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <i class="fas fa-bars"></i> <!-- Font Awesome bars icon -->
+                <a class="dropdown-toggle link-white" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="bi bi-person-fill text-white fs-3"></i>
                 </a>
-                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                <div class="dropdown-menu dropdown-menu-end text-white profile-dropdown" aria-labelledby="dropdownMenuLink">
                     <a class="dropdown-item" href="#">Action</a>
-                    <a class="dropdown-item" href="#">Another action</a>
-                    <a class="dropdown-item" href="#">Something else here</a>
+                    <a class="dropdown-item" href="#">Another</a>
+                    <a class="dropdown-item" href="#">Reset Password</a>
                     <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
                         <a id="logout" href="#" class="dropdown-item" onclick="document.getElementById('logoutForm').submit();">Logout</a>
                     </form>
                 </div>
             </div>
-    </li>
-
-}
-else
-{
-    <li class="nav-item m-0">
-        @* <a class="nav-link text-light" id="register" asp-area="Identity" asp-page="/Account/Register">Register</a> *@
+        </li>
+    }
+    else
+    {
+        <li class="nav-item m-0">
             <button type="button" class="btn btn-outline-secondary m-0" data-toggle="modal" data-target="#register">
-               Register
+                Register
             </button>
             <!-- Modal -->
             @Html.Partial("_Register", authentication)
-          
-    </li>
+
+        </li>
         <li class="nav-item m-0">
-            @* <a class="nav-link text-light" id="login" asp-area="Identity" asp-page="/Account/Login">Login</a> *@
             <button type="button" class="btn btn-secondary m-0" data-toggle="modal" data-target="#login">
                 Login
             </button>
@@ -50,7 +45,7 @@ else
             @Html.Partial("_Login", authenticationLogin)
 
         </li>
-}
+    }
 </ul>
 
 <!-- Bootstrap JavaScript (and jQuery) -->

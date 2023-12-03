@@ -1,7 +1,12 @@
 ﻿@model List<ProductModel> 
 <link rel="stylesheet" type="text/css" href="~/css/controller/home/Index.css"/>
 <link rel="stylesheet" type="text/css" href="~/css/jCarousel.css" />
-
+@if (TempData["ToastMessage"] != null)
+{
+    <script>
+        toastr.success('@Html.Raw( TempData["ToastMessage"])');
+    </script>
+}
 <div class="home">
     <input type="hidden" id="category" value="@ViewBag.Category" />
     <div class="row">
