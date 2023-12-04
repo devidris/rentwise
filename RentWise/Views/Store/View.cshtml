@@ -6,7 +6,7 @@
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 <link rel="stylesheet" href="~/css/controller/store/_Calender.css">
 <link href="https://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"/>
 <link rel="stylesheet" type="text/css" href="~/css/jCarousel.css" />
 <link rel="stylesheet" type="text/css" href="~/css/controller/store/View.css" />
 
@@ -46,7 +46,7 @@
             {
                 <i class="bi bi-heart fs-4 cursor-pointer" id="like" onclick="like()"></i>
             }
-            <i class="bi bi-chat-left fs-4"></i>
+            <i class="bi bi-chat-left fs-4 cursor-pointer" onclick="openModel('chatModal')"></i>
             <a class="btn btn-primary text-decoration-none" href="#calendar_first">Book Now</a>
         </div>
     </div>
@@ -303,12 +303,35 @@
             </div>
         </div>
     </div>
+    @* Chat Modal *@
+    <div class="modal fade" id="chatModal" tabindex="-1" role="dialog" aria-labelledby="chatModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="chatModalLabel">Sent Text To Seller</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="closeModel('chatModal')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <textarea rows="10" placeholder="Enter your message" class="p-3 w-100" id="messageSellar"></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="closeModel('chatModal')">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="sendMessage('@Model.Agent.Id','messageSellar')">Message Sellar</button>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
 </div>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jcarousel/0.3.6/jquery.jcarousel.min.js"></script>
-<script src="~/js/jCarousel.js"></script>
-<script src="~/js/controller/store/_Rating.js"></script>
-<script src="~/js/controller/store/View.js"></script>
-<script src="~/js/controller/store/_Calender.js"></script>
+@section Scripts{
+    <script src="~/js/jCarousel.js" asp-append-version="true"></script>
+    <script src="~/js/controller/store/_Rating.js" asp-append-version="true"></script>
+    <script src="~/js/controller/store/View.js" asp-append-version="true"></script>
+    <script src="~/js/controller/store/_Calender.js" asp-append-version="true"></script>
+}
+

@@ -166,7 +166,6 @@ function like() {
             type
         },
         success: function (result) {
-            console.log('reult', result)
             if (result.statusCode == 401) {
                 toastr.error("Please login to like this product");
                 location.href = '/Auth/Login'

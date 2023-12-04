@@ -20,6 +20,7 @@
 
 function openModel(name, isId = true) {
     if (isId) {
+        console.log($('#' + name))
         $('#' + name).modal('show')
     } else {
         $('.' + name).modal('show')
@@ -31,4 +32,39 @@ function closeModel(name, isId = true) {
     } else {
         $('.' + name).modal('hide')
     }
+}
+function sendMessage(receipient, messageInput) {
+    const message = $('#'+messageInput).val();
+    if (!message || message == "") {
+        toastr.error("Message cannot be empty");
+        return
+    }
+    $.ajax({
+        url: "/Store/SendMessage",
+        type: "POST",
+        data: {
+            receipient,
+            message
+        },
+        success: function (response) {
+            if (response.success) {
+                $('#' + messageInput).val("");
+                if (messageInput == "messageSellar") {
+                toastr.success(response.message);
+                closeModel("chatModal");
+                }
+                
+            } else {
+                if (result.statusCode == 401) {
+                    toastr.error("Please login to like this product");
+                    location.href = '/Auth/Login'
+                } else {
+                    toastr.error("Sonething went wrong");
+                }
+            }
+        },
+        error: function (error) {
+            toastr.error(error.message);
+        }
+    })
 }

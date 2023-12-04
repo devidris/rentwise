@@ -43,6 +43,15 @@ namespace RentWise.Utility
             {10, "Other Images" },
             {11, "Cancellation Policy" },
         };
+
+        public static Dictionary<int, string> ResponseMessages = new Dictionary<int, string>
+        {
+            {1,"Something went wrong"},
+            {2,"Internal Server Error" },
+            {3, "Not found"},
+            {4,"Unathorized" },
+            {5,"OK" }
+        };
     }
 
 

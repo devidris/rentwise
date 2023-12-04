@@ -235,10 +235,11 @@ namespace RentWise.Controllers
                     }
                     await _signInManager.RefreshSignInAsync(user);
                 }
-                return View();
+                TempData["ToastMessage"] = "Password Updated Successfully";  
+                return RedirectToAction("Profile", "Auth");
             }
 
-            return View();
+            return RedirectToAction("Profile","Auth");
         }
 
         public void saveImage(string userId, string fileName, IFormFile file)
