@@ -134,6 +134,7 @@ namespace RentWise.Controllers
             return RedirectToAction("View", "Store");
         }
         [HttpPost]
+        [Authorize]
         public ActionResult Like(string productId, string type)
         {
             string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -186,6 +187,51 @@ namespace RentWise.Controllers
                 Data = "Something Went Wrong"
             });
 
+        }
+        [HttpPost]
+        [Authorize]
+        [AllowAnonymous]
+        public ActionResult SendMessage(string Receipient, string Message)
+        {
+            try
+            {
+                string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                if (userId == null)
+                {
+                    return Json(new
+                    {
+                        StatusCode = (int)HttpStatusCode.Unauthorized,
+                        Message = Lookup.ResponseMessages[4],
+                        Data = "Unauthorized",
+                        Success = false
+                    });
+                }
+                ChatModel chat = new()
+                {
+                    FromUserId = userId,
+                    ToUserId = Receipient,
+                    Message = Message
+                };
+
+                _unitOfWork.Chat.Add(chat);
+                _unitOfWork.Save();
+                return Json(new
+                {
+                    StatusCode = (int)HttpStatusCode.OK,
+                    Message = "Message sent successfully",
+                    Data = Lookup.ResponseMessages[5],
+                    Success = true
+                });
+            } catch (Exception ex)
+            {
+                    return Json(new
+                    {
+                        StatusCode = (int)HttpStatusCode.InternalServerError,
+                        Message = Lookup.ResponseMessages[1],
+                        Data = "Server Error",
+                        Success = false
+                    });
+            }
         }
     }
 

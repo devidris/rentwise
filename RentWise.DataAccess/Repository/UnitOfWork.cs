@@ -17,6 +17,8 @@ namespace RentWise.DataAccess.Repository
 
         public ILikeRepository Like { get; private set; }
 
+        public IChatRepository Chat { get; private set; }
+
 
         public UnitOfWork(ApplicationDbContext db)
         {
@@ -25,6 +27,7 @@ namespace RentWise.DataAccess.Repository
             Product = new ProductRepository(_db);
             Review = new ReviewRepository(_db);
             Like = new LikeRepository(_db);
+            Chat = new ChatRepository(_db);
         }
 
         public void Save()

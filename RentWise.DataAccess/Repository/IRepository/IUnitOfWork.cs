@@ -12,6 +12,8 @@ namespace RentWise.DataAccess.Repository.IRepository
         IProductRepository Product { get; }
         IReviewRepository Review { get; }
         ILikeRepository Like { get; }
+
+        IChatRepository Chat { get; }
         void Save();
     }
 }
