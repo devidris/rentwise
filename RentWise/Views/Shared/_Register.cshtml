@@ -1,10 +1,10 @@
 ﻿@model Authentication;
-<div class="modal fade" id="register" tabindex="-1" aria-labelledby="registerLabel" aria-hidden="true">
+<div class="modal fade" id="register" tabindex="-1" role="dialog" aria-labelledby="registerLabel" aria-hidden="true">
     <form class="modal-dialog modal-dialog-centered" id="registerForm" asp-route-returnUrl="/Home/Index" method="post" asp-action="Register" asp-controller="Auth">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="registerLabel">Create a new account</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="closeModal('register')">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -32,11 +32,16 @@
                     <button id="registerSubmit" type="submit" class="btn btn-primary w-50">Register</button>
                 </div>
                 <div class="d-flex w-100 justify-content-between">
-                    <p>Have an account? Sign in</p>
-                    <p>Forget password?</p>
+                    <p>  <a asp-controller="Auth" asp-action="Login">Already have an account, Login</a></p>
+                    <p> <a id="forgot-password" asp-controller="Auth" asp-action="ForgotPassword">Forgot your password?</a></p>
                 </div>
             </div>
         </div>
     </form>
 </div>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+
+
 

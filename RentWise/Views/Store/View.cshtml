@@ -46,7 +46,7 @@
             {
                 <i class="bi bi-heart fs-4 cursor-pointer" id="like" onclick="like()"></i>
             }
-            <i class="bi bi-chat-left fs-4 cursor-pointer" onclick="openModel('chatModal')"></i>
+            <i class="bi bi-chat-left fs-4 cursor-pointer" onclick="openModal('chatModal')"></i>
             <a class="btn btn-primary text-decoration-none" href="#calendar_first">Book Now</a>
         </div>
     </div>
@@ -309,7 +309,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="chatModalLabel">Sent Text To Seller</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="closeModel('chatModal')">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="closeModal('chatModal')">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
@@ -317,7 +317,7 @@
                     <textarea rows="10" placeholder="Enter your message" class="p-3 w-100" id="messageSellar"></textarea>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="closeModel('chatModal')">Close</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="closeModal('chatModal')">Close</button>
                     <button type="button" class="btn btn-primary" onclick="sendMessage('@Model.Agent.Id','messageSellar')">Message Sellar</button>
                 </div>
             </div>
