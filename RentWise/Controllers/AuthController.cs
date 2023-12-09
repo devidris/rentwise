@@ -84,6 +84,7 @@ namespace RentWise.Controllers
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
             }
+           
             return View();
         }
 
@@ -182,8 +183,10 @@ namespace RentWise.Controllers
         public IActionResult Profile()
         {
             string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            string profilePicture = $"/images/{userId}/";
-            if (!Directory.Exists(profilePicture))
+            string profilePicture = $"images/{userId}";
+            string wwwRootPath = _webHostEnvironment.WebRootPath;
+            string finalPath = Path.Combine(wwwRootPath, profilePicture);
+            if (Directory.Exists(finalPath))
             {
                 profilePicture = $"/images/{userId}/{String.Join("", Lookup.Upload[5].Split(" "))}.png";
             }
@@ -211,7 +214,9 @@ namespace RentWise.Controllers
                     #endregion
                 }  
                 string profilePicture = $"/images/{userId}/";
-                if (!Directory.Exists(profilePicture))
+                string wwwRootPath = _webHostEnvironment.WebRootPath;
+                string finalPath = Path.Combine(wwwRootPath, profilePicture);
+                if (Directory.Exists(finalPath))
                 {
                     profilePicture = $"/images/{userId}/{String.Join("", Lookup.Upload[5].Split(" "))}.png";
                 } else

@@ -18,7 +18,7 @@
     return currentUrl;
 }
 
-function openModel(name, isId = true) {
+function openModal(name, isId = true) {
     if (isId) {
         console.log($('#' + name))
         $('#' + name).modal('show')
@@ -26,7 +26,7 @@ function openModel(name, isId = true) {
         $('.' + name).modal('show')
     }
 }
-function closeModel(name, isId = true) {
+function closeModal(name, isId = true) {
     if (isId) {
         $('#' + name).modal('hide')
     } else {
@@ -51,11 +51,11 @@ function sendMessage(receipient, messageInput) {
                 $('#' + messageInput).val("");
                 if (messageInput == "messageSellar") {
                 toastr.success(response.message);
-                closeModel("chatModal");
+                closeModal("chatModal");
                 }
                 
             } else {
-                if (result.statusCode == 401) {
+                if (response.statusCode == 401) {
                     toastr.error("Please login to like this product");
                     location.href = '/Auth/Login'
                 } else {

@@ -47,5 +47,33 @@ namespace RentWise.Utility
                 return 0.0; // Or any other appropriate default value
             }
         }
+        public static string FormatDuration(TimeSpan duration)
+        {
+            if (duration.TotalMinutes < 1)
+            {
+                return $"{(int)duration.TotalSeconds}s";
+            }
+            else if (duration.TotalHours < 1)
+            {
+                return $"{(int)duration.TotalMinutes}m";
+            }
+            else if (duration.TotalDays < 1)
+            {
+                return $"{(int)duration.TotalHours}h";
+            }
+            else if (duration.TotalDays < 7)
+            {
+                return $"{(int)duration.TotalDays}d";
+            }
+            else if (duration.TotalDays < 365)
+            {
+                return $"{(int)(duration.TotalDays / 7)}w";
+            }
+            else
+            {
+                return $"{(int)(duration.TotalDays / 365)}y";
+            }
+        }
+
     }
 }

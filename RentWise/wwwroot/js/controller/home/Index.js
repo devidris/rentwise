@@ -1,6 +1,5 @@
 ﻿let lat, lng
 const category = $('#category').val()
-console.log(category)
 $('.hr').addClass('d-none')
 if (category) {
     $('.' + category).removeClass('d-none')
