@@ -133,7 +133,7 @@ $(document).on('change', '.insert-rating',
 $(document).ready(function () {
     $("form").submit(function (event) {
         const ratingValue = $(".rating-value").val();
-        const ratingDescription = $("textarea").val();
+        const ratingDescription = $(".review").val();
 
         if (ratingValue === "0" || ratingDescription.trim() === "" || ratingDescription.split(' ').length > 250) {
             toastr.error("Please provide a valid rating and description (not more than 250 words).");
