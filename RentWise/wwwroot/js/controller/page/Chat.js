@@ -3,9 +3,6 @@ const chatSummaries = JSON.parse($('.chat-summaries').val());
 const userId = $('.user-id').val();
 const receipientId = $('.receipient-id').val();
 
-console.log('fullMessage', fullMessage)
-console.log('chatSummaries', chatSummaries)
-
 function displayProfiles() {
     let chatList = "";
     chatSummaries.forEach(chat => {
@@ -21,7 +18,6 @@ function displayProfiles() {
     $('.chats').html(chatList);
 
 }
-
 displayProfiles()
 
 function displayMessagePage() {
@@ -30,6 +26,7 @@ function displayMessagePage() {
     console.log(receipient)
     const receipientProfile = `
      <div class="chat-profile bg-white">
+         <a class="btn btn-primary" href="/page/chat"><i class="bi bi-arrow-left-short"></i>Back</a>
                 <img src="${receipient.ProfilePicture}" alt="" width="50" height="50" class="rounded-circle" />
                 <span class="ml-3">${receipient.User.UserName.split('@')[0]}</span>
             </div>`;
@@ -122,9 +119,11 @@ function send() {
     })
 }
 
-let socket;
+// Scroll to bottom of the chat
+$(document).ready(function () {
+    // Select the div with the overflow set to scroll
+    const scrollingDiv = $('#grid-container');
 
-function connectWebSocket() {
-    socket = new WebSocket(`wss://${location.host}/WebSocket/Socket`);
-}
-connectWebSocket()
+    // Set the scrollTop property to the maximum scroll height
+    scrollingDiv.scrollTop(scrollingDiv[0].scrollHeight);
+});

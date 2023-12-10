@@ -17,23 +17,16 @@
     {
 
       
-        <div class="col-3 bg-white pt-4">
-            <h3 class="h3">Message</h3>
-            <div class="search_input my-3">
-                <i class="bi bi-search text-muted"></i>
-                <input type="search" value="" placeholder="Search" class="bg-light" />
-            </div>
-            <div class="chats">
-            </div>
-        </div>
+        
         @if (ViewBag.OpenChat)
         {
-            <div class="col-9 bg-light chat-area">
+            <div class="col-12 bg-light chat-area">
                 <div class="chat-profile bg-white">
+                    <a class="btn btn-primary" asp-controller="Page" asp-action="Chat"><i class="bi bi-arrow-left-short"></i>Back</a>
                     <img src="~/img/profile.png" alt="" width="50" height="50" class="rounded-circle" />
                     <span class="ml-3">User Name</span>
                 </div>
-                <div class="grid pt-3" id="grid-container"></div>
+                <div class="grid pt-3 px-md-5 px-md-1" id="grid-container"></div>
                 <div class="chat-send row">
                     <input type="text" value="" placeholder="Message" class="col-10 border rounded-pill px-3" id="message" />
                     <button class="btn btn-primary col-2 ml-3" onclick="send()">Send</button>
@@ -42,12 +35,13 @@
         }
         else
         {
-            <div class="col-9 bg-light chat-area">
-                <div class="d-flex justify-content-center align-items-center flex-column">
-                    <div class="bg-white d-flex justify-content-center align-items-center p-5 flex-column rounded-circle" style="width:300px;height:300px">
-                        <i class="bi bi-chat-right-dots-fill display-1 text-primary"></i>
-                        <p class="display-6 text-center">Click on any chat to open</p>
-                    </div>
+            <div class="col-12 bg-white pt-4">
+                <h3 class="h3">Message</h3>
+                <div class="search_input my-3">
+                    <i class="bi bi-search text-muted"></i>
+                    <input type="search" value="" placeholder="Search" class="bg-light" />
+                </div>
+                <div class="chats">
                 </div>
             </div>
         }
