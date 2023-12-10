@@ -35,8 +35,8 @@ function calculatePrice(selectedDates) {
             }, 0);
         }, 0);
     }, 0);
-    if (days > $('.maxRentalDay').val()) {
-        toastr.error($('.maxRentalDay').val() + "days is the maximum allowed rental date")
+    if (days > 0 && days > $('.maxRentalDay').val()) {
+        toastr.error($('.maxRentalDay').val() + " days is the maximum allowed rental date")
         return
     }
     weeksCount = Math.floor(weekdaysCount / 5);
