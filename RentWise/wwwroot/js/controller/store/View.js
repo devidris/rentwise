@@ -89,9 +89,10 @@ function setNoOfProduct(action) {
         noOfProduct++
     } else {
         if (noOfProduct - 1 < 0) {
+            toastr.error("No of product cannot be less than 0")
 
         } else {
-            noOfProduct
+            noOfProduct--
         }
     }
     $('.no-of-product').text(noOfProduct)
