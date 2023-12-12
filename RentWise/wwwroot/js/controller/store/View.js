@@ -1,6 +1,8 @@
 ﻿
 let noOfProduct = 1;
 let datesSelected = {}
+let days = 0
+let totalPrice = 0
 function calculatePrice(selectedDates) {
     datesSelected = selectedDates
     let weekdaysCount = 0;
@@ -10,11 +12,11 @@ function calculatePrice(selectedDates) {
     let lastDate = null;
 
     // Assuming a simple price calculation based on the number of selected dates
-    var days = Object.keys(selectedDates).reduce(function (total, year) {
+     days = Object.keys(selectedDates).reduce(function (total, year) {
         return total + Object.keys(selectedDates[year]).reduce(function (yearTotal, month) {
             return yearTotal + selectedDates[year][month].reduce(function (monthTotal, day) {
-                var iterDate = new Date(year, month, day);
-                var dayOfWeek = iterDate.getDay();
+                let iterDate = new Date(year, month, day);
+                let dayOfWeek = iterDate.getDay();
 
                 if (firstDate === null || iterDate < firstDate) {
                     firstDate = iterDate;
@@ -79,8 +81,8 @@ function calculatePrice(selectedDates) {
                         </p>
                         `
     $('.week').html(calWeekPrice)
-
-    $('.total-price').text('$' + (totalDayPrice + totalWeekendPrice + totalWeekPrice))
+    totalPrice = totalDayPrice + totalWeekendPrice + totalWeekPrice
+    $('.total-price').text('$' + totalPrice)
     $('.start-date').text(formatDate(firstDate))
     $('.end-date').text(formatDate(lastDate))
 }
@@ -107,16 +109,16 @@ function formatDate(date) {
         return "N/A";
     }
 
-    var monthNames = [
+    let monthNames = [
         "January", "February", "March",
         "April", "May", "June", "July",
         "August", "September", "October",
         "November", "December"
     ];
 
-    var month = monthNames[date.getMonth()];
-    var day = date.getDate();
-    var year = date.getFullYear();
+    let month = monthNames[date.getMonth()];
+    let day = date.getDate();
+    let year = date.getFullYear();
 
     return month + ' ' + day + ', ' + year;
 }
@@ -182,4 +184,33 @@ function like() {
             toggleLike()
         }
     })
+}
+function bookNow() {
+    if (days == 0 || totalPrice == 0) {
+        Swal.fire('Error', 'Please select a date', 'error');
+        return
+    }
+
+    if (days > 0 && days > $('.maxRentalDay').val()) {
+        Swal.fire('Maximum rental days exceded',$('.maxRentalDay').val() + " day(s) is the maximum allowed rental date",'error')
+        return
+    }
+    const orderMessage = "Pleaced an order for " + noOfProduct + " " + $('.product-name').val() + " product(s) for " + days + " day(s) at $" + totalPrice + " from " + $('.start-date').text() + " to " + $('.end-date').text() + "."
+    const alertMessage = "You are about to place an order for " + noOfProduct + " " + $('.product-name').val() + " product(s) for " + days + " day(s) at ₵" + totalPrice + " from " + $('.start-date').text() + " to " + $('.end-date').text() + "."
+    // Show SweetAlert confirmation
+    Swal.fire({
+        title: 'Confirm Order',
+        text: alertMessage,
+        icon: 'info',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, place order',
+        cancelButtonText: 'No, cancel',
+    }).then((result) => {
+        if (result.isConfirmed) {
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+            Swal.fire('Cancelled', 'Your request has been cancelled.', 'info');
+        }
+    });
+
+
 }

@@ -15,6 +15,7 @@
 <input value="@Model.PriceWeekend" class="price-weekend" hidden />
 <input value="@Model.PriceDay" class="price-day" hidden />
 <input value="@Model.ProductId" class="product-id" hidden />
+<input value="@Model.Name" class="product-name" hidden />
 
 <div class="preview">
     <p class="px-5 py-2 fs-5 m-0">
@@ -181,7 +182,15 @@
 
                
             </div>
+            @if(ViewBag.NoOfRating == null)
+            {
+               <h5 class="mt-5">Review(0)</h5>  
+            }
+            else
+            {
+                
              <h5 class="mt-5">Review(@ViewBag.NoOfRating)</h5>
+            }
             @if (ViewBag.NoOfRating > 0)
             {
                 @foreach (ReviewModel Review in ViewBag.Reviews)
@@ -289,6 +298,8 @@
                         <p class="end-date">May 5th,2023</p>
                     </div>
                 </div>
+                <hr />
+                <button class="btn btn-primary w-100" onclick="bookNow()">Book Now</button>
             </div>
             <div>
                 @{
@@ -321,7 +332,6 @@
 
 
     </div>
-
 </div>
 
 @section Scripts{
