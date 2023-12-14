@@ -1,5 +1,10 @@
 ﻿@model AuthenticationLogin
-
+@if (TempData["ToastMessage"] != null)
+{
+    <script>
+        toastr.success('@Html.Raw( TempData["ToastMessage"])');
+    </script>
+}
 <form id="loginForm" asp-route-returnUrl="/Home/Index" method="post" class="w-50 m-auto p-5">
     <h2>Login to your account</h2>
     <hr />

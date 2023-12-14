@@ -233,6 +233,52 @@ namespace RentWise.Controllers
                     });
             }
         }
+
+        [HttpPost]
+        [Authorize]
+        [AllowAnonymous]
+        public ActionResult Book(string ProductId,int ProductQuantity,DateTime StartDate,DateTime EndDate,int TotalPrice, string AgentId, string Message)
+        {
+            string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (userId == null)
+            {
+                TempData["ToastMessage"] = "Please login to place an order";
+                return Json(new
+                {
+                    StatusCode = (int)HttpStatusCode.Unauthorized,
+                    Message = Lookup.ResponseMessages[4],
+                    Data = "Unauthorized",
+                    Success = false
+                });
+            }
+            OrdersModel model = new()
+            {
+                ProductId = ProductId,
+                UserId = userId,
+                AgentId = AgentId,
+                ProductQuantity = ProductQuantity,
+                StartDate = StartDate,
+                EndDate = EndDate,
+                TotalAmount = TotalPrice
+            };
+            ChatModel chat = new()
+            {
+                FromUserId = userId,
+                ToUserId = AgentId,
+                Message = Message,
+                IsOrder = true
+            };
+            _unitOfWork.Order.Add(model);
+            _unitOfWork.Chat.Add(chat);
+            _unitOfWork.Save();
+            return Json(new
+            {
+                StatusCode = (int)HttpStatusCode.OK,
+                Message = "Order Placed Successfully",
+                Data = Lookup.ResponseMessages[5],
+                Success = true
+            }); 
+        }
     }
 
 }

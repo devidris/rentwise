@@ -207,6 +207,31 @@ function bookNow() {
         cancelButtonText: 'No, cancel',
     }).then((result) => {
         if (result.isConfirmed) {
+$.ajax({
+                url: '/Store/Book',
+                method: 'POST',
+                data: {
+                    productId: $('.product-id').val(),
+                    productQuantity: noOfProduct,
+                    startDate: $('.start-date').text(),
+                    endDate: $('.end-date').text(),
+                    totalPrice,
+                    agentId: $('.agent-id').val(),
+                    message:orderMessage
+                },
+                success: function (result) {
+                    if (result.statusCode == 401) {
+                        toastr.error("Please login to place an order");
+                        location.href = '/Auth/Login'
+                    } else if (result.statusCode == 200) {
+                        Swal.fire('Success', 'Your order has been placed successfully.', 'success');
+                    } else {
+                        Swal.fire('Error', 'Something went wrong', 'error');
+                    }
+                }, erorr: function (e) {
+                    Swal.fire('Error', 'Something went wrong', 'error');
+                }
+            })
         } else if (result.dismiss === Swal.DismissReason.cancel) {
             Swal.fire('Cancelled', 'Your request has been cancelled.', 'info');
         }
