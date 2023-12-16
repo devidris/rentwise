@@ -52,6 +52,22 @@ namespace RentWise.Utility
             {4,"Unathorized" },
             {5,"OK" }
         };
+
+        public static Dictionary<int, string> OrderStatus = new Dictionary<int, string>
+        {
+            {1,"Pending"},
+            {2,"Accepted" },
+            {3, "Rejected"},
+            {4,"Paid" },
+            {5,"Cancelled" },
+            {6,"Expired"}
+        };
+
+        public static Dictionary<int, string> PaymentMethod = new Dictionary<int, string>
+        {
+            {1,"Cash"},
+            {2,"Online" },
+        };
     }
 
 

@@ -1,0 +1,119 @@
+﻿@using RentWise.Utility;
+@model List<OrdersModel>
+<style>
+    .payment-option {
+        display: none;
+    }
+</style>
+<div class="content content-4">
+    <h1 class="h2">Orders</h1>
+    <hr />
+    @if (Model.Count == 0)
+    {
+        <div class="d-flex flex-column align-items-center">
+            <i class="bi bi-bell-slash-fill text-primary fs-1"></i>
+            <p>No orders</p>
+        </div>
+    }
+    else
+    {
+        <table class="table">
+            <thead class="table-primary">
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Order Id</th>
+                    <th scope="col">Qunatity</th>
+                    <th scope="col">Product Name</th>
+                    <th scope="col">Total Amount</th>
+                    <th scope="col">Start Rental Date</th>
+                    <th scope="col">End Rental Date</th>
+                    <th scope="col">Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    int serialNumber = 1;
+                }
+
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <th scope="row">@serialNumber</th>
+                        <td>@item.OrderId</td>
+                        <td>@item.ProductQuantity</td>
+                        <td>@item.Product.Name</td>
+                        <td>@item.TotalAmount</td>
+                        <td>@item.StartDate.ToShortDateString()</td>
+                        <td>@item.EndDate.ToShortDateString()</td>
+                        @if (item.LkpStatus == 2)
+                        {
+                            <td class="d-flex gap-2 align-items-center">
+                                @Lookup.OrderStatus[item.LkpStatus]
+                                <button class="btn btn-primary" onclick="openModal('paymentModal')">Pay</button>
+                            </td>
+                        }
+                        else
+                        {
+                            <td>@Lookup.OrderStatus[item.LkpStatus]</td>
+                        }
+                    </tr>
+
+
+                    serialNumber++;
+                }
+            </tbody>
+        </table>
+    }
+
+</div>
+@* Payment Modal *@
+<div class="modal fade" id="paymentModal" tabindex="-1" role="dialog" aria-labelledby="paymentModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="paymentModalLabel">Payment Modal</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="closeModal('paymentModal')">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container my-3">
+                    <div class="form-group mb-3">
+                        <label for="paymentMethod">Payment Method:</label>
+                        <div class="btn-group" data-toggle="buttons">
+                            <label class="btn btn-secondary">
+                                <input type="radio" name="payment" id="payWithCash" autocomplete="off" onchange="togglePaymentOption('cash')"> Pay with Cash
+                            </label>
+                            <label class="btn btn-secondary">
+                                <input type="radio" name="payment" id="payOnline" autocomplete="off" onchange="togglePaymentOption('online')"> Pay Online
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="payment-option" id="cashOption">
+                        <em> Note: Please pay the amount to the delivery person and dont release money until you get the product.</em>
+                    </div>
+
+                    <div class="payment-option" id="onlineOption">
+                        <!-- Placeholder content for Pay Online -->
+                        Online Payment Details
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="closeModal('paymentModl')">Close</button>
+                <button type="button" class="btn btn-primary">Pay</button>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+<script>
+    function togglePaymentOption(option) {
+        $(".payment-option").hide(); // Hide all payment options
+
+        // Show the selected payment option
+        $("#" + option + "Option").show();
+    }
+</script>

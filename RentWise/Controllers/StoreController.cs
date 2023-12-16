@@ -135,7 +135,7 @@ namespace RentWise.Controllers
         }
         [HttpPost]
         [Authorize]
-        public ActionResult Like(string productId, string type)
+        public ActionResult Like(string productId, string type,string agentId)
         {
             string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (userId == null)
@@ -150,7 +150,7 @@ namespace RentWise.Controllers
             }
             if (type == "unlike")
             {
-                LikeModel Like = _unitOfWork.Like.Get(u => u.UserId == userId && u.ProductId == productId);
+                LikeModel Like = _unitOfWork.Like.Get(u => u.UserId == userId && u.ProductId == productId && u.AgentId == agentId);
                 _unitOfWork.Like.Remove(Like);
                 _unitOfWork.Save();
 
@@ -167,7 +167,8 @@ namespace RentWise.Controllers
                 LikeModel Like = new()
                 {
                     UserId = userId,
-                    ProductId = productId
+                    ProductId = productId,
+                    AgentId = agentId
                 };
                 _unitOfWork.Like.Add(Like);
                 _unitOfWork.Save();
@@ -232,6 +233,60 @@ namespace RentWise.Controllers
                         Success = false
                     });
             }
+        }
+
+        [HttpPost]
+        [Authorize]
+        [AllowAnonymous]
+        public ActionResult Book(string ProductId,int ProductQuantity,DateTime StartDate,DateTime EndDate,int TotalPrice, string AgentId, string Message)
+        {
+            string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (userId == null)
+            {
+                TempData["ToastMessage"] = "Please login to place an order";
+                return Json(new
+                {
+                    StatusCode = (int)HttpStatusCode.Unauthorized,
+                    Message = Lookup.ResponseMessages[4],
+                    Data = "Unauthorized",
+                    Success = false
+                });
+            }
+            OrdersModel model = new()
+            {
+                ProductId = ProductId,
+                UserId = userId,
+                AgentId = AgentId,
+                ProductQuantity = ProductQuantity,
+                StartDate = StartDate,
+                EndDate = EndDate,
+                TotalAmount = TotalPrice
+            };
+            ChatModel chat = new()
+            {
+                FromUserId = userId,
+                ToUserId = AgentId,
+                Message = Message,
+                IsOrder = true
+            };
+            _unitOfWork.Order.Add(model);
+            _unitOfWork.Chat.Add(chat);
+            _unitOfWork.Save();
+            return Json(new
+            {
+                StatusCode = (int)HttpStatusCode.OK,
+                Message = "Order Placed Successfully",
+                Data = Lookup.ResponseMessages[5],
+                Success = true
+            }); 
+        }
+
+        [Authorize]
+        public IActionResult Orders()
+        {
+            string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            IEnumerable<OrdersModel> orders = _unitOfWork.Order.GetAll(u => u.UserId == userId,"Product");
+            return View(orders);
         }
     }
 

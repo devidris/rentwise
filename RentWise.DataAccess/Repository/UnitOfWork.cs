@@ -19,6 +19,8 @@ namespace RentWise.DataAccess.Repository
 
         public IChatRepository Chat { get; private set; }
 
+        public IOrdersRepository Order { get; private set; }
+
 
         public UnitOfWork(ApplicationDbContext db)
         {
@@ -28,6 +30,7 @@ namespace RentWise.DataAccess.Repository
             Review = new ReviewRepository(_db);
             Like = new LikeRepository(_db);
             Chat = new ChatRepository(_db);
+            Order = new OrdersRepository(_db);
         }
 
         public void Save()

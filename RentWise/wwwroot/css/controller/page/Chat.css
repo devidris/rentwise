@@ -80,6 +80,12 @@
 .right {
     margin-right: auto;
 }
+.center{
+    margin: auto;
+    background:var(--bs-secondary);
+    color:#777;
+
+}
 .search_input {
     display: grid;
     grid-template-columns: min-content 1fr min-content;
