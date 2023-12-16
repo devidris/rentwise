@@ -166,6 +166,7 @@ function like() {
         method: 'POST',
         data: {
             productId: $('.product-id').val(),
+            agentId: $('.agent-id').val(),
             type
         },
         success: function (result) {

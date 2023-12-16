@@ -1,29 +1,12 @@
 ﻿@model ProductModel;
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCM2yIul54qUYlxHgjTmvp52goQdqPcUwA&libraries=places"></script>
-<style>
-    .image-container {
-        position: relative;
-        display: inline-block;
-        margin: 5px;
-    }
-
-    .delete-icon {
-        position: absolute;
-        top: 5px;
-        right: 5px;
-        cursor: pointer;
-        color: #ff0000; /* Red color for the delete icon */
-        font-size: 18px;
-        font-weight: bold;
-    }
-
-</style>
+<style href="~/css/store/Upsert.css"></style>
 <div>
     <partial name="_Nav2" />
     <form class="p-5" method="post"  enctype="multipart/form-data">
+        <input  value="@Model.ProductId" class="product-id" hidden />
         <div asp-validation-summary="All" class="text-danger" role="alert"></div>
         <input class="category-input d-none" hidden aria-required="true" asp-for="@Model.LkpCategory" />
-        <div class="content content-1 text-center">
+        <div class="content content-1 text-center @(!String.IsNullOrEmpty(Model.ProductId) ? "d-none" : "")">
             <h3 class="mt-5">List your property on <span class="font-ilalic">Rent Wise</span> and start welcoming renters in no time!</h3>
             <p class="my-3">To get started, choose the category of Rental you want to list on Rent Wise</p>
             <div class="d-flex flex-wrap p-5 justify-content-evenly">
@@ -185,7 +168,7 @@
                 </div>
             </div>
         </div>
-        <div class="content content-2 d-none">
+        <div class="content content-2 @(String.IsNullOrEmpty(Model.ProductId) ? "d-none" : "")">
             <div class="item mb-5 w-fit m-auto px-5 py-3 fs-5 rounded-2 d-flex align-items-center gap-4"> <span>Category:</span> <span class="text-primary categories">Vehicle Rental </span><button class="btn btn-primary text-white" type="button" onclick="onToggle(1)">Change</button></div>
             <div class="item p-5 rounded-1">
                 <div class="form-floating mb-3">
@@ -195,14 +178,13 @@
                 </div>
 
                 <div class="row">
-
                     <div class="col-3">
                          <label class="form-label" asp-for="@Model.PriceDay">Daily Rental Price</label>
                         <div class="input-group mb-3">
                             <div class="input-group-prepend ">
                                 <span class="input-group-text text-white">₵</span>
                             </div>
-                            <input class="form-control" aria-label="Price / Day" asp-for="@Model.PriceDay" placeholder="Price / Day" value="0">
+                            <input class="form-control" aria-label="Price / Day" asp-for="@Model.PriceDay" placeholder="Price / Day" value="@Model.PriceWeekend">
                             <span class="text-danger" asp-validation-for="@Model.PriceDay"></span>
                         </div>
                     </div>
@@ -213,7 +195,7 @@
                             <div class="input-group-prepend ">
                                 <span class="input-group-text text-white">₵</span>
                             </div>
-                            <input class="form-control" aria-label="Price / Weekend" asp-for="@Model.PriceWeekend" placeholder="Price / Weekend" value="0">
+                            <input class="form-control" aria-label="Price / Weekend" asp-for="@Model.PriceWeekend" placeholder="Price / Weekend" value="@Model.PriceWeekend">
                             <span class="text-danger" asp-validation-for="@Model.PriceWeekend"></span>
                         </div>
                     </div>
@@ -224,7 +206,7 @@
                             <div class="input-group-prepend ">
                                 <span class="input-group-text text-white">₵</span>
                             </div>
-                            <input class="form-control" aria-label="Price / Week" asp-for="@Model.PriceWeek" placeholder="Price / Week" value="0">
+                            <input class="form-control" aria-label="Price / Week" asp-for="@Model.PriceWeek" placeholder="Price / Week" value="@Model.PriceWeek">
                             <span class="text-danger" asp-validation-for="@Model.PriceWeek"></span>
                         </div>
                     </div>
@@ -240,10 +222,12 @@
                     </div>
                 </div>
                 <div class="form-floating mb-3">
-                    <input class="form-control" aria-required="true" type="file" accept="image/*" name="mainImage" asp-for="@Model.MainImage"/>
+                    <input class="form-control" aria-required="true" type="file" accept="image/*" name="mainImage" asp-for="@Model.MainImage" id="main-image-input"/>
                     <label class="form-label" asp-for="@Model.MainImage">Main Image</label>
                     <span class="text-danger" asp-validation-for="@Model.MainImage"></span>
+                    <img id="main-image" width="200" height="200" class="d-none mt-3"/>
                 </div>
+
 
                 <div class="w-fit ml-auto">
                     <button class="btn btn-outline-primary" type="button" onclick="onToggle(1)">Back</button>
@@ -309,197 +293,7 @@
         </div>
     </form>
 </div>
-<script href="~/js/AutocompleteAddress"></script>
-<style>
-    .card {
-        width: 350px;
-        box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.25);
-    }
+@section Scripts{
+    <script src="~/js/controller/store/Upsert.js"></script>
+}
 
-    .item {
-        box-shadow: 0px 0px 4px 1px rgba(0, 0, 0, 0.25);
-    }
-
-</style>
-<script defer>
-    function setCategory(lkpcategory) {
-        $('.category-input').val(lkpcategory)
-        $('.categories').text(categories[lkpcategory-1])
-        onToggle(2)
-    }
-    function onToggle(contentNo) {
-        document.querySelectorAll(".content").forEach((content) => {
-            content.classList.add("d-none");
-        })
-
-        document.querySelector(".content-" + contentNo).classList.remove("d-none");
-    }
-    const categories = [
-        "Construction Equipments",
-        "Vehicle Rentals",
-        "Office Items/Personal Items",
-        "Events/ Equipment Rentals",
-        "Sales Of Vehicles Trackers",
-        "Bill BOard",
-        "Shot Stay Rooms",
-        "Motel",
-        "Boat/Yacht",
-        "Games"
-    ];
-
-
-    const fileList = new DataTransfer();
-
-    $("#images").change(function (e) {
-        Array.from(e.target.files).forEach((file) => {
-            fileList.items.add(file)
-            displayImage(file)
-        });
-
-        $('#allimages')[0].files = fileList.files
-    })
-
-    function displayImage(file) {
-        if (file && file.type.startsWith('image/')) {
-            const reader = new FileReader();
-
-            reader.onload = function () {
-                const image = new Image();
-                image.src = reader.result;
-                image.style.width = '200px';
-                image.style.height = '200px';
-
-                // Create a container for the image and delete icon
-                const container = document.createElement('div');
-                container.classList.add('image-container');
-
-                // Create the delete icon
-                const deleteIcon = document.createElement('span');
-                deleteIcon.classList.add('delete-icon');
-                deleteIcon.innerHTML = '<i class="bi bi-trash3-fill"></i>'; // Use '×' for a close symbol
-
-                // Append the image and delete icon to the container
-                container.appendChild(image);
-                container.appendChild(deleteIcon);
-
-                // Append the container to the main container
-                const mainContainer = document.getElementById('imageContainer');
-                mainContainer.insertBefore(container, mainContainer.firstChild);
-
-                // Handle the click event on the delete icon
-                deleteIcon.addEventListener('click', function () {
-                    // Remove the corresponding file from fileList
-                    container.remove();
-                    Array.from(fileList.files).forEach((f, index) => {
-                        if (f === file) {
-                            fileList.items.remove(index);
-                        }
-                    });
-
-                    // Update the input files
-                    // $('#allimages')[0].files = fileList.files;
-                });
-            }
-
-            reader.readAsDataURL(file);
-        }
-    }
-    let includes = 0
-    function addIncludes() {
-        if(includes > 10){
-            toastr.error("Can add more than 10 product includes")
-            return
-        }
-        const input = `<input type="text" placeholder="Your product include" class="form-control mb-4 include-input"/>`
-        $('.includesContainer').prepend(input)
-        includes++
-    }
-    let rules = 0
-    function addRules() {
-        if (rules > 10) {
-            toastr.error("Can add more than 10 product rules")
-            return
-        }
-        const input = `<input type="text" placeholder="Rule" class="form-control mb-4 rule-input"/>`
-        $('.rulesContainer').prepend(input)
-        rules++
-    }
-
-    function saveChanges(){
-        if (fileList.files.length < 4){
-            toastr.error('Minimum of 4 images')
-            return
-        }
-       let concatenatedInputIncludes = ''
-        $('.include-input').each(function () {
-            if (!$(this).val() || $(this).val() == '') return
-            concatenatedInputIncludes += $(this).val() + ',,rw,,';
-        });
-        $('.includes-value').val('')
-        $('.includes-value').val(concatenatedInputIncludes)
-
-        let concatenatedInputRules = ''
-        $('.rule-input').each(function () {
-            if (!$(this).val() || $(this).val() == '') return
-            concatenatedInputRules += $(this).val() + ',,rw,,';
-        });
-        $('.rules-value').val('')
-        $('.rules-value').val(concatenatedInputRules)
-
-        $('.save').click()
-       
-    }
-    onToggle(1);
-</script>
-@* Autocomplete Address *@
-<script>
-    // Initialize the Places Autocomplete
-    const autocomplete = new google.maps.places.Autocomplete(document.getElementById('autocomplete-input'));
-
-    // Set the types to restrict the search to addresses only
-    autocomplete.setTypes(['address']);
-
-    // Listen for the event when a place is selected
-    autocomplete.addListener('place_changed', function () {
-        const place = autocomplete.getPlace();
-        $('.store-address').val(place.formatted_address)
-        if (place.geometry && place.geometry.location) {
-            const latitude = place.geometry.location.lat();
-            const longitude = place.geometry.location.lng();
-            $('.latitude').val(latitude)
-            $('.longitude').val(longitude)
-
-            // Construct the request URL for reverse geocoding
-            const geocodingApiUrl = 'https://maps.googleapis.com/maps/api/geocode/json?latlng=' + latitude + ',' + longitude + '&key=AIzaSyCM2yIul54qUYlxHgjTmvp52goQdqPcUwA';
-
-            // Make a request to the Geocoding API
-            fetch(geocodingApiUrl)
-                .then(response => response.json())
-                .then(data => {
-                    // Check if the response contains results
-                    if (data.results && data.results.length > 0) {
-                        // Extract country and state from the first result
-                        const components = data.results[0].address_components;
-
-                        components.forEach(function (component) {
-                            if (component.types.includes('country')) {
-                                const country = component.long_name;
-                                $('.country').val(country)
-                            }
-                            if (component.types.includes('administrative_area_level_1')) {
-                                const state = component.long_name;
-                                $('.state').val(state)
-                            }
-                    
-                        });
-                    } else {
-                        console.log("No results found for reverse geocoding");
-                    }
-                })
-                .catch(error => {
-                    console.error("Error during reverse geocoding request:", error);
-                });
-
-        }
-    });
-</script>

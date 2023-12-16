@@ -1,20 +1,24 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using RentWise.DataAccess.Repository.IRepository;
 using RentWise.Models;
 using RentWise.Models.Identity;
 using RentWise.Utility;
+using System.Net;
+using System.Security.Claims;
 
 namespace RentWise.Agent.Controllers
 {
+    [Authorize]
     public class StoreController : Controller
     {
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly IUnitOfWork _unitOfWork;
 
-        public StoreController(UserManager<IdentityUser> userManager,IWebHostEnvironment webHostEnvironment,IUnitOfWork unitOfWork)
+        public StoreController(UserManager<IdentityUser> userManager, IWebHostEnvironment webHostEnvironment, IUnitOfWork unitOfWork)
         {
             _userManager = userManager;
             _webHostEnvironment = webHostEnvironment;
@@ -24,41 +28,40 @@ namespace RentWise.Agent.Controllers
 
         public async Task<IActionResult> Index(int id = 0)
         {
-            IdentityUser user = await _userManager.GetUserAsync(User);
-            if (user == null)
-            {
-                return RedirectToAction("Register", "Login");
-            }
-            AgentRegistrationModel agentDetails = _unitOfWork.AgentRegistration.Get(u=>u.Id == user.Id,"User");
+            string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            ViewBag.Id = userId;
+            AgentRegistrationModel agentDetails = _unitOfWork.AgentRegistration.Get(u => u.Id == userId);
             ViewBag.RegistrationDate = agentDetails.CreatedAt;
-            ViewBag.Id = user.Id;
-            LikeModel like = _unitOfWork.Like.Get(u=>u.UserId == user.Id);
-            ViewBag.IsLike = like;
-            if(id == 0)
+            List<LikeModel> like = _unitOfWork.Like.GetAll(u => u.AgentId == agentDetails.Id).ToList();
+            ViewBag.LikeCount = like.Count;
+            IEnumerable<ProductModel> userProducts = new List<ProductModel>();
+            userProducts = _unitOfWork.Product.GetAll(u => u.AgentId == userId);
+            ViewBag.TotalSubmited = userProducts.Count();
+            if (id > 0)
             {
-                IEnumerable<ProductModel> userProducts = _unitOfWork.Product.GetAll(u => u.AgentId == user.Id, "Agent");
-                return View(userProducts);
-            }else
-            {
-            IEnumerable<ProductModel> userProducts = _unitOfWork.Product.GetAll(u => u.AgentId == user.Id && u.LkpCategory == id,"Agent");
-                return View(userProducts);
+                userProducts = userProducts.Where(u => u.LkpCategory == id);
             }
-            
+            ViewBag.TotalFilterCount = userProducts.Count();
+            return View(userProducts);
+
         }
 
-        public IActionResult Upsert()
+        public IActionResult Upsert(string? id)
         {
-            return View();
+            ProductModel product = new ProductModel()
+            {
+                ProductId = ""
+            };
+            if(id != null) {
+                product = _unitOfWork.Product.Get(u => u.ProductId == id);
+            }
+            return View(product);
         }
         [HttpPost]
         public async Task<IActionResult> Upsert(ProductModel model, IFormFile? mainImage, List<IFormFile> otherImages)
         {
-            IdentityUser user = await _userManager.GetUserAsync(User);
-            if (user == null)
-            {
-                return RedirectToAction("Register", "Login");
-            }
-            model.AgentId = user.Id;
+            string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            model.AgentId = userId;
             if (mainImage == null)
             {
                 ModelState.AddModelError(string.Join("", Lookup.Upload[9].Split(" ")), "Main Image upload is compulsory.");
@@ -67,7 +70,8 @@ namespace RentWise.Agent.Controllers
             {
                 ModelState.AddModelError(string.Join("", Lookup.Upload[10].Split(" ")), "Other Images upload is compulsory and must be more than or equal to 4 images.");
             }
-            if (ModelState.IsValid) {
+            if (ModelState.IsValid)
+            {
                 model.Description = SharedFunctions.Capitalize(model.Description);
                 model.Name = SharedFunctions.Capitalize(model.Name);
 
@@ -78,10 +82,11 @@ namespace RentWise.Agent.Controllers
                 #endregion
 
                 #region Saving Other Images
-                for(int i = 0; i < otherImages.Count; i++) { 
-                IFormFile otherImage = otherImages[i];
-                string otherImageName = String.Join("", Lookup.Upload[10].Split(" ")) + "-" + i + ".webp";
-                saveImage(model.AgentId, otherImageName, otherImage,model.ProductId);
+                for (int i = 0; i < otherImages.Count; i++)
+                {
+                    IFormFile otherImage = otherImages[i];
+                    string otherImageName = String.Join("", Lookup.Upload[10].Split(" ")) + "-" + i + ".webp";
+                    saveImage(model.AgentId, otherImageName, otherImage, model.ProductId);
                 }
                 #endregion
 
@@ -97,7 +102,7 @@ namespace RentWise.Agent.Controllers
                 _unitOfWork.Product.Add(model);
                 _unitOfWork.Save();
 
-                return RedirectToAction("Preview", "Store",new { id = model.ProductId });
+                return RedirectToAction("Preview", "Store", new { id = model.ProductId });
             }
             return View();
         }
@@ -120,27 +125,24 @@ namespace RentWise.Agent.Controllers
 
         }
 
-        public async Task<IActionResult> Preview(string ?id)
+        public async Task<IActionResult> Preview(string? id)
         {
-            IdentityUser user = await _userManager.GetUserAsync(User);
-            if (user == null)
-            {
-                return RedirectToAction("Register", "Login");
-            }
+            string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             ProductModel model = new ProductModel();
-            if(String.IsNullOrEmpty(id))
+            if (String.IsNullOrEmpty(id))
             {
-                model = _unitOfWork.Product.Get(u => u.AgentId == user.Id, "Agent");
-            } else
+                model = _unitOfWork.Product.Get(u => u.AgentId == userId, "Agent");
+            }
+            else
             {
                 model = _unitOfWork.Product.Get(u => u.ProductId == id, "Agent");
 
             }
-            IEnumerable<ReviewModel> Reviews = _unitOfWork.Review.GetAll(u=>u.ProductId == model.ProductId);
+            IEnumerable<ReviewModel> Reviews = _unitOfWork.Review.GetAll(u => u.ProductId == model.ProductId);
             ViewBag.Reviews = Reviews;
-            ViewBag.HasAddRating = Reviews.FirstOrDefault(u => u.UserId == user.Id) != null;
+            ViewBag.HasAddRating = Reviews.FirstOrDefault(u => u.UserId == userId) != null;
             ViewBag.NoOfRating = Reviews.Count();
-            IEnumerable<ProductModel> OtherProducts = _unitOfWork.Product.GetAll(u=>u.AgentId == user.Id && u.ProductId != model.ProductId);
+            IEnumerable<ProductModel> OtherProducts = _unitOfWork.Product.GetAll(u => u.AgentId == userId && u.ProductId != model.ProductId);
             ViewBag.OtherProducts = OtherProducts;
             ViewBag.NoOfOtherProducts = OtherProducts.Count();
             return View(model);
@@ -149,25 +151,19 @@ namespace RentWise.Agent.Controllers
         [HttpPost]
         public async Task<IActionResult> AddRating(int RatingValue, string RatingDescription, string ProductId, string AgentId)
         {
-            IdentityUser user = await _userManager.GetUserAsync(User);
-
-            if (user == null)
-            {
-                return RedirectToAction("Register", "Login");
-            }
-
+            string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             ReviewModel Review = new()
             {
                 RatingValue = RatingValue,
                 RatingDescription = RatingDescription,
-                UserId = user.Id,
+                UserId = userId,
                 ProductId = ProductId,
                 AgentId = AgentId
             };
 
             _unitOfWork.Review.Add(Review);
 
-            int OldRating = _unitOfWork.Product.Get(u=>u.ProductId == ProductId).Rating;
+            int OldRating = _unitOfWork.Product.Get(u => u.ProductId == ProductId).Rating;
             int NoOfRating = _unitOfWork.Review.GetAll(u => u.ProductId == ProductId).Count();
             int NewRating = ((OldRating * NoOfRating) + RatingValue) / (NoOfRating + 1);
 
@@ -179,5 +175,6 @@ namespace RentWise.Agent.Controllers
 
             return RedirectToAction("Preview", "Store");
         }
+
     }
 }

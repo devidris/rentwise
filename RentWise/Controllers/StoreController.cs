@@ -135,7 +135,7 @@ namespace RentWise.Controllers
         }
         [HttpPost]
         [Authorize]
-        public ActionResult Like(string productId, string type)
+        public ActionResult Like(string productId, string type,string agentId)
         {
             string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (userId == null)
@@ -150,7 +150,7 @@ namespace RentWise.Controllers
             }
             if (type == "unlike")
             {
-                LikeModel Like = _unitOfWork.Like.Get(u => u.UserId == userId && u.ProductId == productId);
+                LikeModel Like = _unitOfWork.Like.Get(u => u.UserId == userId && u.ProductId == productId && u.AgentId == agentId);
                 _unitOfWork.Like.Remove(Like);
                 _unitOfWork.Save();
 
@@ -167,7 +167,8 @@ namespace RentWise.Controllers
                 LikeModel Like = new()
                 {
                     UserId = userId,
-                    ProductId = productId
+                    ProductId = productId,
+                    AgentId = agentId
                 };
                 _unitOfWork.Like.Add(Like);
                 _unitOfWork.Save();
@@ -278,6 +279,14 @@ namespace RentWise.Controllers
                 Data = Lookup.ResponseMessages[5],
                 Success = true
             }); 
+        }
+
+        [Authorize]
+        public IActionResult Orders()
+        {
+            string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            IEnumerable<OrdersModel> orders = _unitOfWork.Order.GetAll(u => u.UserId == userId,"Product");
+            return View(orders);
         }
     }
 

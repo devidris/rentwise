@@ -55,8 +55,12 @@ function displayChat(message = null) {
         data.push(messageProp)
     } else {
         fullMessage.forEach(message => {
+            console.log(message)
             const messageProp = { content: message.Message }
-            if (message.FromUserId == userId) {
+            if (message.IsOrder) {
+                messageProp.class = 'center'
+            }
+            else if (message.FromUserId == userId) {
                 messageProp.class = 'left'
             }
             else {

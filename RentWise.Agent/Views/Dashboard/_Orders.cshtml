@@ -1,34 +1,64 @@
-﻿<div class="content content-4">
+﻿@using RentWise.Utility;
+@model List<OrdersModel>
+<div class="content content-4">
     <h1 class="h2">Orders</h1>
     <hr />
-    <table class="table">
-        <thead class="table-primary">
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">First</th>
-                <th scope="col">Last</th>
-                <th scope="col">Handle</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>@@mdo</td>
-            </tr>
-            <tr>
-                <th scope="row">2</th>
-                <td>Jacob</td>
-                <td>Thornton</td>
-                <td>@@fat</td>
-            </tr>
-            <tr>
-                <th scope="row">3</th>
-                <td>Larry</td>
-                <td>the Bird</td>
-                <td>@@twitter</td>
-            </tr>
-        </tbody>
-    </table>
+    @if (Model.Count == 0)
+    {
+        <div class="d-flex flex-column align-items-center">
+            <i class="bi bi-bell-slash-fill text-primary fs-1"></i>
+            <p>No orders</p>
+        </div>
+    }
+    else
+    {
+        <table class="table">
+            <thead class="table-primary">
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Order Id</th>
+                    <th scope="col">Qunatity</th>
+                    <th scope="col">Product Name</th>
+                    <th scope="col">Total Amount</th>
+                    <th scope="col">Start Rental Date</th>
+                    <th scope="col">End Rental Date</th>
+                    <th scope="col">Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    int serialNumber = 1;
+                }
+
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <th scope="row">@serialNumber</th>
+                        <td>@item.OrderId</td>
+                        <td>@item.ProductQuantity</td>
+                        <td>@item.Product.Name</td>
+                        <td>@item.TotalAmount</td>
+                        <td>@item.StartDate.ToShortDateString()</td>
+                        <td>@item.EndDate.ToShortDateString()</td>
+                        @if (item.LkpStatus == 1)
+                        {
+                            <td class="d-flex gap-2 align-items-center">
+                                @Lookup.OrderStatus[item.LkpStatus]
+                                <a class="btn btn-primary" asp-controller="Dashboard" asp-action="ApproveOrReject" asp-route-id="@item.OrderId" asp-route-status="2">Accept</a>
+                                <a class="btn btn-primary" asp-controller="Dashboard" asp-action="ApproveOrReject" asp-route-id="@item.OrderId" asp-route-status="3">Reject</a>
+                            </td>
+                        }
+                        else
+                        {
+                            <td>@Lookup.OrderStatus[item.LkpStatus]</td>
+                        }
+                    </tr>
+
+
+                    serialNumber++;
+                }
+            </tbody>
+        </table>
+    }
+
 </div>
