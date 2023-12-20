@@ -2,13 +2,16 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 using RentWise.DataAccess.Repository;
 using RentWise.DataAccess.Repository.IRepository;
 using RentWise.Models;
 using RentWise.Models.Identity;
 using RentWise.Utility;
+using RestSharp;
 using System.Net;
 using System.Security.Claims;
+using System.Text;
 
 namespace RentWise.Controllers
 {
@@ -135,7 +138,7 @@ namespace RentWise.Controllers
         }
         [HttpPost]
         [Authorize]
-        public ActionResult Like(string productId, string type,string agentId)
+        public ActionResult Like(string productId, string type, string agentId)
         {
             string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (userId == null)
@@ -223,22 +226,23 @@ namespace RentWise.Controllers
                     Data = Lookup.ResponseMessages[5],
                     Success = true
                 });
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
-                    return Json(new
-                    {
-                        StatusCode = (int)HttpStatusCode.InternalServerError,
-                        Message = Lookup.ResponseMessages[1],
-                        Data = "Server Error",
-                        Success = false
-                    });
+                return Json(new
+                {
+                    StatusCode = (int)HttpStatusCode.InternalServerError,
+                    Message = Lookup.ResponseMessages[1],
+                    Data = "Server Error",
+                    Success = false
+                });
             }
         }
 
         [HttpPost]
         [Authorize]
         [AllowAnonymous]
-        public ActionResult Book(string ProductId,int ProductQuantity,DateTime StartDate,DateTime EndDate,int TotalPrice, string AgentId, string Message)
+        public ActionResult Book(string ProductId, int ProductQuantity, DateTime StartDate, DateTime EndDate, int TotalPrice, string AgentId, string Message)
         {
             string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (userId == null)
@@ -278,15 +282,98 @@ namespace RentWise.Controllers
                 Message = "Order Placed Successfully",
                 Data = Lookup.ResponseMessages[5],
                 Success = true
-            }); 
+            });
         }
 
         [Authorize]
-        public IActionResult Orders()
+        public IActionResult Orders(string orderId = "")
         {
             string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            IEnumerable<OrdersModel> orders = _unitOfWork.Order.GetAll(u => u.UserId == userId,"Product");
+            IEnumerable<OrdersModel> orders = _unitOfWork.Order.GetAll(u => u.UserId == userId, "Product");
             return View(orders);
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        public ActionResult UpdateOrders(string orderId = "")
+        {
+            OrdersModel order = _unitOfWork.Order.Get(u => u.OrderId == int.Parse(orderId), "Product");
+            order.Paid = true;
+            _unitOfWork.Order.Update(order);
+            _unitOfWork.Save();
+            return Json(new
+            {
+                StatusCode = (int)HttpStatusCode.OK,
+                Message = "Order Placed Successfully",
+                Data = Lookup.ResponseMessages[5],
+                Success = true
+            });
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> Pay(int orderId = 0, string type = "cash", string pageLink = "")
+        {
+            string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (userId == null)
+            {
+                TempData["ToastMessage"] = "Please login to place an order";
+                return Json(new
+                {
+                    StatusCode = (int)HttpStatusCode.Unauthorized,
+                    Message = Lookup.ResponseMessages[4],
+                    Data = "Unauthorized",
+                    Success = false
+                });
+            }
+            OrdersModel order = _unitOfWork.Order.Get(u => u.OrderId == orderId, "Product");
+            Random random = new Random();
+            int randomNumber = random.Next(1, 101);
+            string reference = order.OrderId.ToString() + "-RENTWISE-" + randomNumber;
+            if (type == "cash")
+            {
+                order.LkpPaymentMethod = 1;
+                _unitOfWork.Order.Update(order);
+                _unitOfWork.Save();
+            }
+            else if (type == "online")
+            {
+                order.LkpPaymentMethod = 2;
+                _unitOfWork.Order.Update(order);
+                _unitOfWork.Save();
+
+                // Populate JSON payload from the order variable
+                // Create variables for amount, description, and reference
+                decimal totalAmount = order.TotalAmount;
+                string description = order.Product.Description; // Adjust this based on your actual structure
+                string clientReference = reference;
+
+                // Create the JSON string using variables
+                string jsonBody = $"{{\"totalAmount\":{totalAmount},\"description\":\"{description}\",\"callbackUrl\":\"{pageLink}?orderId={order.OrderId}\",\"returnUrl\":\"{pageLink}\",\"cancellationUrl\":\"{pageLink}\",\"merchantAccountNumber\":\"2018934\",\"clientReference\":\"{clientReference}\"}}";
+
+
+                var options = new RestClientOptions("https://payproxyapi.hubtel.com/items/initiate");
+                var client = new RestClient(options);
+                var request = new RestRequest("");
+                request.AddHeader("accept", "application/json");
+                request.AddHeader("authorization", "Basic bkc2dldCRTo1YzU0NmY1YTZkNTI0Y2VkYjYzOGUzNmQxNmVlYjM5MQ==");
+                request.AddJsonBody(jsonBody, false);
+                var response = await client.PostAsync(request);
+                return Json(new
+                {
+                    StatusCode = (int)HttpStatusCode.OK,
+                    Message = "Order Placed Successfully",
+                    Data = JsonConvert.SerializeObject(response),
+                    Success = true
+                });
+            }
+            return Json(new
+            {
+                StatusCode = (int)HttpStatusCode.InternalServerError,
+                Message = Lookup.ResponseMessages[1],
+                Data = "Internal Server Error",
+                Success = false
+            });
         }
     }
 

@@ -49,7 +49,7 @@
                         {
                             <td class="d-flex gap-2 align-items-center">
                                 @Lookup.OrderStatus[item.LkpStatus]
-                                <button class="btn btn-primary" onclick="openModal('paymentModal')">Pay</button>
+                                <button class="btn btn-primary" onclick="pay('@item.OrderId')">Pay</button>
                             </td>
                         }
                         else
@@ -95,25 +95,67 @@
                     </div>
 
                     <div class="payment-option" id="onlineOption">
-                        <!-- Placeholder content for Pay Online -->
-                        Online Payment Details
+                        <em> Note: You will be rediected to payment page.</em>
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="closeModal('paymentModl')">Close</button>
-                <button type="button" class="btn btn-primary">Pay</button>
+                <button class="btn btn-primary pay" onclick="payNow()">Pay</button>
             </div>
         </div>
     </div>
 
 
 </div>
-<script>
-    function togglePaymentOption(option) {
-        $(".payment-option").hide(); // Hide all payment options
+@section Scripts{
+    <script>
+        let pageLink = location.href
+        let type = ''
+        let orderId = 0;
+        function togglePaymentOption(option) {
+            type = option
+            $(".payment-option").hide(); // Hide all payment options
 
-        // Show the selected payment option
-        $("#" + option + "Option").show();
-    }
-</script>
+            // Show the selected payment option
+            $("#" + option + "Option").show();
+        }
+
+        function pay(id) {
+            orderId = id
+            openModal('paymentModal')
+        }
+
+        function payNow() {
+
+            if (type == "") {
+                toastr.error("Please select a payment method")
+                return
+            }
+           $.ajax({
+                url: '/Store/Pay',
+                type: 'POST',
+                data: {
+                    orderId,
+                    type,
+                    pageLink
+                },
+                success: function (data) {
+                    if (data.success) {
+                        const message = JSON.parse(data.data)
+                        const content = JSON.parse(message.Content)
+                        location.href = content.data.checkoutUrl;
+                        Swal.fire('Success', 'Your order will be marked as paid as soon as it is confirmed.', 'success');
+                        closeModal('paymentModal')
+                    }
+                    else {
+                        Swal.fire('Error', 'Something went wrong', 'error');
+                    }
+                },
+                error: function (data) {
+                    Swal.fire('Error', 'Something went wrong', 'error');
+                }
+            })
+        }
+    </script>
+}
