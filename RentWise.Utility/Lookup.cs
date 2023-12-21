@@ -60,7 +60,8 @@ namespace RentWise.Utility
             {3, "Rejected"},
             {4,"Paid" },
             {5,"Cancelled" },
-            {6,"Expired"}
+            {6,"Expired"},
+            {7, "Waiting to pay with cash" }
         };
 
         public static Dictionary<int, string> PaymentMethod = new Dictionary<int, string>

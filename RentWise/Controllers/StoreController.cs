@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Azure;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -333,8 +334,16 @@ namespace RentWise.Controllers
             if (type == "cash")
             {
                 order.LkpPaymentMethod = 1;
+                order.LkpStatus = 7;
                 _unitOfWork.Order.Update(order);
                 _unitOfWork.Save();
+                return Json(new
+                {
+                    StatusCode = (int)HttpStatusCode.OK,
+                    Message = "Order Placed Successfully",
+                    Data = "Ok",
+                    Success = true
+                });
             }
             else if (type == "online")
             {
