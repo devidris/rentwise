@@ -11,12 +11,12 @@ using System.Security.Claims;
 
 namespace RentWise.Controllers
 {
-    public class Page : Controller
+    public class PageController : Controller
     {
         public readonly IUnitOfWork _unitOfWork;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly IWebHostEnvironment _webHostEnvironment;
-        public Page(IUnitOfWork unitOfWork, UserManager<IdentityUser> userManager, IWebHostEnvironment webHostEnvironment)
+        public PageController(IUnitOfWork unitOfWork, UserManager<IdentityUser> userManager, IWebHostEnvironment webHostEnvironment)
         {
 
             _unitOfWork = _unitOfWork = unitOfWork;

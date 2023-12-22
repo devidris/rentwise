@@ -1,4 +1,6 @@
 ﻿
+const totalOrders = $(".order-count").val()
+const totalEarnings = $(".earnings").val()
 document.addEventListener('DOMContentLoaded', function () {
     var ctx = document.getElementById('myChart').getContext('2d');
 
@@ -6,7 +8,7 @@ document.addEventListener('DOMContentLoaded', function () {
         labels: ['Number of Sales', 'Total number of orders'],
         datasets: [{
             label: 'Count',
-            data: [10, 20], // Replace with your actual data
+            data: [totalEarnings, totalOrders], // Replace with your actual data
             backgroundColor: [
                 'rgba(0, 128, 128, 1)',
                 'rgba(75, 0, 130, 1)'

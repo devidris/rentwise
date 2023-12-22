@@ -49,27 +49,27 @@
     <div class="row mt-5 bg-light px-5">
         <div class="col-2 pl-5 ">
             <ul class="d-flex flex-column text-light list-unstyled w-100 justify-content-evenly  lead text-center  bg-dark py-3 rounded sidebar">
-                <li onclick="onToggle(1)">
+                <li onclick="onToggle(1)" class="sidebar sidebar-1">
                     <i class="bi bi-columns-gap"></i>
                     <span>Dashboard</span>
                 </li>
                 <hr />
-                <li onclick="onToggle(2)">
+                <li onclick="onToggle(2)" class="sidebar sidebar-2">
                     <i class="bi bi-chat-right-dots-fill"></i>
                     <span>Messages</span>
                 </li>
                 <hr />
-                <li onclick="onToggle(3)">
+                <li onclick="onToggle(3)" class="sidebar sidebar-3">
                     <i class="bi bi-calendar-event-fill"></i>
                     <span>Report</span>
                 </li>
                 <hr />
-                <li onclick="onToggle(4)">
+                <li onclick="onToggle(4)" class="sidebar sidebar-4">
                     <i class="bi bi-bookmark-dash-fill"></i>
                     <span>Orders</span>
                 </li>
                 <hr />
-                <li onclick="onToggle(5)">
+                <li onclick="onToggle(5)" class="sidebar sidebar-5">
                     <i class="bi bi-list-check"></i>
                     <span>Review</span>
                 </li>
@@ -104,7 +104,7 @@
             </ul>
         </div>
         <div class="col-10 pr-3">
-            <partial name="_Dashboard" />
+            <partial name="_Dashboard" model="ViewBag.Orders" />
             <partial name="_Chat" />
             <partial name="_Reports" />
             <partial name="_Orders" model="ViewBag.Orders" />
@@ -153,18 +153,35 @@
             border: none;
         }
 
+    .active {
+        background: var(--bs-primary);
+    }
+
 </style>
 <style>
 
 </style>
 <script>
     function onToggle(contentNo) {
+
         document.querySelectorAll(".content").forEach((content) => {
             content.classList.add("display-none");
         })
-
         document.querySelector(".content-" + contentNo).classList.remove("display-none");
+
+        $(".sidebar").removeClass("active");
+        $(".sidebar-" + contentNo).addClass("active");
     }
 
-    onToggle(1);
+    function onToggleSidebar() {
+        const url = window.location.href;
+        const urlParams = new URLSearchParams(url.split('?')[1]);
+        const activeValue = urlParams.get('active');
+        if (activeValue && activeValue.length > 0) {
+            onToggle(activeValue);
+        } else {
+            onToggle(1);
+        }
+    }
+    onToggleSidebar()
 </script>

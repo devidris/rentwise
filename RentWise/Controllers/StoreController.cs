@@ -353,7 +353,7 @@ namespace RentWise.Controllers
 
                 // Populate JSON payload from the order variable
                 // Create variables for amount, description, and reference
-                decimal totalAmount = order.TotalAmount;
+                double totalAmount = order.TotalAmount;
                 string description = order.Product.Description; // Adjust this based on your actual structure
                 string clientReference = reference;
 
