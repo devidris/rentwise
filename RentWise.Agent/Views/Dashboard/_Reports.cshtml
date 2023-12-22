@@ -1,4 +1,6 @@
 ﻿<link rel="stylesheet" href="~/css/controller/dashboard/_Reports.css"/>
+@model List<OrdersModel>
+
 <div class="content content-3">
     <h1 class="h2">Reports</h1>
     <hr />
@@ -13,28 +15,28 @@
         <div class="col-4">
             <ul class="list-unstyled border border-1 text-center py-3">
                 <li>
-                    <p>$0</p>
-                    <p>Sales in this period</p>
+                    <p>₵@ViewBag.totalAmount</p>
+                    <p>Total Sales</p>
                 </li>
                 <hr />
                 <li>
-                    <p>$0</p>
-                    <p>Average daily sales</p>
+                    <p>₵@ViewBag.totalPendingAmount</p>
+                    <p>Total Pending</p>
                 </li>
                 <hr />
                 <li>
-                    <p>0<p>
+                    <p>@Model.Count()<p>
                     <p>Orders placed</p>
                 </li>
                 <hr />
                 <li>
-                    <p>0</p>
+                    <p>@ViewBag.NoOfFilteredOrders</p>
                     <p>Items purchased</p>
                 </li>
                 <hr />
                 <li>
-                    <p>0</p>
-                    <p>Orders placed</p>
+                    <p>@ViewBag.NoOfPendingOrders</p>
+                    <p>Orders placed pending</p>
                 </li>
             </ul>
         </div>

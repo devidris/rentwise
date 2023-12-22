@@ -1,5 +1,4 @@
-﻿
-const totalOrders = $(".order-count").val()
+﻿const totalOrders = $(".order-count").val()
 const totalEarnings = $(".earnings").val()
 document.addEventListener('DOMContentLoaded', function () {
     var ctx = document.getElementById('myChart').getContext('2d');
@@ -8,7 +7,7 @@ document.addEventListener('DOMContentLoaded', function () {
         labels: ['Number of Sales', 'Total number of orders'],
         datasets: [{
             label: 'Count',
-            data: [totalEarnings, totalOrders], // Replace with your actual data
+            data: [totalEarnings, totalOrders],
             backgroundColor: [
                 'rgba(0, 128, 128, 1)',
                 'rgba(75, 0, 130, 1)'
@@ -18,7 +17,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 'rgba(75, 0, 130, 1)'
             ],
             borderWidth: 1,
-            barThickness: 20 // Set the width of each bar
+            barThickness: 20
         }]
     };
 

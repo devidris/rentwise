@@ -104,9 +104,11 @@
             </ul>
         </div>
         <div class="col-10 pr-3">
+            <input value="@ViewBag.NoOfOrders" class="order-count" hidden />
+            <input value="@ViewBag.totalAmount" class="earnings" hidden />
             <partial name="_Dashboard" model="ViewBag.Orders" />
             <partial name="_Chat" />
-            <partial name="_Reports" />
+            <partial name="_Reports" model="ViewBag.Orders"/>
             <partial name="_Orders" model="ViewBag.Orders" />
             <partial name="_Reviews" />
 

@@ -26,12 +26,26 @@ namespace RentWise.Agent.Controllers
         public async Task<IActionResult> Index(string Id = "")
         {
             string userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;    
-            IEnumerable<OrdersModel> order = _unitOfWork.Order.GetAll(u=>u.AgentId == userId,"Product");
-            ViewBag.Orders = order;
+            IEnumerable<OrdersModel> orders = _unitOfWork.Order.GetAll(u=>u.AgentId == userId,"Product");
+            ViewBag.Orders = orders;
+            ViewBag.NoOfOrders = orders.Count();    
             IEnumerable<ReviewModel> reviews = _unitOfWork.Review.GetAll(u => u.AgentId == userId);
             ViewBag.Reviews = reviews;
             IEnumerable<LikeModel> likes = _unitOfWork.Like.GetAll(u=> u.AgentId == userId);
             ViewBag.Likes = likes;
+
+            IEnumerable<OrdersModel> filteredOrders = orders.Where(order => order.LkpStatus == 4);
+            ViewBag.NoOfFilteredOrders = filteredOrders.Count();
+            IEnumerable<OrdersModel> pendingOrders = orders.Where(order => order.LkpStatus == 1 || order.LkpStatus == 2 || order.LkpStatus == 7);
+            ViewBag.NoOfPendingOrders = pendingOrders.Count();
+             ViewBag.totalAmount = filteredOrders.Any() ? filteredOrders.Sum(order => order.TotalAmount) : 0;
+            ViewBag.averageTotalAmount = filteredOrders.Any() ? filteredOrders.Average(order => order.TotalAmount) : 0;
+            ViewBag.totalPendingAmount = pendingOrders.Any() ? pendingOrders.Sum(order => order.TotalAmount) : 0;
+
+            ViewBag.totalReview = reviews.Any() ? reviews.Count() : 0;
+            ViewBag.avergeRating = reviews.Any() ? reviews.Average(review => review.RatingValue) : 0;
+
+            ViewBag.totalLikes = likes.Count();
 
             ViewBag.UserId = userId;
 
@@ -112,6 +126,8 @@ namespace RentWise.Agent.Controllers
             }
             ViewBag.FullMessage = JsonConvert.SerializeObject(FullMessage);
             ViewBag.ChatSummaries = JsonConvert.SerializeObject(chatSummaries);
+
+
             return View();
         }
         public IActionResult ApproveOrReject(int Id,int LkpStatus)

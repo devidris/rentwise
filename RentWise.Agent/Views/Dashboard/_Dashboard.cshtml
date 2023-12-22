@@ -1,19 +1,5 @@
 ﻿@model List<OrdersModel>
-@{
-    IEnumerable <OrdersModel> filteredOrders = Model.Where(order => order.LkpStatus == 4);
-    IEnumerable<OrdersModel> pendingOrders = Model.Where(order => order.LkpStatus == 1 || order.LkpStatus == 2);
-    double totalAmount = filteredOrders.Any() ? filteredOrders.Sum(order => order.TotalAmount) : 0;
-    double averageTotalAmount = filteredOrders.Any() ? filteredOrders.Average(order => order.TotalAmount) : 0;
-    double totalPendingAmount = pendingOrders.Any() ? pendingOrders.Sum(order => order.TotalAmount) : 0;
 
-    IEnumerable<ReviewModel> reviews = ViewBag.Reviews;
-    int totalReview = reviews.Any() ? reviews.Count(): 0;
-    double avergeRating = reviews.Any() ? reviews.Average(review => review.RatingValue): 0;
-
-    IEnumerable<LikeModel> likes = ViewBag.Likes;
-    int totalLikes = likes.Count();
-
-}
 <div class="content content-1">
     <div class="bg-primary bg-opacity-25 p-3">
         <p class="m-0  text">Congratulations!!!  Your account is Active</p>
@@ -26,24 +12,22 @@
             <p class="m-0  text">Account Setup Progress</p>
         </div>
     </div>
-    <input value="@Model.Count" class="order-count" hidden />
-    <input value="@totalAmount" class="earnings" hidden />
     <div class="row">
         <div class="col-6">
             <ul class="list-unstyled border border-1 text-center">
                 <li>
                     <p><b>Total Orders Pending</b></p>
-                    <p><b>₵@totalPendingAmount</b></p>
+                    <p><b>₵@ViewBag.totalPendingAmount</b></p>
                     <hr />
                 </li>
                 <li>
                     <p><b>Earning</b></p>
-                    <p><b>₵@totalAmount</b></p>
+                    <p><b>₵@ViewBag.totalAmount</b></p>
                     <hr />
                 </li>
                 <li>
                     <p><b>Average Earning</b></p>
-                    <p><b>₵@averageTotalAmount</b></p>
+                    <p><b>₵@ViewBag.averageTotalAmount</b></p>
                     <hr />
                 </li>
                 <li>
@@ -88,15 +72,15 @@
                 </li>
                 <li>
                     <span>Total Review</span>
-                    <span>@totalReview</span>
+                    <span>@ViewBag.totalReview</span>
                 </li>
                 <li>
                     <span>Average Rating</span>
-                    <span>@avergeRating</span>
+                    <span>@ViewBag.avergeRating</span>
                 </li>
                 <li>
                     <span>Total Likes</span>
-                    <span>@totalLikes</span>
+                    <span>@ViewBag.totalLikes</span>
                 </li>
             </ul>
         </div>
