@@ -1,4 +1,9 @@
-﻿
+﻿const jsonOrders = $('.orders').text()
+$('.orders').remove()
+const orders = JSON.parse(jsonOrders)
+console.log(orders[0])
+
+
 function onToggleReport(contentNo) {
     document.querySelectorAll(".report").forEach((content) => {
         content.classList.add("display-none");
@@ -49,3 +54,79 @@ document.addEventListener('DOMContentLoaded', function () {
         options: options
     });
 });
+
+function getReportData() {
+    let startDate = document.querySelector('.spd-from').value;
+    let endDate = document.querySelector('.spd-to').value;
+    if (startDate === '' || endDate === '') {
+        calculateSales(orders);
+    } else {
+        const startDate = new Date(document.querySelector('.spd-from').value);
+        const endDate = new Date(document.querySelector('.spd-to').value);
+        const filteredOrdersByDates = orders.filter(order => {
+            const orderDate = new Date(order.CreatedAt);
+            return orderDate >= startDate && orderDate < endDate;
+        });
+        calculateSales(filteredOrdersByDates);
+    }
+}
+function calculateSales(orders) {
+    const filteredOrders = orders.filter(order => order.LkpOderStaus == 4)
+    const pendingOrders = orders.filter(order => order.LkpStatus == 1 || order.LkpStatus == 2 || order.LkpStatus == 7)
+    const totalEarnings = filteredOrders.reduce((total, order) => total + order.TotalAmount, 0)
+    const averageEarnings = totalEarnings == 0 ? 0 : totalEarnings / filteredOrders.length
+    const currency = "₵"
+    $('.sitp').text(currency + totalEarnings)
+    $('.ads').text(currency + averageEarnings)
+    $('.opg').text(pendingOrders.length)
+    $('.opd').text(filteredOrders.length)
+
+    const dailyTotals = {};
+
+    orders.forEach((order) => {
+        const createdAtDate = order.CreatedAt.split("T")[0]; // Extract date part
+        dailyTotals[createdAtDate] = (dailyTotals[createdAtDate] || 0) + order.TotalAmount;
+    });
+
+    const dailyTotalsArray = Object.entries(dailyTotals).map(([date, total]) => ({
+        date,
+        total,
+    }));
+
+    displayOverviewReport2(dailyTotalsArray);
+}
+
+getReportData();
+function displayOverviewReport2(dailyTotalsArray) {
+    var ctx = document.getElementById('overview-report-2').getContext('2d');
+
+    // Check if a chart already exists
+    var existingChart = Chart.getChart(ctx);
+    if (existingChart) {
+        existingChart.destroy(); // Destroy the existing chart
+    }
+
+    const dates = dailyTotalsArray.map(entry => entry.date);
+    const totals = dailyTotalsArray.map(entry => entry.total);
+
+    const myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: dates,
+            datasets: [{
+                label: 'Daily Totals',
+                data: totals,
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+}

@@ -28,8 +28,9 @@ namespace RentWise.Agent.Controllers
             string userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;    
             IEnumerable<OrdersModel> orders = _unitOfWork.Order.GetAll(u=>u.AgentId == userId,"Product");
             ViewBag.Orders = orders;
-            ViewBag.NoOfOrders = orders.Count();    
-            IEnumerable<ReviewModel> reviews = _unitOfWork.Review.GetAll(u => u.AgentId == userId);
+            ViewBag.NoOfOrders = orders.Count();  
+            ViewBag.JSONOrders = JsonConvert.SerializeObject(orders);
+            IEnumerable<ReviewModel> reviews = _unitOfWork.Review.GetAll(u => u.AgentId == userId,"User,Product");
             ViewBag.Reviews = reviews;
             IEnumerable<LikeModel> likes = _unitOfWork.Like.GetAll(u=> u.AgentId == userId);
             ViewBag.Likes = likes;

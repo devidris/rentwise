@@ -97,7 +97,7 @@ namespace RentWise.Controllers
             ViewBag.IsLike = like != null;
             if (userId != null)
             {
-                IEnumerable<ReviewModel> Reviews = _unitOfWork.Review.GetAll(u => u.ProductId == model.ProductId);
+                IEnumerable<ReviewModel> Reviews = _unitOfWork.Review.GetAll(u => u.ProductId == model.ProductId,"User");
                 ViewBag.Reviews = Reviews;
                 ViewBag.HasAddRating = Reviews.FirstOrDefault(u => u.UserId == userId) != null;
                 ViewBag.NoOfRating = Reviews.Count();
