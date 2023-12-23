@@ -25,6 +25,9 @@ namespace RentWise.Models
         public IdentityUser User { get; set; }
         [ValidateNever]
         public string ProductId { get; set; }
+        [ForeignKey("ProductId")]
+        [ValidateNever]
+        public ProductModel Product { get; set; }
         [ValidateNever]
         public string AgentId { get; set; }
 

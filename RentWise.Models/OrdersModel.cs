@@ -27,7 +27,7 @@ namespace RentWise.Models
         public int LkpPaymentMethod { get; set; } 
 
         public int ProductQuantity { get; set; }
-        public int TotalAmount { get; set; }
+        public double TotalAmount { get; set; }
 
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }

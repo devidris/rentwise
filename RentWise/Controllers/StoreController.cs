@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Azure;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -96,7 +97,7 @@ namespace RentWise.Controllers
             ViewBag.IsLike = like != null;
             if (userId != null)
             {
-                IEnumerable<ReviewModel> Reviews = _unitOfWork.Review.GetAll(u => u.ProductId == model.ProductId);
+                IEnumerable<ReviewModel> Reviews = _unitOfWork.Review.GetAll(u => u.ProductId == model.ProductId,"User");
                 ViewBag.Reviews = Reviews;
                 ViewBag.HasAddRating = Reviews.FirstOrDefault(u => u.UserId == userId) != null;
                 ViewBag.NoOfRating = Reviews.Count();
@@ -333,8 +334,16 @@ namespace RentWise.Controllers
             if (type == "cash")
             {
                 order.LkpPaymentMethod = 1;
+                order.LkpStatus = 7;
                 _unitOfWork.Order.Update(order);
                 _unitOfWork.Save();
+                return Json(new
+                {
+                    StatusCode = (int)HttpStatusCode.OK,
+                    Message = "Order Placed Successfully",
+                    Data = "Ok",
+                    Success = true
+                });
             }
             else if (type == "online")
             {
@@ -344,7 +353,7 @@ namespace RentWise.Controllers
 
                 // Populate JSON payload from the order variable
                 // Create variables for amount, description, and reference
-                decimal totalAmount = order.TotalAmount;
+                double totalAmount = order.TotalAmount;
                 string description = order.Product.Description; // Adjust this based on your actual structure
                 string clientReference = reference;
 

@@ -132,6 +132,7 @@
                 toastr.error("Please select a payment method")
                 return
             }
+            console.log(orderId,type)
            $.ajax({
                 url: '/Store/Pay',
                 type: 'POST',
@@ -142,11 +143,23 @@
                 },
                 success: function (data) {
                     if (data.success) {
-                        const message = JSON.parse(data.data)
-                        const content = JSON.parse(message.Content)
-                        location.href = content.data.checkoutUrl;
-                        Swal.fire('Success', 'Your order will be marked as paid as soon as it is confirmed.', 'success');
-                        closeModal('paymentModal')
+                        if (type == cash) {
+                            Swal.fire({
+                                title: 'Payment Successful',
+                                icon: 'success',
+                                confirmButtonText: 'OK',
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    location.reload();
+                                }
+                            });
+                        } else {
+                            const message = JSON.parse(data.data)
+                            const content = JSON.parse(message.Content)
+                            location.href = content.data.checkoutUrl;
+                            Swal.fire('Success', 'Your order will be marked as paid as soon as it is confirmed.', 'success');
+                            closeModal('paymentModal')
+                        }
                     }
                     else {
                         Swal.fire('Error', 'Something went wrong', 'error');

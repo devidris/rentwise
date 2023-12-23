@@ -1,112 +1,51 @@
 ﻿<link rel="stylesheet" href="~/css/controller/dashboard/_Chat.css" asp-append-version="true" />
 <div class="content content-2 row">
-    @* <div class="d-flex justify-content-center align-items-center vh-100 flex-column">
-    <div class="bg-white d-flex justify-content-center align-items-center p-5 flex-column rounded-circle" style="width:500px;height:500px">
-    <i class="bi bi-chat-right-dots-fill display-1 text-primary"></i>
-    <p class="display-6">You have no chat</p>
-    </div>
-    </div> *@
-
-    <div class="col-3 bg-white pt-4">
-        <h3 class="h3">Message</h3>
-        <div class="search_input my-3">
-            <i class="bi bi-search text-muted"></i>
-            <input type="search" value="" placeholder="Search" class="bg-light" />
+    <input value="@ViewBag.FullMessage" class="full-message" hidden />
+    <input value="@ViewBag.ChatSummaries" class="chat-summaries" hidden />
+    <input value="@ViewBag.UserId" class="user-id" hidden />
+    <input value="@ViewBag.ReceipientId" class="receipient-id" hidden />
+    @if (ViewBag.IsChatEmpty)
+    {
+        <div class="d-flex justify-content-center align-items-center vh-100 flex-column">
+            <div class="bg-white d-flex justify-content-center align-items-center p-5 flex-column rounded-circle" style="width:500px;height:500px">
+                <i class="bi bi-chat-right-dots-fill display-1 text-primary"></i>
+                <p class="display-6">You have no chat</p>
+            </div>
         </div>
-        <div>
-            <div class="chat">
-                <img src="~/img/profile.png" alt="Profile Image" />
-                <p><b>Idris Saidu</b></p>
-                <p>Done</p>
-                <p>4m</p>
-                <p class="bg-primary rounded-circle text-center text-white">3</p>
+    }
+    else
+    {
 
+
+
+        @if (ViewBag.OpenChat)
+        {
+            <div class="col-12 bg-light chat-area">
+                <div class="chat-profile bg-white">
+                    <a class="btn btn-primary" asp-controller="Dashboard" asp-action="Index" asp-route-tab="chat"><i class="bi bi-arrow-left-short"></i>Back</a>
+                    <img src="~/img/profile.png" alt="" width="50" height="50" class="rounded-circle" />
+                    <span class="ml-3">User Name</span>
+                </div>
+                <div class="grid pt-3 px-md-5 px-md-1" id="grid-container"></div>
+                <div class="chat-send row">
+                    <input type="text" value="" placeholder="Message" class="col-10 border rounded-pill px-3" id="message" />
+                    <button class="btn btn-primary col-2 ml-3" onclick="send()">Send</button>
+                </div>
             </div>
-            <hr />
-            <div class="chat">
-                <img src="~/img/profile.png" alt="Profile Image" />
-                <p><b>Idris Saidu</b></p>
-                <p>Done</p>
-                <p>4m</p>
-                <p class="bg-primary rounded-circle text-center text-white">3</p>
-
+        }
+        else
+        {
+            <div class="col-12 bg-white pt-4">
+                <h3 class="h3">Message</h3>
+                <div class="search_input my-3">
+                    <i class="bi bi-search text-muted"></i>
+                    <input type="search" value="" placeholder="Search" class="bg-light" />
+                </div>
+                <div class="chats">
+                </div>
             </div>
-            <hr />    <div class="chat">
-                <img src="~/img/profile.png" alt="Profile Image" />
-                <p><b>Idris Saidu</b></p>
-                <p>Done</p>
-                <p>4m</p>
-                <p class="bg-primary rounded-circle text-center text-white">3</p>
+        }
+    }
 
-            </div>
-            <hr />    <div class="chat">
-                <img src="~/img/profile.png" alt="Profile Image" />
-                <p><b>Idris Saidu</b></p>
-                <p>Done</p>
-                <p>4m</p>
-                <p class="bg-primary rounded-circle text-center text-white">3</p>
-
-            </div>
-            <hr />    <div class="chat">
-                <img src="~/img/profile.png" alt="Profile Image" />
-                <p><b>Idris Saidu</b></p>
-                <p>Done</p>
-                <p>4m</p>
-                <p class="bg-primary rounded-circle text-center text-white">3</p>
-
-            </div>
-            <hr />    <div class="chat">
-                <img src="~/img/profile.png" alt="Profile Image" />
-                <p><b>Idris Saidu</b></p>
-                <p>Done</p>
-                <p>4m</p>
-                <p class="bg-primary rounded-circle text-center text-white">3</p>
-
-            </div>
-            <hr />    <div class="chat">
-                <img src="~/img/profile.png" alt="Profile Image" />
-                <p><b>Idris Saidu</b></p>
-                <p>Done</p>
-                <p>4m</p>
-                <p class="bg-primary rounded-circle text-center text-white">3</p>
-
-            </div>
-            <hr />
-            <div class="chat">
-                <img src="~/img/profile.png" alt="Profile Image" />
-                <p><b>Idris Saidu</b></p>
-                <p>Done</p>
-                <p>4m</p>
-                <p class="bg-primary rounded-circle text-center text-white">3</p>
-
-            </div>
-            <hr />    <div class="chat">
-                <img src="~/img/profile.png" alt="Profile Image" />
-                <p><b>Idris Saidu</b></p>
-                <p>Done</p>
-                <p>4m</p>
-                <p class="bg-primary rounded-circle text-center text-white">3</p>
-
-            </div>
-            <hr />    <div class="chat">
-                <img src="~/img/profile.png" alt="Profile Image" />
-                <p><b>Idris Saidu</b></p>
-                <p>Done</p>
-                <p>4m</p>
-                <p class="bg-primary rounded-circle text-center text-white">3</p>
-
-            </div>
-            <hr />    <div class="chat">
-                <img src="~/img/profile.png" alt="Profile Image" />
-                <p><b>Idris Saidu</b></p>
-                <p>Done</p>
-                <p>4m</p>
-                <p class="bg-primary rounded-circle text-center text-white">3</p>
-
-            </div>
-
-        </div>
-    </div>
-    <div class="col-9 bg-primary">b</div>
 </div>
 <script src="~/js/controller/dashboard/_Chat.js"></script>
