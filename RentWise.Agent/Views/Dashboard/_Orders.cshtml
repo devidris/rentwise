@@ -47,6 +47,11 @@
                                 <a class="btn btn-primary" asp-controller="Dashboard" asp-action="ApproveOrReject" asp-route-id="@item.OrderId" asp-route-status="2">Accept</a>
                                 <a class="btn btn-primary" asp-controller="Dashboard" asp-action="ApproveOrReject" asp-route-id="@item.OrderId" asp-route-status="3">Reject</a>
                             </td>
+                        } else if(item.LkpStatus == 7)
+                        {
+                            <td>@Lookup.OrderStatus[item.LkpStatus]
+                                <a class="btn btn-primary" asp-controller="Dashboard" asp-action="PaymentReceived" asp-route-id="@item.OrderId">Mark as Received</a>
+                            </td>
                         }
                         else
                         {

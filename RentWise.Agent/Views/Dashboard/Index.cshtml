@@ -74,32 +74,32 @@
                     <span>Review</span>
                 </li>
                 <hr />
-                <li>
+                <li onclick="onToggle(6)" class="sidebar sidebar-6">
                     <i class="bi bi-person-fill"></i>
                     <span>Profile</span>
                 </li>
                 <hr />
-                <li>
+                <li onclick="onToggle(7)" class="sidebar sidebar-7">
                     <i class="bi bi-card-checklist"></i>
                     <span>Withdraw</span>
                 </li>
                 <hr />
                 <li>
-                    <i class="bi bi-gear-fill"></i>
-                    <span>Settings</span>
-                </li>
-                <hr />
-                <li>
-                    <div class="d-flex justify-content-evenly">
+                    <a asp-controller="Store" asp-action="Index" class="link-light text-decoration-none">
                         <i class="bi bi-shop-window"></i>
-                        <div class="vr"></div>
-                        <i class="bi bi-person-fill"></i>
-                    </div>
+                        <span>Store</span>
+                    </a>
                 </li>
                 <hr />
+                <hr />
                 <li>
-                    <i class="bi bi-box-arrow-left"></i>
-                    <span>Logout</span>
+                    <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                        <button id="logout" type="submit" class="bg-transparent btn text-white w-100>
+                            <i class="bi bi-box-arrow-left"></i>
+                            <span>Logout</span>
+                        </button>
+                    </form>
+                   
                 </li>
             </ul>
         </div>
@@ -108,9 +108,11 @@
             <input value="@ViewBag.totalAmount" class="earnings" hidden />
             <partial name="_Dashboard" model="ViewBag.Orders" />
             <partial name="_Chat" />
-            <partial name="_Reports" model="ViewBag.Orders"/>
+            <partial name="_Reports" model="ViewBag.Orders" />
             <partial name="_Orders" model="ViewBag.Orders" />
             <partial name="_Reviews" model="ViewBag.Reviews" />
+            <partial name="_Profile" model="ViewBag.Agent" />
+            <partial name="_Withdrawal" />
 
 
         </div>
@@ -123,9 +125,13 @@
         padding: .6rem 0;
     }
 
-        .sidebar li:hover {
+        .sidebar li:not(.split-li):hover, .sidebar-item:hover {
             background: var(--bs-primary)
         }
+
+    .sidebar-item {
+        padding: .6rem 3rem;
+    }
 
     .display-none {
         display: none
@@ -165,7 +171,6 @@
 </style>
 <script>
     function onToggle(contentNo) {
-
         document.querySelectorAll(".content").forEach((content) => {
             content.classList.add("display-none");
         })
