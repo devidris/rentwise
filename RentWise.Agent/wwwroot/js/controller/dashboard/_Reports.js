@@ -1,7 +1,14 @@
 ﻿const jsonOrders = $('.orders').text()
 $('.orders').remove()
 const orders = JSON.parse(jsonOrders)
-console.log(orders[0])
+const orderStatus = [
+    "Pending",
+    "Accepted",
+    "Rejected",
+    "Paid",
+    "Cancelled",
+    "Expired",
+    "Waiting to pay with cash"]
 
 
 function onToggleReport(contentNo) {
@@ -130,3 +137,87 @@ function displayOverviewReport2(dailyTotalsArray) {
         }
     });
 }
+
+function getReportDataTable(type = "selling") {
+
+
+    const className = type == "earning" ? "te" : "ts"
+    let startDate = document.querySelector('.' + className +'-from').value;
+    let endDate = document.querySelector('.' + className + '-to').value;
+    if (startDate == '' || endDate == '') {
+        let tableData = ""
+        let resultArray = groupOrders(orders)
+        if (type == "earning") {
+            resultArray = resultArray.sort((a, b) => b.TotalAmount - a.TotalAmount)
+        } else {
+            resultArray = resultArray.sort((a, b) => b.Quantity - a.Quantity)
+        }
+        resultArray.forEach((item,index) => {
+            tableData += `
+             <tr>
+                    <th scope="row">${index+1}</th>
+                        <td>${item.Quantity}</td>
+                        <td>${item.ProductName}</td>
+                        <td>${item.TotalAmount}</td>
+                </tr>
+            `;
+        })
+        $('.' + className + '-tbody').html(tableData)
+    
+    } else {
+        const startDate = new Date(document.querySelector('.spd-from').value);
+        const endDate = new Date(document.querySelector('.spd-to').value);
+        const filteredOrdersByDates = orders.filter(order => {
+            const orderDate = new Date(order.CreatedAt);
+            return orderDate >= startDate && orderDate < endDate;
+        });
+        let tableData = ""
+        let resultArray = groupOrders(filteredOrdersByDates)
+        if (type == "earning") {
+            resultArray = resultArray.sort((a, b) => b.TotalAmount - a.TotalAmount)
+        } else {
+            resultArray = resultArray.sort((a, b) => b.Quantity - a.Quantity)
+        }
+        resultArray.forEach((item, index) => {
+            tableData += `
+             <tr>
+                    <th scope="row">${index + 1}</th>
+                        <td>${item.Quantity}</td>
+                        <td>${item.ProductName}</td>
+                        <td>${item.TotalAmount}</td>
+                </tr>
+            `;
+        })
+        $('.' + className + '-tbody').html(tableData)
+
+    }
+}
+
+function groupOrders(orders) {
+
+    const groupedOrders = {};
+
+    orders.forEach(order => {
+        const productId = order.ProductId;
+
+        if (!groupedOrders[productId]) {
+            groupedOrders[productId] = {
+                Quantity: 0,
+                ProductName: order.Product.Name,
+                TotalAmount: 0,
+            };
+        }
+
+        groupedOrders[productId].Quantity += order.ProductQuantity;
+        groupedOrders[productId].TotalAmount += order.TotalAmount;
+    });
+
+    return  Object.entries(groupedOrders).map(([productId, values]) => ({
+        ProductId: productId,
+        Quantity: values.Quantity,
+        ProductName: values.ProductName,
+        TotalAmount: values.TotalAmount,
+    }));
+}
+getReportDataTable()
+getReportDataTable('earning')

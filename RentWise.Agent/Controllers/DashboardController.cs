@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using RentWise.DataAccess.Repository.IRepository;
 using RentWise.Models;
+using RentWise.Models.Identity;
 using RentWise.Utility;
 using System.Net;
 using System.Security.Claims;
@@ -25,7 +26,9 @@ namespace RentWise.Agent.Controllers
         }
         public async Task<IActionResult> Index(string Id = "")
         {
-            string userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;    
+            string userId = User.FindFirst(ClaimTypes.NameIdentifier).Value; 
+            AgentRegistrationModel agent = _unitOfWork.AgentRegistration.Get(u => u.Id == userId);
+            ViewBag.Agent = agent;
             IEnumerable<OrdersModel> orders = _unitOfWork.Order.GetAll(u=>u.AgentId == userId,"Product");
             ViewBag.Orders = orders;
             ViewBag.NoOfOrders = orders.Count();  
@@ -156,6 +159,28 @@ namespace RentWise.Agent.Controllers
                 _unitOfWork.Save();
             }
             return RedirectToAction("Index","Dashboard");
+        }
+        public IActionResult PaymentReceived(int Id)
+        {
+            string UserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            OrdersModel order = _unitOfWork.Order.Get(u => u.OrderId == Id && u.AgentId == UserId);
+            if (order != null)
+            {
+                string Message = "Payment received by renter";
+                ChatModel chat = new()
+                {
+                    FromUserId = order.AgentId,
+                    ToUserId = order.UserId,
+                    Message = Message,
+                    IsOrder = true,
+                };
+
+                _unitOfWork.Chat.Add(chat);
+                order.LkpStatus = 4;
+                _unitOfWork.Order.Update(order);
+                _unitOfWork.Save();
+            }
+            return RedirectToAction("Index", "Dashboard");
         }
 
         [HttpPost]
