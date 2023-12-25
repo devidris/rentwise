@@ -40,7 +40,7 @@
                         <td>@item.TotalAmount</td>
                         <td>@item.StartDate.ToShortDateString()</td>
                         <td>@item.EndDate.ToShortDateString()</td>
-                        @if (item.LkpStatus == 1)
+                        @if (item.LkpStatus == 1 || item.LkpStatus == 0)
                         {
                             <td class="d-flex gap-2 align-items-center">
                                 @Lookup.OrderStatus[item.LkpStatus]
