@@ -154,78 +154,120 @@ namespace RentWise.Controllers
             return View();
         }
 
-        public async Task<IActionResult> RegisterAgent(AgentRegistrationModel model, IFormFile logo, IFormFile nationalCard, IFormFile profilePicture)
+        [Authorize]
+        public async Task<IActionResult> RegisterAgent(AgentRegistrationModel model, IFormFile? logo, IFormFile? nationalCard, IFormFile? profilePicture)
         {
             IdentityUser user = await _userManager.GetUserAsync(User);
-            if (user == null)
-            {
-                return RedirectToAction("Register", "Login");
-            }
             if (!model.Privacy)
             {
                 ModelState.AddModelError("Privacy", "You have to accept terms and conditions.");
             }
-            model.Id = user.Id;
+            TempData["Action"] = 6;
+            bool isCreate = model.Id == null;
+            AgentRegistrationModel agent = _unitOfWork.AgentRegistration.Get(u => u.Id == user.Id);
+            bool changeNumber = true;
+            if (agent != null)
+            {
+                changeNumber = agent.PhoneNumber != model.PhoneNumber;
+            }
+            bool changeSlug = true;
+            if (agent != null)
+            {
+                changeSlug = agent.Slug != model.Slug;
+            }
+            bool changeStoreName = true;
+            if (agent != null)
+            {
+                changeStoreName = agent.StoreName != model.StoreName;
+            }
+            if (isCreate)
+            {
+                if (logo == null)
+                {
+                    ModelState.AddModelError(Lookup.Upload[1], "Logo upload is compulsory.");
+                }
+                if (nationalCard == null)
+                {
+                    ModelState.AddModelError(string.Join("", Lookup.Upload[4].Split(" ")), "National Card upload is compulsory.");
+                }
+                if (profilePicture == null)
+                {
+                    ModelState.AddModelError(string.Join("", Lookup.Upload[5].Split(" ")), "Profile Picture upload is compulsory.");
+                }
+            }
 
-            if (logo == null)
-            {
-                ModelState.AddModelError(Lookup.Upload[1], "Logo upload is compulsory.");
-            }
-            if (nationalCard == null)
-            {
-                ModelState.AddModelError(string.Join("", Lookup.Upload[4].Split(" ")), "National Card upload is compulsory.");
-            }
-            if (profilePicture == null)
-            {
-                ModelState.AddModelError(string.Join("", Lookup.Upload[5].Split(" ")), "Profile Picture upload is compulsory.");
-            }
-
-            if (_unitOfWork.AgentRegistration.Get(u => u.PhoneNumber == model.PhoneNumber) != null)
+            if (_unitOfWork.AgentRegistration.Get(u => u.PhoneNumber == model.PhoneNumber) != null && changeNumber)
             {
                 ModelState.AddModelError(string.Join("", Lookup.Upload[5].Split(" ")), "Phone Number is already in use.");
             }
-            if (_unitOfWork.AgentRegistration.Get(u => u.Slug == model.Slug) != null)
+            if (_unitOfWork.AgentRegistration.Get(u => u.Slug == model.Slug) != null && changeSlug)
             {
                 ModelState.AddModelError(Lookup.Upload[6], "Slug is already in use.");
             }
-            if (_unitOfWork.AgentRegistration.Get(u => u.StoreName == model.StoreName) != null)
+            if (_unitOfWork.AgentRegistration.Get(u => u.StoreName == model.StoreName) != null && changeStoreName)
             {
                 ModelState.AddModelError(string.Join("", Lookup.Upload[7].Split(" ")), "Store Name is already in use.");
             }
-
+            if (isCreate)
+            {
+                model.Id = user.Id;
+            }
             if (ModelState.IsValid)
             {
-                model.FirstName = SharedFunctions.Capitalize(model.FirstName);
-                model.LastName = SharedFunctions.Capitalize(model.LastName);
+                if (isCreate)
+                {
+                    model.FirstName = SharedFunctions.Capitalize(model.FirstName);
+                    model.LastName = SharedFunctions.Capitalize(model.LastName);
+                } else
+                {
+                    model.FirstName = SharedFunctions.Capitalize(agent.FirstName);
+                    model.LastName = SharedFunctions.Capitalize(agent.LastName);
+                }
                 model.StoreName = SharedFunctions.Capitalize(model.StoreName);
 
-                #region Saving Logo
-                string logoName = Lookup.Upload[1] + Path.GetExtension(logo.FileName);
+                if(logo != null)
+                {
+                    #region Saving Logo
+                    string logoName = Lookup.Upload[1] + Path.GetExtension(logo.FileName);
 
-                saveImage(model.Id, logoName, logo);
-                #endregion
-                #region Saving National Card
-                string nationalCardName = String.Join("", Lookup.Upload[4].Split(" ")) + Path.GetExtension(nationalCard.FileName);
+                    saveImage(model.Id, logoName, logo);
+                    #endregion
+                }
+                if(nationalCard != null)
+                {
+                    #region Saving National Card
+                    string nationalCardName = String.Join("", Lookup.Upload[4].Split(" ")) + Path.GetExtension(nationalCard.FileName);
 
-                saveImage(model.Id, nationalCardName, nationalCard);
-                #endregion
-                #region Saving Profile Picture
-                string profilePictureName = String.Join("", Lookup.Upload[5].Split(" ")) + Path.GetExtension(profilePicture.FileName);
+                    saveImage(model.Id, nationalCardName, nationalCard);
+                    #endregion
+                }
+                if(profilePicture != null)
+                {
+                    #region Saving Profile Picture
+                    string profilePictureName = String.Join("", Lookup.Upload[5].Split(" ")) + Path.GetExtension(profilePicture.FileName);
 
-                saveImage(model.Id, profilePictureName, profilePicture);
-                #endregion
+                    saveImage(model.Id, profilePictureName, profilePicture);
+                    #endregion
+                }
                 if (model.Slug == null) { model.Slug = model.Id.ToString(); }
 
-                _unitOfWork.AgentRegistration.Add(model);
-                _unitOfWork.Save();
+                if (isCreate)
+                {
+                    _unitOfWork.AgentRegistration.Add(model);
 
-                IList<string> userRoles = await _userManager.GetRolesAsync(user);
-                await _userManager.AddToRoleAsync(user, Lookup.Roles[2]);
-                await _userManager.RemoveFromRoleAsync(user, Lookup.Roles[3]);
+                    IList<string> userRoles = await _userManager.GetRolesAsync(user);
+                    await _userManager.AddToRoleAsync(user, Lookup.Roles[2]);
+                    await _userManager.RemoveFromRoleAsync(user, Lookup.Roles[3]);
+                } else
+                {
+                    TempData["Success"] = "Update Successful";
+                    _unitOfWork.AgentRegistration.Update(model);
+                }
+                    _unitOfWork.Save();
 
 
-
-                return RedirectToAction("Index", "Store");
+                
+                return RedirectToAction(model.ReturnAction, model.ReturnController);
             }
             TempData.Put("Model", model);
             List<string> errorMessages = ModelState.Values
@@ -234,7 +276,7 @@ namespace RentWise.Controllers
           .ToList();
 
             TempData["ErrorMessages"] = errorMessages; // Store the error messages in TempData
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction(model.ReturnAction,model.ReturnController);
         }
 
         public void saveImage(string userId, string fileName, IFormFile file)

@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', function () {
     var ctx = document.getElementById('overview-report').getContext('2d');
 
     var data = {
-        labels: ['Number of Sales', 'Total number of orders'],
+        labels: ['Total Sales', 'Total number of orders'],
         datasets: [{
             label: 'Count',
             data: [totalEarnings, totalOrders],
@@ -123,7 +123,7 @@ function displayOverviewReport2(dailyTotalsArray) {
             datasets: [{
                 label: 'Daily Totals',
                 data: totals,
-                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                backgroundColor: 'rgba(75, 192, 192, 1)',
                 borderColor: 'rgba(75, 192, 192, 1)',
                 borderWidth: 1
             }]

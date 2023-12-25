@@ -98,7 +98,14 @@ namespace RentWise.Models.Identity
         [NotMapped]
         [Required]
         public bool Privacy { get; set; }
-   
+        [NotMapped]
+        [ValidateNever]
+        public string? ReturnController { get; set; } = "Dashboard";
+        [NotMapped]
+        [ValidateNever]
+        public string? ReturnAction { get; set; } = "Index";
+
+
 
     }
 

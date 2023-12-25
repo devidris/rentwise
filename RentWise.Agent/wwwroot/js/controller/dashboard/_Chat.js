@@ -121,5 +121,7 @@ function send() {
 
 $(document).ready(function () {
     const scrollingDiv = $('#grid-container');
-    scrollingDiv.scrollTop(scrollingDiv[0].scrollHeight);
+    if (scrollingDiv.length > 0) {
+        scrollingDiv.scrollTop(scrollingDiv[0].scrollHeight);
+    }
 });
