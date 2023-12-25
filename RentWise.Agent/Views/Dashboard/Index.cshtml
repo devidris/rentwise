@@ -48,6 +48,7 @@
 
     <div class="row mt-5 bg-light px-5">
         <div class="col-2 pl-5 ">
+            <input value="@ViewBag.Action" class="action" hidden/>
             <ul class="d-flex flex-column text-light list-unstyled w-100 justify-content-evenly  lead text-center  bg-dark py-3 rounded sidebar">
                 <li onclick="onToggle(1)" class="sidebar sidebar-1">
                     <i class="bi bi-columns-gap"></i>
@@ -94,7 +95,7 @@
                 <hr />
                 <li>
                     <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-                        <button id="logout" type="submit" class="bg-transparent btn text-white w-100>
+                        <button id="logout" type="submit" class="bg-transparent btn text-white w-100">
                             <i class="bi bi-box-arrow-left"></i>
                             <span>Logout</span>
                         </button>
@@ -187,7 +188,8 @@
         if (activeValue && activeValue.length > 0) {
             onToggle(activeValue);
         } else {
-            onToggle(1);
+            const action = $(".action").val();
+            onToggle(action);
         }
     }
     onToggleSidebar()

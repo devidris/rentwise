@@ -26,8 +26,36 @@ namespace RentWise.Agent.Controllers
         }
         public async Task<IActionResult> Index(string Id = "")
         {
+            if (TempData["Action"] != null)
+            {
+            ViewBag.Action = TempData["Action"];
+            } else
+            {
+                ViewBag.Action = 1;
+            }
+            var errorMessages = TempData["ErrorMessages"];
+            if (errorMessages != null)
+            {
+                // Check if the object is a string array
+                if (errorMessages is string[] errorMessageArray)
+                {
+                    foreach (var errorMessage in errorMessageArray)
+                    {
+                        ModelState.AddModelError(string.Empty, errorMessage);
+                    }
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, errorMessages.ToString());
+                }
+            }
             string userId = User.FindFirst(ClaimTypes.NameIdentifier).Value; 
             AgentRegistrationModel agent = _unitOfWork.AgentRegistration.Get(u => u.Id == userId);
+            if(agent != null)
+            {
+                agent.ReturnController = "Dashboard";
+                agent.ReturnAction = "Index";
+            }
             ViewBag.Agent = agent;
             IEnumerable<OrdersModel> orders = _unitOfWork.Order.GetAll(u=>u.AgentId == userId,"Product");
             ViewBag.Orders = orders;
