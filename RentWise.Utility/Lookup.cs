@@ -55,6 +55,7 @@ namespace RentWise.Utility
 
         public static Dictionary<int, string> OrderStatus = new Dictionary<int, string>
         {
+            {0,"Pending"},
             {1,"Pending"},
             {2,"Accepted" },
             {3, "Rejected"},
