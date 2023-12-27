@@ -15,6 +15,8 @@ namespace RentWise.DataAccess.Repository.IRepository
 
         IChatRepository Chat { get; }
         IOrdersRepository Order { get; }
+
+        IUsersDetailsRepository UsersDetails { get; }
         void Save();
     }
 }

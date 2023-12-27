@@ -86,7 +86,7 @@ namespace RentWise.Models.Identity
         [ValidateNever]
         [NotMapped]
         public string Logo { get; set; }
-       
+
         [NotMapped]
         [ValidateNever]
         [Display(Name = "Profile Picture")]
@@ -109,7 +109,8 @@ namespace RentWise.Models.Identity
 
     }
 
-    public class ForgetPasswordModel { 
+    public class ForgetPasswordModel
+    {
         [Required]
         [EmailAddress]
         public string Email { get; set; }
@@ -120,10 +121,19 @@ namespace RentWise.Models.Identity
         public string? OldPassword { get; set; }
         [Display(Name = "Password")]
         public string? NewPassword { get; set; }
-        
+
         [Display(Name = "Confirm password")]
         [Compare("NewPassword", ErrorMessage = "The password and confirmation password do not match.")]
         public string? ConfirmPassword { get; set; }
 
+    }
+
+    public class UsersDetailsModel
+    {
+        [Key]
+        public string Id { get; set; }
+        public int Orders { get; set; } = 0;
+        public int Messages { get; set; } = 0;
+        public string Username { get; set; }
     }
 }
