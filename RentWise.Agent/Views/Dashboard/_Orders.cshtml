@@ -44,8 +44,8 @@
                         {
                             <td class="d-flex gap-2 align-items-center">
                                 @Lookup.OrderStatus[item.LkpStatus]
-                                <a class="btn btn-primary" asp-controller="Dashboard" asp-action="ApproveOrReject" asp-route-id="@item.OrderId" asp-route-status="2">Accept</a>
-                                <a class="btn btn-primary" asp-controller="Dashboard" asp-action="ApproveOrReject" asp-route-id="@item.OrderId" asp-route-status="3">Reject</a>
+                                <a class="btn btn-primary" asp-controller="Dashboard" asp-action="ApproveOrReject" asp-route-id="@item.OrderId" asp-route-lkpstatus="2">Accept</a>
+                                <a class="btn btn-primary" asp-controller="Dashboard" asp-action="ApproveOrReject" asp-route-id="@item.OrderId" asp-route-lkpstatus="3">Reject</a>
                             </td>
                         } else if(item.LkpStatus == 7)
                         {
