@@ -143,7 +143,7 @@
                 },
                 success: function (data) {
                     if (data.success) {
-                        if (type == cash) {
+                        if (type == 'cash') {
                             Swal.fire({
                                 title: 'Payment Successful',
                                 icon: 'success',
@@ -157,7 +157,7 @@
                             const message = JSON.parse(data.data)
                             const content = JSON.parse(message.Content)
                             location.href = content.data.checkoutUrl;
-                            Swal.fire('Success', 'Your order will be marked as paid as soon as it is confirmed.', 'success');
+                            Swal.fire('Success', 'Your order will be marked as paid as soon as it is confirmed.', 'info');
                             closeModal('paymentModal')
                         }
                     }
