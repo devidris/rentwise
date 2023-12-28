@@ -27,7 +27,7 @@ namespace RentWise.Controllers
             _config = config;
             _userManager = userManager;
         }
-        public IActionResult Index(int Id = 0, string? Sort = null, string? Name = null, string? PriceRange = null, string? MaxDay = null, double Lat = 0, double Lng = 0)
+        public async Task<IActionResult> Index(int Id = 0, string? Sort = null, string? Name = null, string? PriceRange = null, string? MaxDay = null, double Lat = 0, double Lng = 0)
         {
             List<ProductModel> products = new List<ProductModel>();
             if (Id > 0)
@@ -86,6 +86,21 @@ namespace RentWise.Controllers
             }
             ViewBag.CategoryName = Id > 0 ? Lookup.Categories[Id] : "All Category";
             ViewBag.Link = _config.Value.AgentWebsiteLink;
+            var user = await _userManager.GetUserAsync(User);
+            if (user != null)
+            {
+                if (_unitOfWork.UsersDetails.Get(u => u.Id == user.Id) == null)
+                { 
+                    UsersDetailsModel usersDetailsModel = new UsersDetailsModel
+                {
+                    Username = user.UserName.Split('@')[0],
+                    Id = user.Id,
+                };
+                _unitOfWork.UsersDetails.Add(usersDetailsModel);
+                _unitOfWork.Save();
+                
+                }
+            }
             return View(products);
         }
         public async Task<IActionResult> View(string? id)
@@ -217,7 +232,12 @@ namespace RentWise.Controllers
                     ToUserId = Receipient,
                     Message = Message
                 };
-
+                UsersDetailsModel usersDetailsModel = _unitOfWork.UsersDetails.Get(u => u.Id == Receipient);
+                if (usersDetailsModel != null)
+                {
+                    usersDetailsModel.Messages += 1;
+                    _unitOfWork.UsersDetails.Update(usersDetailsModel);
+                }
                 _unitOfWork.Chat.Add(chat);
                 _unitOfWork.Save();
                 return Json(new
@@ -274,6 +294,13 @@ namespace RentWise.Controllers
                 Message = Message,
                 IsOrder = true
             };
+            UsersDetailsModel usersDetailsModel = _unitOfWork.UsersDetails.Get(u => u.Id == AgentId);
+            if (usersDetailsModel != null)
+            {
+                usersDetailsModel.Orders += 1;
+                usersDetailsModel.Messages += 1;
+                _unitOfWork.UsersDetails.Update(usersDetailsModel);
+            }
             _unitOfWork.Order.Add(model);
             _unitOfWork.Chat.Add(chat);
             _unitOfWork.Save();
@@ -291,24 +318,40 @@ namespace RentWise.Controllers
         {
             string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             IEnumerable<OrdersModel> orders = _unitOfWork.Order.GetAll(u => u.UserId == userId, "Product");
+            UsersDetailsModel usersDetailsModel = _unitOfWork.UsersDetails.Get(u => u.Id == userId);
+            if (usersDetailsModel != null)
+            {
+                usersDetailsModel.Orders = 0;
+                _unitOfWork.UsersDetails.Update(usersDetailsModel);
+                _unitOfWork.Save();
+            }
             return View(orders);
         }
 
         [HttpPost]
         [AllowAnonymous]
-        public ActionResult UpdateOrders(string orderId = "")
+        public IActionResult Success(string orderId = "")
         {
             OrdersModel order = _unitOfWork.Order.Get(u => u.OrderId == int.Parse(orderId), "Product");
             order.Paid = true;
-            _unitOfWork.Order.Update(order);
-            _unitOfWork.Save();
-            return Json(new
+            order.LkpStatus = 4;
+            string UserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            if (order != null)
             {
-                StatusCode = (int)HttpStatusCode.OK,
-                Message = "Order Placed Successfully",
-                Data = Lookup.ResponseMessages[5],
-                Success = true
-            });
+                string Message = "Payment received by renter";
+                ChatModel chat = new()
+                {
+                    FromUserId = order.AgentId,
+                    ToUserId = order.UserId,
+                    Message = Message,
+                    IsOrder = true,
+                };
+                _unitOfWork.Chat.Add(chat);
+            }
+                _unitOfWork.Order.Update(order);
+            _unitOfWork.Save();
+            TempData["Success"] = "Payment for order no"+ orderId + "was successful";
+            return RedirectToAction(nameof(Orders));
         }
 
         [Authorize]
@@ -356,9 +399,9 @@ namespace RentWise.Controllers
                 double totalAmount = order.TotalAmount;
                 string description = order.Product.Description; // Adjust this based on your actual structure
                 string clientReference = reference;
-
+                string link = _config.Value.ClientWebsiteLink+ "/Success?orderId="+order.OrderId;
                 // Create the JSON string using variables
-                string jsonBody = $"{{\"totalAmount\":{totalAmount},\"description\":\"{description}\",\"callbackUrl\":\"{pageLink}?orderId={order.OrderId}\",\"returnUrl\":\"{pageLink}\",\"cancellationUrl\":\"{pageLink}\",\"merchantAccountNumber\":\"2018934\",\"clientReference\":\"{clientReference}\"}}";
+                string jsonBody = $"{{\"totalAmount\":{totalAmount},\"description\":\"{description}\",\"callbackUrl\":\"{pageLink}?orderId={order.OrderId}\",\"returnUrl\":\"{link}\",\"cancellationUrl\":\"{pageLink}\",\"merchantAccountNumber\":\"2018934\",\"clientReference\":\"{clientReference}\"}}";
 
 
                 var options = new RestClientOptions("https://payproxyapi.hubtel.com/items/initiate");

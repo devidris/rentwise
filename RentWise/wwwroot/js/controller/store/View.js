@@ -48,10 +48,10 @@ function calculatePrice(selectedDates) {
     const totalDayPrice = priceDay * weekdaysCount * noOfProduct
     const calDaysPrice = `
                 <p>
-                $${priceDay}/Day * ${weekdaysCount} Day * ${noOfProduct} Product
+                ₵${priceDay}/Day * ${weekdaysCount} Day * ${noOfProduct} Product
                 </p>
                 <p>
-                $${totalDayPrice}
+                ₵${totalDayPrice}
                 </p>
                 `
     $('.day').html(calDaysPrice)
@@ -62,10 +62,10 @@ function calculatePrice(selectedDates) {
         priceWeekend * weekendsCount * noOfProduct
     const calWeekendPrice = `
                     <p>
-                        $${priceWeekend}/Day * ${weekendsCount} Weekend * ${noOfProduct} Product
+                        ₵${priceWeekend}/Day * ${weekendsCount} Weekend * ${noOfProduct} Product
                     </p>
                     <p>
-                        $${totalWeekendPrice}
+                        ₵${totalWeekendPrice}
                     </p>
                     `
     $('.weekend').html(calWeekendPrice)
@@ -74,15 +74,15 @@ function calculatePrice(selectedDates) {
     const totalWeekPrice = priceWeek * weeksCount * noOfProduct
     const calWeekPrice = `
                         <p>
-                            $${priceWeek}/Day * ${weeksCount} Week * ${noOfProduct} Product
+                            ₵${priceWeek}/Day * ${weeksCount} Week * ${noOfProduct} Product
                         </p>
                         <p>
-                            $${totalWeekPrice}
+                            ₵${totalWeekPrice}
                         </p>
                         `
     $('.week').html(calWeekPrice)
     totalPrice = totalDayPrice + totalWeekendPrice + totalWeekPrice
-    $('.total-price').text('$' + totalPrice)
+    $('.total-price').text('₵' + totalPrice)
     $('.start-date').text(formatDate(firstDate))
     $('.end-date').text(formatDate(lastDate))
 }

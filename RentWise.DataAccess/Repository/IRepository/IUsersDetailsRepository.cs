@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace RentWise.DataAccess.Repository.IRepository
 {
-    public interface IUsersDetailsRepository
+    public interface IUsersDetailsRepository:IRepository<UsersDetailsModel>
     {
         void Update(UsersDetailsModel model);
     }

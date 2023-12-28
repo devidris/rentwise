@@ -1,11 +1,16 @@
 ﻿@using Microsoft.AspNetCore.Identity
+@using System.Security.Claims;
+@using RentWise.DataAccess.Repository.IRepository;
 
 @inject SignInManager<IdentityUser> SignInManager
 @inject UserManager<IdentityUser> UserManager
+@inject IUnitOfWork _unitOfWork
 
 @{
     Authentication authentication = new Authentication(); // or null if you want to pass null
     AuthenticationLogin authenticationLogin = new AuthenticationLogin();
+    string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+    UsersDetailsModel usersDetailsModel = _unitOfWork.UsersDetails.Get(u => u.Id == userId);
 }
 <link rel="stylesheet" href="~/css/shared/_LoginPartial.css" asp-append-version="true" />
 <ul class="navbar-nav align-items-center gap-2">
@@ -15,11 +20,33 @@
             <div class="dropdown">
                 <a class="dropdown-toggle link-white" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <i class="bi bi-person-fill text-white fs-3"></i>
+                    @{
+                        int totalNotification = usersDetailsModel.Orders + usersDetailsModel.Messages;
+                    }
+                    @if (totalNotification > 0)
+                    {
+                        <sup class="link-light text-decoration-none">@totalNotification</sup>
+                    }
                 </a>
                 <div class="dropdown-menu dropdown-menu-end text-white profile-dropdown" aria-labelledby="dropdownMenuLink">
                     <a class="dropdown-item" asp-controller="Auth" asp-action="Profile">Profile</a>
-                    <a class="dropdown-item" asp-controller="Page" asp-action="Chat">Message</a>
-                    <a class="dropdown-item" asp-controller="Store" asp-action="Orders">Orders</a>
+
+                    <a class="dropdown-item" asp-controller="Page" asp-action="Chat">
+                        Message
+                        @if (usersDetailsModel.Messages > 0)
+                        {
+                            <sup>@usersDetailsModel.Messages</sup>
+                        }
+                    </a>
+
+                    <a class="dropdown-item" asp-controller="Store" asp-action="Orders">
+                        Orders
+                        @if (usersDetailsModel.Orders > 0)
+                        {
+                            <sup>@usersDetailsModel.Orders</sup>
+                        }
+                    </a>
+
                     <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
                         <a id="logout" href="#" class="dropdown-item" onclick="document.getElementById('logoutForm').submit();">Logout</a>
                     </form>

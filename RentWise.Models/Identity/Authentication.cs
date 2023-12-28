@@ -128,7 +128,7 @@ namespace RentWise.Models.Identity
 
     }
 
-    public class UsersDetailsModel
+    public class UsersDetailsModel:DefaultModel
     {
         [Key]
         public string Id { get; set; }
