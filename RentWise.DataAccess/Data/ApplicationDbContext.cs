@@ -26,6 +26,8 @@ public class ApplicationDbContext : IdentityDbContext<IdentityUser>
     public DbSet<ChatModel> Chats { get; set; }
 
     public DbSet<OrdersModel> Orders { get; set; }
+
+    public DbSet<UsersDetailsModel> UsersDetails { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);

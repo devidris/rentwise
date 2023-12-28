@@ -105,11 +105,21 @@
             </div>
         </div>
     </div>
-
+    @if (TempData["Success"] != null)
+    {
+        <input value="@TempData["Success"]" class="status" />
+    } else
+    {
+        <input value="0" class="status" />
+    }
 
 </div>
 @section Scripts{
     <script>
+        const status = $('.status').val()
+        if(status != 0){
+            Swal.fire('Payment Successful', status, 'success');
+        }
         let pageLink = location.href
         let type = ''
         let orderId = 0;

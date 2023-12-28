@@ -168,6 +168,14 @@ namespace RentWise.Agent.Controllers
             OrdersModel order = _unitOfWork.Order.Get(u => u.OrderId == Id && u.AgentId == UserId);
             if (order != null)
             {
+                UsersDetailsModel usersDetailsModel = _unitOfWork.UsersDetails.Get(u=>u.Id == order.UserId);
+                if (usersDetailsModel != null)
+                {
+                    usersDetailsModel.Orders += 1;
+                    usersDetailsModel.Messages += 1;
+                    _unitOfWork.UsersDetails.Update(usersDetailsModel);
+                    _unitOfWork.Save();
+                }
                 string Message = "Your order has been rejected";
                 if (Id == 2)
                 {
@@ -186,6 +194,7 @@ namespace RentWise.Agent.Controllers
                 _unitOfWork.Order.Update(order);
                 _unitOfWork.Save();
             }
+            TempData["active"] = 4;
             return RedirectToAction("Index","Dashboard");
         }
         public IActionResult PaymentReceived(int Id)
@@ -205,6 +214,7 @@ namespace RentWise.Agent.Controllers
 
                 _unitOfWork.Chat.Add(chat);
                 order.LkpStatus = 4;
+                order.Paid = true;
                 _unitOfWork.Order.Update(order);
                 _unitOfWork.Save();
             }
@@ -235,7 +245,12 @@ namespace RentWise.Agent.Controllers
                     ToUserId = Receipient,
                     Message = Message
                 };
-
+                UsersDetailsModel usersDetailsModel = _unitOfWork.UsersDetails.Get(u => u.Id == Receipient);
+                if (usersDetailsModel != null)
+                {
+                    usersDetailsModel.Messages += 1;
+                    _unitOfWork.UsersDetails.Update(usersDetailsModel);
+                }
                 _unitOfWork.Chat.Add(chat);
                 _unitOfWork.Save();
                 return Json(new

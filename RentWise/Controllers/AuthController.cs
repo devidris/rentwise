@@ -12,6 +12,7 @@ using System.Security.Claims;
 using Microsoft.Extensions.Options;
 using RentWise.Models;
 using Microsoft.AspNetCore.Hosting;
+using RentWise.DataAccess.Repository.IRepository;
 
 namespace RentWise.Controllers
 {
@@ -25,13 +26,14 @@ namespace RentWise.Controllers
         private readonly IEmailSender _emailSender;
         private readonly IOptions<RentWiseConfig> _config;
         private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly IUnitOfWork _unitOfWork;
         public AuthController(
               UserManager<IdentityUser> userManager,
             RoleManager<IdentityRole> roleManager,
             IUserStore<IdentityUser> userStore,
             SignInManager<IdentityUser> signInManager,
             ILogger<Authentication> logger,
-            IEmailSender emailSender, IOptions<RentWiseConfig> config, IWebHostEnvironment webHostEnvironment)
+            IEmailSender emailSender, IOptions<RentWiseConfig> config, IWebHostEnvironment webHostEnvironment,IUnitOfWork unitOfWork)
 
         {
 
@@ -43,6 +45,7 @@ namespace RentWise.Controllers
             _emailSender = emailSender;
             _config = config;
             _webHostEnvironment = webHostEnvironment;
+            _unitOfWork = unitOfWork;
         }
 
         public IActionResult Register()
@@ -64,17 +67,22 @@ namespace RentWise.Controllers
 
                 if (result.Succeeded)
                 {
+                    await _signInManager.SignInAsync(user, isPersistent: false);
                     _logger.LogInformation("User created a new account with password.");
                     await _userManager.AddToRoleAsync(user, Lookup.Roles[3]);
-                    var userId = await _userManager.GetUserIdAsync(user);
+                    UsersDetailsModel usersDetailsModel = new UsersDetailsModel
+                    {
+                        Username = model.Email.Split('@')[0],
+                        Id = user.Id,
+                    };
+                    _unitOfWork.UsersDetails.Add(usersDetailsModel);
+                    _unitOfWork.Save();
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
                         return RedirectToPage("RegisterConfirmation", new { email = model.Email, returnUrl = model.ReturnUrl });
                     }
                     else
                     {
-                        await _signInManager.SignInAsync(user, isPersistent: false);
-
                         return LocalRedirect(model.ReturnUrl);
 
                     }

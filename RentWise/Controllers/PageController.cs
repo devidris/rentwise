@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RentWise.DataAccess.Repository.IRepository;
 using RentWise.Models;
+using RentWise.Models.Identity;
 using RentWise.Utility;
 using System.Security.Claims;
 
@@ -46,6 +47,14 @@ namespace RentWise.Controllers
              .Where(c => c.FromUserId == userId || c.ToUserId == userId)
              .GroupBy(c => c.FromUserId == userId ? c.ToUserId : c.FromUserId)
              .ToList();
+
+            UsersDetailsModel usersDetailsModel = _unitOfWork.UsersDetails.Get(u => u.Id == userId);
+            if (usersDetailsModel != null)
+            {
+                usersDetailsModel.Messages = 0;
+                _unitOfWork.UsersDetails.Update(usersDetailsModel);
+                _unitOfWork.Save();
+            }
 
             List<ChatSummary> chatSummaries = new List<ChatSummary>();
 

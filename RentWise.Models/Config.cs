@@ -9,5 +9,6 @@ namespace RentWise.Models
     public class RentWiseConfig
     {
         public string AgentWebsiteLink { get; set; }
+        public string ClientWebsiteLink { get; set; }
     }
 }

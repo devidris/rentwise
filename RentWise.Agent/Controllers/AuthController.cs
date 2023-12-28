@@ -79,7 +79,13 @@ namespace RentWise.Controllers
                 {
                     _logger.LogInformation("User created a new account with password.");
                     await _userManager.AddToRoleAsync(user, Lookup.Roles[3]);
-                    var userId = await _userManager.GetUserIdAsync(user);
+                    UsersDetailsModel usersDetailsModel = new UsersDetailsModel
+                    {
+                        Username = model.Email.Split('@')[0],
+                        Id = user.Id,
+                    };
+                    _unitOfWork.UsersDetails.Add(usersDetailsModel);
+                    _unitOfWork.Save();
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
                         return RedirectToPage("RegisterConfirmation", new { email = model.Email, returnUrl = model.ReturnUrl });
