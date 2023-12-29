@@ -327,10 +327,7 @@ namespace RentWise.Controllers
             }
             return View(orders);
         }
-
-        [HttpPost]
-        [AllowAnonymous]
-        public IActionResult Success(string orderId = "")
+        public IActionResult Success(string orderId = "",string checokutId = "")
         {
             OrdersModel order = _unitOfWork.Order.Get(u => u.OrderId == int.Parse(orderId), "Product");
             order.Paid = true;
@@ -399,7 +396,7 @@ namespace RentWise.Controllers
                 double totalAmount = order.TotalAmount;
                 string description = order.Product.Description; // Adjust this based on your actual structure
                 string clientReference = reference;
-                string link = _config.Value.ClientWebsiteLink+ "/Success?orderId="+order.OrderId;
+                string link = _config.Value.ClientWebsiteLink+ "/Store/Success?orderId="+order.OrderId;
                 // Create the JSON string using variables
                 string jsonBody = $"{{\"totalAmount\":{totalAmount},\"description\":\"{description}\",\"callbackUrl\":\"{pageLink}?orderId={order.OrderId}\",\"returnUrl\":\"{link}\",\"cancellationUrl\":\"{pageLink}\",\"merchantAccountNumber\":\"2018934\",\"clientReference\":\"{clientReference}\"}}";
 
