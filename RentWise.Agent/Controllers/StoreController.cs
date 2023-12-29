@@ -48,10 +48,7 @@ namespace RentWise.Agent.Controllers
 
         public IActionResult Upsert(string? id)
         {
-            ProductModel product = new ProductModel()
-            {
-                ProductId = ""
-            };
+            ProductModel product = new ProductModel(){};
             if(id != null) {
                 product = _unitOfWork.Product.Get(u => u.ProductId == id);
             }
@@ -104,7 +101,7 @@ namespace RentWise.Agent.Controllers
 
                 return RedirectToAction("Preview", "Store", new { id = model.ProductId });
             }
-            return View();
+            return View(model);
         }
 
         public void saveImage(string userId, string fileName, IFormFile file, string productId)

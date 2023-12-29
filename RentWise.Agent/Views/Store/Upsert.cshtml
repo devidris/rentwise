@@ -3,7 +3,7 @@
 <div>
     <partial name="_Nav2" />
     <form class="p-5" method="post"  enctype="multipart/form-data">
-        <input  value="@Model.ProductId" class="product-id" hidden />
+       <input value="@Model.ProductId" class="product-id" hidden />
         <div asp-validation-summary="All" class="text-danger" role="alert"></div>
         <input class="category-input d-none" hidden aria-required="true" asp-for="@Model.LkpCategory" />
         <div class="content content-1 text-center @(!String.IsNullOrEmpty(Model.ProductId) ? "d-none" : "")">
@@ -294,6 +294,8 @@
     </form>
 </div>
 @section Scripts{
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCSk8XumgpnSn3AcgoPqQm_zZwrq8Ll6UY&libraries=places"></script>
     <script src="~/js/controller/store/Upsert.js"></script>
 }
+
 
