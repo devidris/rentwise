@@ -117,7 +117,6 @@
 
             // Listen for the event when a place is selected
             autocomplete.addListener('place_changed', function () {
-                console.log(1);
                 const place = autocomplete.getPlace();
                 $('.store-address').val(place.formatted_address);
                 if (place.geometry && place.geometry.location) {
@@ -127,7 +126,7 @@
                     $('.longitude').val(longitude);
 
                     // Construct the request URL for reverse geocoding
-                    const geocodingApiUrl = 'https://maps.googleapis.com/maps/api/geocode/json?latlng=' + latitude + ',' + longitude + '&key=YOUR_API_KEY';
+                const geocodingApiUrl = 'https://maps.googleapis.com/maps/api/geocode/json?latlng=' + latitude + ',' + longitude + '&key=AIzaSyCSk8XumgpnSn3AcgoPqQm_zZwrq8Ll6UY';
 
                     // Make a request to the Geocoding API
                     fetch(geocodingApiUrl)

@@ -147,5 +147,26 @@ namespace RentWise.Controllers
                 Success = true
             });
         }
+
+        public IActionResult LegalAndPolicy()
+        {
+            return View();
+        }
+        public IActionResult Policy()
+        {
+            return View();
+        }
+        public IActionResult Legal()
+        {
+            return View();
+        }
+        public IActionResult TOS()
+        {
+            return View();
+        }
+        public IActionResult AvoidScam()
+        {
+            return View();
+        }
     }
 }
