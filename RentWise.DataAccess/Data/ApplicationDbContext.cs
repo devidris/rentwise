@@ -28,6 +28,7 @@ public class ApplicationDbContext : IdentityDbContext<IdentityUser>
     public DbSet<OrdersModel> Orders { get; set; }
 
     public DbSet<UsersDetailsModel> UsersDetails { get; set; }
+    public DbSet<ContactAdminModel> ContactAdmin { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
