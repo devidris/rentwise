@@ -191,19 +191,22 @@ namespace RentWise.Controllers
         public IActionResult Profile()
         {
             string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            ChangePasswordModel model = new ChangePasswordModel();
+            UsersDetailsModel usersDetails = _unitOfWork.UsersDetails.Get(u=>u.Id == userId);
+            model.Username = usersDetails.Username;
             string profilePicture = $"images/{userId}";
             string wwwRootPath = _webHostEnvironment.WebRootPath;
             string finalPath = Path.Combine(wwwRootPath, profilePicture);
             if (Directory.Exists(finalPath))
             {
-                profilePicture = $"/images/{userId}/{String.Join("", Lookup.Upload[5].Split(" "))}.png";
+                profilePicture = $"~/images/{userId}/{String.Join("", Lookup.Upload[5].Split(" "))}.png";
             }
             else
             {
                 profilePicture = "~/img/profile.png";
             }
             ViewBag.ProfilePicture = profilePicture;
-            return View();
+            return View(model);
         }
 
         [HttpPost]
@@ -211,8 +214,16 @@ namespace RentWise.Controllers
         public async Task<IActionResult> Profile(ChangePasswordModel model, IFormFile? image)
         {
             string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
-            if (ModelState.IsValid)
+            UsersDetailsModel usersDetails = _unitOfWork.UsersDetails.Get(u => u.Id == userId);
+            if (_unitOfWork.UsersDetails.Get(u => u.Username == model.Username) != null && usersDetails.Username != model.Username )
+            {
+                    ModelState.AddModelError("Username", "Username is already in use.");
+            }
+            if (usersDetails.Username != model.Username)
+            {
+                usersDetails.Username = model.Username;
+            }
+                if (ModelState.IsValid)
             {
                 if (image != null)
                 {
@@ -220,7 +231,10 @@ namespace RentWise.Controllers
                     string profileImageName = String.Join("", Lookup.Upload[5].Split(" ")) + ".png";
                     saveImage(userId, profileImageName, image);
                     #endregion
-                }  
+                }
+               
+                _unitOfWork.UsersDetails.Update(usersDetails);
+                _unitOfWork.Save();
                 string profilePicture = $"/images/{userId}/";
                 string wwwRootPath = _webHostEnvironment.WebRootPath;
                 string finalPath = Path.Combine(wwwRootPath, profilePicture);
@@ -248,7 +262,7 @@ namespace RentWise.Controllers
                     }
                     await _signInManager.RefreshSignInAsync(user);
                 }
-                TempData["ToastMessage"] = "Password Updated Successfully";  
+                TempData["ToastMessage"] = "Profile Updated Successfully";  
                 return RedirectToAction("Profile", "Auth");
             }
 

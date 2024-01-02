@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using RentWise.Models.Identity;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -22,7 +23,7 @@ namespace RentWise.Models
         public string UserId { get; set; }
         [ForeignKey("UserId")]
         [ValidateNever]
-        public IdentityUser User { get; set; }
+        public UsersDetailsModel UserDetails { get; set; }
         [ValidateNever]
         public string ProductId { get; set; }
         [ForeignKey("ProductId")]

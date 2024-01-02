@@ -25,7 +25,7 @@
                     <tr>
                         <th scope="row">@serialNumber</th>
                         <td>@item.CreatedAt.ToShortDateString()</td>
-                        <td>@item.User.UserName.Split('@')[0]</td>
+                        <td>@item.UserDetails.Username</td>
                         <td>@item.Product.Name</td>
                         <td>@item.RatingValue</td>
                         <td>@item.RatingDescription</td>

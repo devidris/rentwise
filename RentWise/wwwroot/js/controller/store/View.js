@@ -134,7 +134,7 @@ $(document).on('change', '.insert-rating',
         $('.rating-value').val(stars * 2);
     });
 $(document).ready(function () {
-    $("form").submit(function (event) {
+    $(".rating-form").submit(function (event) {
         const ratingValue = $(".rating-value").val();
         const ratingDescription = $(".review").val();
 

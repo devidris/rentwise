@@ -17,6 +17,26 @@ namespace RentWise.Utility
 
             return char.ToUpper(input[0]) + input.Substring(1);
         }
+        public static string CapitalizeAllWords(string input)
+        {
+            if (string.IsNullOrEmpty(input))
+            {
+                return input;
+            }
+
+            string[] words = input.Split(' ');
+
+            for (int i = 0; i < words.Length; i++)
+            {
+                if (!string.IsNullOrEmpty(words[i]))
+                {
+                    words[i] = char.ToUpper(words[i][0]) + words[i].Substring(1);
+                }
+            }
+
+            return string.Join(" ", words);
+        }
+
         public static double CalculateHaversineDistance(double lat1, double lon1, double lat2, double lon2)
         {
             const double R = 6371; // Earth radius in kilometers
