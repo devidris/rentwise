@@ -126,6 +126,8 @@ namespace RentWise.Models.Identity
         [Compare("NewPassword", ErrorMessage = "The password and confirmation password do not match.")]
         public string? ConfirmPassword { get; set; }
 
+        public string Username { get; set; }
+
     }
 
     public class UsersDetailsModel:DefaultModel

@@ -21,7 +21,8 @@ namespace RentWise.DataAccess.Repository
 
         public IOrdersRepository Order { get; private set; }
 
-        public IUsersDetailsRepository UsersDetails { get; private set; }   
+        public IUsersDetailsRepository UsersDetails { get; private set; } 
+        public IContactAdminRepository ContactAdmin { get; private set; }
 
 
         public UnitOfWork(ApplicationDbContext db)
@@ -34,6 +35,7 @@ namespace RentWise.DataAccess.Repository
             Chat = new ChatRepository(_db);
             Order = new OrdersRepository(_db);
             UsersDetails = new UsersDetailsRepository(_db);
+            ContactAdmin = new ContactAdminRepository(_db);
         }
 
         public void Save()

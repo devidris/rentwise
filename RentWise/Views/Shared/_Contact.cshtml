@@ -1,0 +1,28 @@
+﻿@if (ViewBag.IsPage != null)
+{
+    <h1>Get In Touch</h1>
+}
+else
+{
+    
+    <h3 class="mb-3">Get In Touch</h3>
+}
+<form method="post">
+    <div class="row">
+        <div class="col-6">
+            <input type="text" class="form-control mb-3 firstname" placeholder="First Name" />
+        </div>
+        <div class="col-6">
+            <input type="text" class="form-control mb-3 lastname" placeholder="Last Name" />
+        </div>
+        <div class="col-12">
+            <input type="email" class="form-control mb-3 email" placeholder="Email" />
+        </div>
+        <div class="col-12">
+            <textarea name="" id="" cols="30" rows="10" class="form-control mb-3 message" placeholder="Message"></textarea>
+        </div>
+        <div class="col-12">
+                <button class="btn btn-secondary" type="button" onclick="contact()">Send</button>
+        </div>
+    </div>
+</form>

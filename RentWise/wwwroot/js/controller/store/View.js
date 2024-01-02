@@ -134,7 +134,7 @@ $(document).on('change', '.insert-rating',
         $('.rating-value').val(stars * 2);
     });
 $(document).ready(function () {
-    $("form").submit(function (event) {
+    $(".rating-form").submit(function (event) {
         const ratingValue = $(".rating-value").val();
         const ratingDescription = $(".review").val();
 
@@ -200,7 +200,7 @@ function bookNow() {
     const alertMessage = "You are about to place an order for " + noOfProduct + " " + $('.product-name').val() + " product(s) for " + days + " day(s) at ₵" + totalPrice + " from " + $('.start-date').text() + " to " + $('.end-date').text() + "."
     // Show SweetAlert confirmation
     Swal.fire({
-        title: 'Confirm Order',
+        title: 'Confirm Reservation',
         text: alertMessage,
         icon: 'info',
         showCancelButton: true,

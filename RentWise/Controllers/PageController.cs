@@ -8,6 +8,7 @@ using RentWise.DataAccess.Repository.IRepository;
 using RentWise.Models;
 using RentWise.Models.Identity;
 using RentWise.Utility;
+using System.Net;
 using System.Security.Claims;
 
 namespace RentWise.Controllers
@@ -20,7 +21,7 @@ namespace RentWise.Controllers
         public PageController(IUnitOfWork unitOfWork, UserManager<IdentityUser> userManager, IWebHostEnvironment webHostEnvironment)
         {
 
-            _unitOfWork = _unitOfWork = unitOfWork;
+            _unitOfWork  = unitOfWork;
             _userManager = userManager;
             _webHostEnvironment = webHostEnvironment;
         }
@@ -34,6 +35,7 @@ namespace RentWise.Controllers
         }
         public IActionResult Contact()
         {
+            ViewBag.IsPage = true;
             return View();
         }
         [Authorize]
@@ -130,5 +132,41 @@ namespace RentWise.Controllers
             return View();
         }
 
+        [HttpPost]
+        [AllowAnonymous]
+        public ActionResult ContactAdmin(string firstname,string lastname,string email,string message)
+        {
+            ContactAdminModel contactAdminModel = new ContactAdminModel {FirstName = firstname, LastName =lastname, Email = email, Message = message };
+            _unitOfWork.ContactAdmin.Add(contactAdminModel);
+            _unitOfWork.Save();
+            return Json(new
+            {
+                StatusCode = (int)HttpStatusCode.OK,
+                Message = "Done",
+                Data = "OK",
+                Success = true
+            });
+        }
+
+        public IActionResult LegalAndPolicy()
+        {
+            return View();
+        }
+        public IActionResult Policy()
+        {
+            return View();
+        }
+        public IActionResult Legal()
+        {
+            return View();
+        }
+        public IActionResult TOS()
+        {
+            return View();
+        }
+        public IActionResult AvoidScam()
+        {
+            return View();
+        }
     }
 }
