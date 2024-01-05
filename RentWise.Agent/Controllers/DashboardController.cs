@@ -61,7 +61,7 @@ namespace RentWise.Agent.Controllers
             ViewBag.Orders = orders;
             ViewBag.NoOfOrders = orders.Count();  
             ViewBag.JSONOrders = JsonConvert.SerializeObject(orders);
-            IEnumerable<ReviewModel> reviews = _unitOfWork.Review.GetAll(u => u.AgentId == userId,"User,Product");
+            IEnumerable<ReviewModel> reviews = _unitOfWork.Review.GetAll(u => u.AgentId == userId,"UserDetails,Product");
             ViewBag.Reviews = reviews;
             IEnumerable<LikeModel> likes = _unitOfWork.Like.GetAll(u=> u.AgentId == userId);
             ViewBag.Likes = likes;

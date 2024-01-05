@@ -95,7 +95,7 @@ function send() {
         return
     }
     $('.' + receipientId + '-lastmessage').text(message)
-    console.log($('.' + receipientId + '-lastmessage'))
+
     $.ajax({
         url: "/Store/SendMessage",
         type: "POST",

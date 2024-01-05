@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using RentWise.DataAccess;
 using RentWise.DataAccess.Repository;
 using RentWise.DataAccess.Repository.IRepository;
+using RentWise.Models;
 using RentWise.Models.Identity;
 
 namespace RentWise.Agent
@@ -19,6 +20,7 @@ namespace RentWise.Agent
             builder.Services.AddControllersWithViews();
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+            builder.Services.Configure<RentWiseConfig>(builder.Configuration.GetSection("RentWiseConfig"));
             builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
             builder.Services.AddScoped<IEmailSender, EmailSender>();
             builder.Services.AddRazorPages();
