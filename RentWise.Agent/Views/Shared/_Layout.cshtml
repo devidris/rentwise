@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.Extensions.Options;
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -19,39 +20,36 @@
             </div>
         </div>
     </main>
-
+    @inject IOptions<RentWiseConfig> _config;
     <footer class="bg-primary p-5 text-white text-center">
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-4 col-sm-12 mt-sm-4">
 
-                    <p class="mb-3"><b>Follow us at</b> <i class="bi bi-instagram"></i></p>
+                    <p class="mb-3">
+                        <a href="https://www.instagram.com/rentwise_gh" class="text-decoration-none mb-3 link-light" target="_blank">
+                            <b>Follow us at</b> <i class="bi bi-instagram"></i>
+                        </a>
+                    </p>
                     <ul class="list-unstyled mt-4">
-                        <li><a href="" class="link-light text-decoration-none">About Us</a></li>
-                        <li><a href="" class="link-light text-decoration-none">Legal Terms & Privacy Policy</a></li>
-                        <li><a href="" class="link-light text-decoration-none">Advertise</a></li>
-                        <li><a href="" class="link-light text-decoration-none">Avoid Scams and Fraud</a></li>
+                        <li><a href="@_config.Value.ClientWebsiteLink/Page/About" target="_blank" class="link-light text-decoration-none">About Us</a></li>
+                        <li><a href="@_config.Value.ClientWebsiteLink/Page/LegalAndPolicy" target="_blank" class="link-light text-decoration-none">Legal Terms & Privacy Policy</a></li>
+                        <li><a href="@_config.Value.ClientWebsiteLink/Page/TOS" target="_blank" class="link-light text-decoration-none">Terms Of Service</a></li>
+                        <li><a href="@_config.Value.ClientWebsiteLink/Page/AvoidScam" target="_blank" class="link-light text-decoration-none">Avoid Scams and Fraud</a></li>
                     </ul>
                 </div>
                 <div class="col-md-4 col-sm-12  mt-sm-4">
                     <ul>
-                        <li><a href="" class="link-light text-decoration-none">Register as Cusotmer</a></li>
-                        <li><a href="" class="link-light text-decoration-none">Become an Agent</a></li>
-                        <li><a href="" class="link-light text-decoration-none">Login</a></li>
+                        <li><a href="@_config.Value.ClientWebsiteLink/Auth/Register" target="_blank" class="link-light text-decoration-none">Register as Cusotmer</a></li>
+                        <li><a asp-controller="Home" asp-action="Index" class="link-light text-decoration-none">Become an Agent</a></li>
+                        <li><a href="@_config.Value.ClientWebsiteLink/Auth/Login" target="_blank" class="link-light text-decoration-none">Login</a></li>
                     </ul>
                 </div>
                 <div class="col-md-4 col-sm-12  mt-sm-4">
-                    <h3 class="mb-3">Get In Touch</h3>
-                    <form class="d-flex flex-column gap-4 form-contact">
-                        <input type="text" placeholder="Name" value="" class="border-0 border-bottom bg-transparent text-light p-2" />
-                        <input type="text" placeholder="Email" value="" class="border-0 border-bottom bg-transparent text-light p-2" />
-                        <textarea placeholder="Message" class="border-0 border-bottom bg-transparent text-light p-2"></textarea>
-                        <button class="btn btn-secondary rounded-pill text-dark w-auto">Submit</button>
-                    </form>
+                    <partial name="_Contact" />
                 </div>
             </div>
         </div>
-
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js" asp-append-version="true"></script>

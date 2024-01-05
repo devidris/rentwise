@@ -7,27 +7,33 @@
         <div class="col-3"></div>
         <div class="search_input col-3">
             <i class="bi bi-search text-muted"></i>
-            <input type="search" value="" placeholder="Search" />
-            <button class="btn rouded-pill btn-info text-white"> <i class="bi bi-search text-muted text-white"></i>Search</button>
+            @if(ViewBag.Name != null)
+            {
+                <input type="search" value="@ViewBag.Name" placeholder="Search" class="product-search" />
+            } else
+            {
+            <input type="search" value="" placeholder="Search" class="product-search"/>              
+            }
+            <button class="btn rouded-pill btn-info text-white" onclick="search()" type="button"> <i class="bi bi-search text-muted text-white"></i>Search</button>
         </div>
         
         <div class="col-3 d-flex align-items-center gap-3">
-            <p class="m-0">
+            <a class="m-0 text-dark text-decoration-none" asp-controller="Store" asp-action="Index">
                 <b>Product</b>
-            </p>
+            </a>
                 <div class="vr"></div>
-            <p class="m-0">
+            <a class="m-0 text-dark text-decoration-none" asp-controller="Dashboard" asp-action="Index" asp-route-active="5">
                 <b>Review</b>
-            </p>
-            <div class="vr"></div>
-            <p class="m-0">
+            </a>
+            @* <div class="vr"></div> *@
+            @* <p class="m-0">
                 <b>Share</b>
                 <i class="bi bi-share-fill"></i>
-            </p>
+            </p> *@
         </div>
         <div class="col-3 d-flex gap-2">
             <i class="bi bi-heart"></i>
-            <p>0</p>
+            <p>@ViewBag.LikeCount</p>
         </div>
     </div>
     <div class="row">
@@ -44,17 +50,16 @@
            
                 </div>
             </div>
-            <div class="card mt-3">
+            <div class="card my-3">
                 <div class="card-body">
                     <p class="card-title bg-primary bg-opacity-25 p-2 text-center ">Store Product Category</p>
                     <ul class="card-text list-unstyled d-flex flex-column gap-3  ">
                         <li class="d-flex gap-2"> <input type="radio" name="category" value="0" class="0" onclick="filterCategory(0)" id="all"/> <label for="all">Select All</label></li>
-                        <li class="d-flex gap-2"> <input type="radio" name="category" value="2" class="2" onclick="filterCategory(2)" id="vehicle-rental" /> <label for="vehicle-rental">Vehicle Rentals</label></li>
-                        <li class="d-flex gap-2"> <input type="radio" name="category" value="1" class="1" onclick="filterCategory(1)" id="construction" /> <label for="construction">Construction Equipment Rental</label></li>
-                        <li class="d-flex gap-2"> <input type="radio" name="category" value="3" class="3" onclick="filterCategory(3)" id="personal" /> <label for="personal">Personal/office Rental</label></li>
-                        <li class="d-flex gap-2"> <input type="radio" name="category" value="4" class="4" onclick="filterCategory(4)" id="props" /><label for="props">Props/Event Rental</label></li>
-                        <li class="d-flex gap-2"> <input type="radio" name="category" value="5" class="5" onclick="filterCategory(5)" id="vehicle-tracker" /><label for="vehicle-tracker">Vehicle Trackers</label></li>
-                    </ul>
+                        @foreach (var category in ViewBag.Categories)
+                        {
+                            <li class="d-flex gap-2"> <input type="radio" name="category" value="@category.Key" class="@category.Key" onclick="filterCategory(@category.Key)" id="@category.Value" /> <label for="@category.Value">@category.Value</label></li>
+                        }
+                     </ul>
 
                 </div>
             </div>
@@ -82,7 +87,11 @@
 
                 } else
                 {
-                    @if (ViewBag.TotalFilterCount == 0)
+                    @if(ViewBag.Name != null)
+                    {
+                        <h1 class="text-center mb-5">You don't have a product with name @ViewBag.Name</h1>
+                    }
+                    else if (ViewBag.TotalFilterCount != 0)
                     {
                         
                         <h1 class="text-center mb-5">You don't have a product currently</h1>
@@ -101,15 +110,6 @@
         </div>
     </div>
 </div>
-
-<script>
-  function filterCategory(lkpCategory){
-        lkpCategory == 0 ? location.replace(`/Store/Index`) : location.replace(`/Store/Index/${lkpCategory}`)
-    }
-    const lkpCategory = location.href.split('/').reverse()[0]
-    if (lkpCategory.toLowerCase() == 'store' || lkpCategory.toLowerCase() == 'index') {
-        $('.0').prop('checked', true)
-    } else {
-    $('.'+lkpCategory).prop('checked',true)
-    }
-</script>
+@section Scripts {
+  <script src="~/js/controller/store/Index.js"></script>
+}

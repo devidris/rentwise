@@ -11,7 +11,7 @@ using System.Security.Claims;
 
 namespace RentWise.Agent.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Admin, Agent")]
     public class StoreController : Controller
     {
         private readonly IWebHostEnvironment _webHostEnvironment;
@@ -26,7 +26,7 @@ namespace RentWise.Agent.Controllers
 
         }
 
-        public async Task<IActionResult> Index(int id = 0)
+        public async Task<IActionResult> Index(int id = 0,string name = "")
         {
             string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             ViewBag.Id = userId;
@@ -41,6 +41,12 @@ namespace RentWise.Agent.Controllers
             {
                 userProducts = userProducts.Where(u => u.LkpCategory == id);
             }
+            if (!String.IsNullOrEmpty(name))
+            {
+                userProducts = userProducts.Where(u=>u.Name.Contains(name));
+                ViewBag.Name = name;
+            }
+            ViewBag.Categories = Lookup.Categories;
             ViewBag.TotalFilterCount = userProducts.Count();
             return View(userProducts);
 
