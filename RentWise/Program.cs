@@ -22,7 +22,13 @@ namespace RentWise
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                       options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
             builder.Services.Configure<RentWiseConfig>(builder.Configuration.GetSection("RentWiseConfig"));
-
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowSpecificOrigin",
+                    builder => builder.WithOrigins("https://localhost:7292", "https://agent.rentwisegh.com")
+                                      .AllowAnyHeader()
+                                      .AllowAnyMethod());
+            });
 
             builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
             //builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<ApplicationDbContext>();
@@ -52,6 +58,7 @@ namespace RentWise
                 ReceiveBufferSize = 4 * 1024
             };
             app.UseWebSockets(wsOptions);
+            app.UseCors("AllowSpecificOrigin");
             app.UseStaticFiles();
 
             app.UseRouting();

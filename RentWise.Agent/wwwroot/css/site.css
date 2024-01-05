@@ -172,3 +172,10 @@ body {
 .no-underline {
     text-decoration: none;
 }
+.cursor-pointer {
+    cursor: pointer;
+}
+
+.w-fit {
+    width: fit-content;
+}
