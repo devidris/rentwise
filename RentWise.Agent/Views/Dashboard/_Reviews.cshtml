@@ -4,38 +4,40 @@
     <hr />
     @if (Model.Any())
     {
-        <table class="table">
-            <thead class="table-primary">
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Date</th>
-                    <th scope="col">Username</th>
-                    <th scope="col">Product</th>
-                    <th scope="col">Rating</th>
-                    <th scope="col">Description</th>
-                </tr>
-            </thead>
-            <tbody>
-                @{
-                    int serialNumber = 1;
-                }
-
-                @foreach (ReviewModel item in Model)
-                {
+        <div class="table-responsive">
+            <table class="table">
+                <thead class="table-primary">
                     <tr>
-                        <th scope="row">@serialNumber</th>
-                        <td>@item.CreatedAt.ToShortDateString()</td>
-                        <td>@item.UserDetails.Username</td>
-                        <td>@item.Product.Name</td>
-                        <td>@item.RatingValue</td>
-                        <td>@item.RatingDescription</td>
+                        <th scope="col">#</th>
+                        <th scope="col">Date</th>
+                        <th scope="col">Username</th>
+                        <th scope="col">Product</th>
+                        <th scope="col">Rating</th>
+                        <th scope="col">Description</th>
                     </tr>
+                </thead>
+                <tbody>
+                    @{
+                        int serialNumber = 1;
+                    }
+
+                    @foreach (ReviewModel item in Model)
+                    {
+                        <tr>
+                            <th scope="row">@serialNumber</th>
+                            <td>@item.CreatedAt.ToShortDateString()</td>
+                            <td>@item.UserDetails.Username</td>
+                            <td>@item.Product.Name</td>
+                            <td>@item.RatingValue</td>
+                            <td>@item.RatingDescription</td>
+                        </tr>
 
 
-                    serialNumber++;
-                }
-            </tbody>
-        </table>
+                        serialNumber++;
+                    }
+                </tbody>
+            </table>
+        </div>
     }
     else
     {

@@ -1,15 +1,36 @@
 ﻿<div class="content content-7">
-    <h1 class="h2">Orders</h1>
+    <h1 class="h2">Withdrawals</h1>
     <hr />
-    <div class="d-flex justify-content-evenly align-items-center my-3">
-        <p>Pending Balance: $100</p>
-        <p>Pending Owing: $100</p>
-        <p>Total Pending: $100 </p>
+    <div class="d-flex justify-content-evenly align-items-center my-3 flex-wrap">
+        @{
+            AgentRegistrationModel agent = ViewBag.Agent;
+            double totalPaidCash = agent.PayWithCash;
+            double totalPaidOnline = agent.PayWithCard;
+            double totalPaid = totalPaidCash + totalPaidOnline;
+
+            double totalOwingCash = agent.PayWithCash * 0.1;
+            double totalOwingOnline = agent.PayWithCard * 0.1;
+            double totalOwing = totalOwingCash + totalOwingOnline;
+
+            double totalPending = totalPaid - totalOwing;
+        }
+        <p>Pending Balance: @totalPaid (Cash: @totalPaidCash , Online: @totalPaidOnline)</p>
+        <p>Pending Owing: @totalOwing (Cash: @totalOwingCash , Online: @totalOwingOnline)</p>
+        <p>Total Pending: @totalPending </p>
         <div>
-            <button class="btn btn-primary">Withdrawal</button>
-            <button class="btn btn-primary">Pay</button>
+            @if(totalPending > 0)
+            {
+                <button class="btn btn-primary" onclick="openModal('withdrawal')">Withdrawal</button>
+            }
+            @if(totalPending < 0)
+            {
+            <button class="btn btn-primary">Pay</button>             
+            }
         </div>
     </div>
+
+
+    <div class="table-responsive">
     <table class="table">
         <thead class="table-primary">
             <tr>
@@ -25,4 +46,51 @@
         </thead>
         <tbody></tbody>
     </table>
+    </div>
+</div>
+@* Withdrawal Modal *@
+<div class="modal fade" id="withdrawal" tabindex="-1" role="dialog" aria-labelledby="withdrawalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <form class="modal-content" asp-controller="Dashboard" asp-action="Withdrawal">
+            <div class="modal-header">
+                <h5 class="modal-title" id="withdrawalLabel">Withdrawal</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="closeModal('withdrawal')">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="price">
+                    <div class="row">
+                        <div class="col-12 mb-3">
+                            <select class="form-select" aria-label="List of banks" name="banks">
+                                <option selected>Select bank</option>
+                                @foreach (var bank in ViewBag.Banks)
+                                {
+                                    <option value="@bank.Key">@bank.Value</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label">Full Name</label>
+                            <div class="input-group mb-3">
+                                <input class="form-control" type="text" placeholder="Enter your name" name="name">
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label">Account Number</label>
+                            <div class="input-group mb-3" >
+                                <input class="form-control" type="number" placeholder="Enter your account number" name="acc">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="closeModal('withdrawal')">Close</button>
+                <button type="submit" class="btn btn-primary" onclick="withdrawal()">withdrawal</button>
+            </div>
+        </form>
+    </div>
+
+
 </div>

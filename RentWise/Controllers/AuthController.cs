@@ -214,6 +214,7 @@ namespace RentWise.Controllers
         public async Task<IActionResult> Profile(ChangePasswordModel model, IFormFile? image)
         {
             string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            ViewBag.UserId = userId;
             UsersDetailsModel usersDetails = _unitOfWork.UsersDetails.Get(u => u.Id == userId);
             if (_unitOfWork.UsersDetails.Get(u => u.Username == model.Username) != null && usersDetails.Username != model.Username )
             {
@@ -232,7 +233,7 @@ namespace RentWise.Controllers
                     saveImage(userId, profileImageName, image);
                     #endregion
                 }
-               
+               usersDetails.UpdatedAt = DateTime.Now;
                 _unitOfWork.UsersDetails.Update(usersDetails);
                 _unitOfWork.Save();
                 string profilePicture = $"/images/{userId}/";
@@ -285,6 +286,24 @@ namespace RentWise.Controllers
                 file.CopyTo(fileStream);
             }
 
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> Delete(string user)
+        {
+            string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (userId != user)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            // Get the user manager from your dependency injection system
+            var userManager = HttpContext.RequestServices.GetService<UserManager<ApplicationUser>>();
+
+            // Find the user by ID
+            var userToDelete = await userManager.FindByIdAsync(userId);
+            var result = await userManager.DeleteAsync(userToDelete);
+            return RedirectToAction("Index", "Home");
         }
 
     }

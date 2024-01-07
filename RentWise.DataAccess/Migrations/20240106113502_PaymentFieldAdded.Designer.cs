@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RentWise.DataAccess;
 
@@ -11,9 +12,11 @@ using RentWise.DataAccess;
 namespace RentWise.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240106113502_PaymentFieldAdded")]
+    partial class PaymentFieldAdded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -430,38 +433,6 @@ namespace RentWise.DataAccess.Migrations
                     b.ToTable("Likes");
                 });
 
-            modelBuilder.Entity("RentWise.Models.Models.WithdrawalHistoryModel", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("AccountDetails")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("AgentId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FullName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("LkpBankName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<double>("WithdrawalAmount")
-                        .HasColumnType("float");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("WithdrawalHistories");
-                });
-
             modelBuilder.Entity("RentWise.Models.OrdersModel", b =>
                 {
                     b.Property<int>("OrderId")
@@ -520,29 +491,6 @@ namespace RentWise.DataAccess.Migrations
                     b.HasIndex("ProductId");
 
                     b.ToTable("Orders");
-                });
-
-            modelBuilder.Entity("RentWise.Models.ProductImageModel", b =>
-                {
-                    b.Property<int>("Key")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Key"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ProductId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Key");
-
-                    b.HasIndex("ProductId");
-
-                    b.ToTable("ProductImages");
                 });
 
             modelBuilder.Entity("RentWise.Models.ProductModel", b =>
@@ -750,17 +698,6 @@ namespace RentWise.DataAccess.Migrations
                     b.Navigation("Product");
                 });
 
-            modelBuilder.Entity("RentWise.Models.ProductImageModel", b =>
-                {
-                    b.HasOne("RentWise.Models.ProductModel", "Product")
-                        .WithMany("ProductImages")
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Product");
-                });
-
             modelBuilder.Entity("RentWise.Models.ProductModel", b =>
                 {
                     b.HasOne("RentWise.Models.Identity.AgentRegistrationModel", "Agent")
@@ -789,11 +726,6 @@ namespace RentWise.DataAccess.Migrations
                     b.Navigation("Product");
 
                     b.Navigation("UserDetails");
-                });
-
-            modelBuilder.Entity("RentWise.Models.ProductModel", b =>
-                {
-                    b.Navigation("ProductImages");
                 });
 #pragma warning restore 612, 618
         }

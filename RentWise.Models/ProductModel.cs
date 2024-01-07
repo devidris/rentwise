@@ -54,5 +54,7 @@ namespace RentWise.Models
 
         public string? Country { get; set; }
         public string? State { get; set; }
+        [ValidateNever]
+        public List<ProductImageModel> ProductImages { get; set; }
     }
 }

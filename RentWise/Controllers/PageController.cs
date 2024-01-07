@@ -54,6 +54,7 @@ namespace RentWise.Controllers
             if (usersDetailsModel != null)
             {
                 usersDetailsModel.Messages = 0;
+                usersDetailsModel.UpdatedAt = DateTime.Now;
                 _unitOfWork.UsersDetails.Update(usersDetailsModel);
                 _unitOfWork.Save();
             }
@@ -65,6 +66,7 @@ namespace RentWise.Controllers
             foreach (var item in unReadMessage)
             {
                 item.IsRead = true;
+                item.UpdatedAt = DateTime.Now;
                 _unitOfWork.Chat.Update(item);
             }   
            _unitOfWork.Save();

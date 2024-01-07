@@ -11,11 +11,10 @@ namespace RentWise.Models.Models
     {
         [Key]
         public int Id { get; set; }
-        public int AgentId { get; set; }
-        public int WithdrawalAmount { get; set; }
-        public DateTime WithdrawalDate { get; set; }
-
+        public string AgentId { get; set; }
+        public double WithdrawalAmount { get; set; }
         public string AccountDetails { get; set; }
-        public string BankName { get; set; }
+        public string LkpBankName { get; set; }
+        public string FullName { get; set; }
     }
 }

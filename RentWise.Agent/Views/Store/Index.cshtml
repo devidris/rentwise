@@ -4,8 +4,8 @@
     <partial name="_Nav2" />
     <img src="~/img/banner.png" alt="banner" class="w-100" />
     <div class="row align-items-center mt-3">
-        <div class="col-3"></div>
-        <div class="search_input col-3">
+        <div class="col-lg-3 d-md-none d-lg-flex"></div>
+        <div class="search_input col-lg-3 col-md-12">
             <i class="bi bi-search text-muted"></i>
             @if(ViewBag.Name != null)
             {
@@ -17,7 +17,7 @@
             <button class="btn rouded-pill btn-info text-white" onclick="search()" type="button"> <i class="bi bi-search text-muted text-white"></i>Search</button>
         </div>
         
-        <div class="col-3 d-flex align-items-center gap-3">
+        <div class="col-lg-3 col-md-12 d-flex align-items-center gap-3 justify-content-center mt-md-3 mt-sm-3">
             <a class="m-0 text-dark text-decoration-none" asp-controller="Store" asp-action="Index">
                 <b>Product</b>
             </a>
@@ -31,13 +31,13 @@
                 <i class="bi bi-share-fill"></i>
             </p> *@
         </div>
-        <div class="col-3 d-flex gap-2">
+        <div class="col-lg-3 gap-2 d-md-none d-lg-flex d-sm-none">
             <i class="bi bi-heart"></i>
             <p>@ViewBag.LikeCount</p>
         </div>
     </div>
     <div class="row">
-        <div class="col-3 px-5">
+        <div class="col-lg-3 col-md-4 col-sm-12 px-lg-5 px-md-2">
             <a class="p-3 my-3 bg-dark text-white w-100 d-flex gap-1 justify-content-center text-decoration-none" asp-controller="Dashboard" asp-action="Index"><i class="bi bi-columns-gap"></i><span>Dashboard</span></a>
             <div class="card my-3">
                 <div class="card-body">
@@ -64,7 +64,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-9">
+        <div class="col-lg-9 col-md-8 col-sm-12">
             <div class="d-flex flex-wrap w-10 mt-5 mb-3">
                 @if(Model.Count() > 0)
                 {
@@ -104,7 +104,7 @@
                 }
 
             </div>
-            <a class="mt-5 p-3 bg-dark text-white no-underline" href="/Store/Upsert">
+            <a class="mt-5 p-3 bg-dark text-white no-underline mb-5 d-block w-fit" asp-controller="Store" asp-action="Upsert">
                 <i class="bi bi-plus-circle-fill"></i> <span>Add A New Product</span>
             </a>
         </div>

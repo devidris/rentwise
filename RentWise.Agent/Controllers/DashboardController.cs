@@ -6,13 +6,14 @@ using Newtonsoft.Json;
 using RentWise.DataAccess.Repository.IRepository;
 using RentWise.Models;
 using RentWise.Models.Identity;
+using RentWise.Models.Models;
 using RentWise.Utility;
 using System.Net;
 using System.Security.Claims;
 
 namespace RentWise.Agent.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Admin, Agent")]
     public class DashboardController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -33,6 +34,7 @@ namespace RentWise.Agent.Controllers
             {
                 ViewBag.Action = 1;
             }
+            ViewBag.Banks = Lookup.Banks;
             var errorMessages = TempData["ErrorMessages"];
             if (errorMessages != null)
             {
@@ -70,9 +72,9 @@ namespace RentWise.Agent.Controllers
             ViewBag.NoOfFilteredOrders = filteredOrders.Count();
             IEnumerable<OrdersModel> pendingOrders = orders.Where(order => order.LkpStatus == 1 || order.LkpStatus == 2 || order.LkpStatus == 7);
             ViewBag.NoOfPendingOrders = pendingOrders.Count();
-             ViewBag.totalAmount = filteredOrders.Any() ? filteredOrders.Sum(order => order.TotalAmount) : 0;
-            ViewBag.averageTotalAmount = filteredOrders.Any() ? filteredOrders.Average(order => order.TotalAmount) : 0;
-            ViewBag.totalPendingAmount = pendingOrders.Any() ? pendingOrders.Sum(order => order.TotalAmount) : 0;
+             ViewBag.totalAmount = Math.Round(filteredOrders.Any() ? filteredOrders.Sum(order => order.TotalAmount) : 0, 2);
+            ViewBag.averageTotalAmount =Math.Round(filteredOrders.Any() ? filteredOrders.Average(order => order.TotalAmount) : 0,2);
+            ViewBag.totalPendingAmount = Math.Round(pendingOrders.Any() ? pendingOrders.Sum(order => order.TotalAmount) : 0,2);
 
             ViewBag.totalReview = reviews.Any() ? reviews.Count() : 0;
             ViewBag.avergeRating = reviews.Any() ? reviews.Average(review => review.RatingValue) : 0;
@@ -94,6 +96,7 @@ namespace RentWise.Agent.Controllers
             foreach (var item in unReadMessage)
             {
                 item.IsRead = true;
+                item.UpdatedAt = DateTime.Now;
                 _unitOfWork.Chat.Update(item);
             }
             _unitOfWork.Save();
@@ -173,6 +176,7 @@ namespace RentWise.Agent.Controllers
                 {
                     usersDetailsModel.Orders += 1;
                     usersDetailsModel.Messages += 1;
+                    usersDetailsModel.UpdatedAt = DateTime.Now;
                     _unitOfWork.UsersDetails.Update(usersDetailsModel);
                     _unitOfWork.Save();
                 }
@@ -191,6 +195,7 @@ namespace RentWise.Agent.Controllers
 
                 _unitOfWork.Chat.Add(chat);
                 order.LkpStatus = LkpStatus;
+                order.UpdatedAt = DateTime.Now;
                 _unitOfWork.Order.Update(order);
                 _unitOfWork.Save();
             }
@@ -215,14 +220,19 @@ namespace RentWise.Agent.Controllers
                 _unitOfWork.Chat.Add(chat);
                 order.LkpStatus = 4;
                 order.Paid = true;
+                order.UpdatedAt = DateTime.Now;
                 _unitOfWork.Order.Update(order);
+                AgentRegistrationModel agent = _unitOfWork.AgentRegistration.Get(u => u.Id == order.AgentId);
+                agent.PayWithCash += order.TotalAmount;
+                agent.UpdatedAt = DateTime.Now;
+                _unitOfWork.AgentRegistration.Update(agent);
                 _unitOfWork.Save();
             }
+            TempData["Action"] = 4;
             return RedirectToAction("Index", "Dashboard");
         }
 
         [HttpPost]
-        [Authorize]
         [AllowAnonymous]
         public ActionResult SendMessage(string Receipient, string Message)
         {
@@ -249,6 +259,7 @@ namespace RentWise.Agent.Controllers
                 if (usersDetailsModel != null)
                 {
                     usersDetailsModel.Messages += 1;
+                    usersDetailsModel.UpdatedAt = DateTime.Now;
                     _unitOfWork.UsersDetails.Update(usersDetailsModel);
                 }
                 _unitOfWork.Chat.Add(chat);
@@ -272,5 +283,54 @@ namespace RentWise.Agent.Controllers
                 });
             }
         }
+
+        [HttpPost]
+        [AllowAnonymous]
+        public IActionResult Withdrawal(string lkpBank,string name,string acc)
+        {
+            string UserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            AgentRegistrationModel agent = _unitOfWork.AgentRegistration.Get(u => u.Id == UserId);
+            if(String.IsNullOrEmpty(lkpBank))
+            {
+                TempData["Error"] = "Please select a bank";
+            }
+            if(String.IsNullOrEmpty(name))
+            {
+                TempData["Error"] = "Please enter your name to proceed";
+            }
+            if (String.IsNullOrEmpty(acc))
+            {
+                TempData["Error"] = "Please enter your account number";
+            }
+            if (TempData["Error"] == null)
+            {
+                double totalPaidCash = agent.PayWithCash;
+                double totalPaidOnline = agent.PayWithCard;
+                double totalPaid = totalPaidCash + totalPaidOnline;
+
+                double totalOwingCash = agent.PayWithCash * 0.1;
+                double totalOwingOnline = agent.PayWithCard * 0.1;
+                double totalOwing = totalOwingCash + totalOwingOnline;
+
+                double totalPending = totalPaid - totalOwing;
+                WithdrawalHistoryModel withdrawalHistoryModel = new WithdrawalHistoryModel{
+                    AgentId = UserId,
+                    WithdrawalAmount = totalPending,
+                    FullName = name,
+                    LkpBankName = lkpBank,
+                    AccountDetails = acc
+                };
+                _unitOfWork.WithdrawalHistory.Add(withdrawalHistoryModel);
+                agent.PayWithCard = 0;
+                agent.PayWithCash = 0;
+                agent.UpdatedAt = DateTime.Now;
+                _unitOfWork.AgentRegistration.Update(agent);
+                _unitOfWork.Save();
+            }
+            TempData["Action"] = 7;
+            return RedirectToAction("Index", "Dashboard");
+        }
+
+
     }
 }

@@ -24,6 +24,9 @@ namespace RentWise.DataAccess.Repository
         public IUsersDetailsRepository UsersDetails { get; private set; } 
         public IContactAdminRepository ContactAdmin { get; private set; }
 
+        public IProductImageRepository ProductImage { get; private set; }
+
+        public IWithdrawalHistoryRepository WithdrawalHistory { get; private set; }
 
         public UnitOfWork(ApplicationDbContext db)
         {
@@ -36,6 +39,8 @@ namespace RentWise.DataAccess.Repository
             Order = new OrdersRepository(_db);
             UsersDetails = new UsersDetailsRepository(_db);
             ContactAdmin = new ContactAdminRepository(_db);
+            ProductImage = new ProductImageRepository(_db);
+            WithdrawalHistory = new WithdrawalHistoryRepository(_db);
         }
 
         public void Save()

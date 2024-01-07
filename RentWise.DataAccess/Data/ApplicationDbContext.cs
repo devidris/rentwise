@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using RentWise.Models;
 using RentWise.Models.Identity;
+using RentWise.Models.Models;
 using System.Reflection.Emit;
 
 namespace RentWise.DataAccess;
@@ -29,6 +30,9 @@ public class ApplicationDbContext : IdentityDbContext<IdentityUser>
 
     public DbSet<UsersDetailsModel> UsersDetails { get; set; }
     public DbSet<ContactAdminModel> ContactAdmin { get; set; }
+
+    public DbSet<WithdrawalHistoryModel> WithdrawalHistories { get; set; }
+    public DbSet<ProductImageModel> ProductImages { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);

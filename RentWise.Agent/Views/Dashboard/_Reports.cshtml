@@ -9,14 +9,14 @@
     <h1 class="h2">Reports</h1>
     <hr />
 
-    <div class="d-flex gap-3 reports">
+    <div class="d-flex gap-3 reports flex-wrap justify-content-center">
         <div class="border border-1 px-4 py-2 report-tab-1 report-tab" onclick="onToggleReport(1)">Overview</div>
         <div class="border border-1 px-4 py-2 report-tab-2 report-tab" onclick="onToggleReport(2)">Sales per day</div>
         <div class="border border-1 px-4 py-2 report-tab-3 report-tab" onclick="onToggleReport(3)">Top Selling</div>
         <div class="border border-1 px-4 py-2 report-tab-4 report-tab" onclick="onToggleReport(4)">Top Earning</div>
     </div>
     <div class="row mt-5 report report-1">
-        <div class="col-4">
+        <div class="col-md-4 col-sm-12">
             <ul class="list-unstyled border border-1 text-center py-3">
                 <li>
                     <p>₵@ViewBag.totalAmount</p>
@@ -51,8 +51,8 @@
         </div>
     </div>
     <div class="row mt-5 report report-2">
-        <div class="col-4">
-            <div class="mb-5 d-flex gap-3 align-items-center">
+        <div class="col-md-4 col-sm-12">
+            <div class="mb-5 d-flex gap-3 align-items-center flex-wrap">
                 <div>
                     <label for="from">From:</label>
                     <input type="date" id="from" class="p-1 spd-from" />
@@ -93,7 +93,7 @@
         </div>
     </div>
     <div class="report mt-5 report-3">
-        <div class="mb-5 d-flex gap-3 align-items-center">
+        <div class="mb-5 d-flex gap-3 align-items-center flex-wrap">
             <div>
                 <label for="from">From:</label>
                 <input type="date" id="from" class="p-1 ts-from" />
@@ -118,7 +118,7 @@
         </table>
     </div>
     <div class="report mt-5 report-4">
-        <div class="mb-5 d-flex gap-3 align-items-center">
+        <div class="mb-5 d-flex flex-wrap gap-3 align-items-center">
             <div>
                 <label for="from">From:</label>
                 <input type="date" id="from" class="p-1 te-from" />
