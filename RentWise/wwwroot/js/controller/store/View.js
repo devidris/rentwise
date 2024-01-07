@@ -204,7 +204,7 @@ function bookNow() {
         text: alertMessage,
         icon: 'info',
         showCancelButton: true,
-        confirmButtonText: 'Yes, place order',
+        confirmButtonText: 'Yes, place reservation',
         cancelButtonText: 'No, cancel',
     }).then((result) => {
         if (result.isConfirmed) {
@@ -225,7 +225,7 @@ $.ajax({
                         toastr.error("Please login to place an order");
                         location.href = '/Auth/Login'
                     } else if (result.statusCode == 200) {
-                        Swal.fire('Success', 'Your order has been placed successfully.', 'success');
+                        Swal.fire('Success', 'Your reservation has been placed successfully.', 'success');
                     } else {
                         Swal.fire('Error', 'Something went wrong', 'error');
                     }

@@ -1,5 +1,6 @@
 ﻿@model ChangePasswordModel;
 <div class="profile my-5">
+    <input value="@ViewBag.UserId" class="userId" hidden />
     <form id="change-password-form" method="post" class="w-75 m-auto" enctype="multipart/form-data">
         <div asp-validation-summary="All" class="text-danger" role="alert"></div>
         <label for="image" class="d-block w-fit m-auto mb-3 cursor-pointer">
@@ -29,6 +30,7 @@
             <span asp-validation-for="@Model.ConfirmPassword" class="text-danger"></span>
         </div>
         <button type="submit" class="w-100 btn btn-lg btn-primary save">Save Changes</button>
+    <button type="button" class="btn btn-danger w-100" onclick="deleteAccount()">Delete Account</button>
     </form>
 </div>
 
