@@ -1,7 +1,7 @@
 ﻿<div class="content content-7">
-    <h1 class="h2">Orders</h1>
+    <h1 class="h2">Withdrawals</h1>
     <hr />
-    <div class="d-flex justify-content-evenly align-items-center my-3">
+    <div class="d-flex justify-content-evenly align-items-center my-3 flex-wrap">
         @{
             AgentRegistrationModel agent = ViewBag.Agent;
             double totalPaidCash = agent.PayWithCash;
@@ -28,6 +28,9 @@
             }
         </div>
     </div>
+
+
+    <div class="table-responsive">
     <table class="table">
         <thead class="table-primary">
             <tr>
@@ -43,6 +46,7 @@
         </thead>
         <tbody></tbody>
     </table>
+    </div>
 </div>
 @* Withdrawal Modal *@
 <div class="modal fade" id="withdrawal" tabindex="-1" role="dialog" aria-labelledby="withdrawalLabel" aria-hidden="true">

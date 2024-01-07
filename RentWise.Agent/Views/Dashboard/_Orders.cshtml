@@ -12,58 +12,63 @@
     }
     else
     {
-        <table class="table">
-            <thead class="table-primary">
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Order Id</th>
-                    <th scope="col">Qunatity</th>
-                    <th scope="col">Product Name</th>
-                    <th scope="col">Total Amount</th>
-                    <th scope="col">Start Rental Date</th>
-                    <th scope="col">End Rental Date</th>
-                    <th scope="col">Status</th>
-                </tr>
-            </thead>
-            <tbody>
-                @{
-                    int serialNumber = 1;
-                }
-
-                @foreach (OrdersModel item in Model)
-                {
+          <div class="table-responsive">
+            <table class="table" style="overflow-y:auto">
+                <thead class="table-primary">
                     <tr>
-                        <th scope="row">@serialNumber</th>
-                        <td>@item.OrderId</td>
-                        <td>@item.ProductQuantity</td>
-                        <td>@item.Product.Name</td>
-                        <td>@item.TotalAmount</td>
-                        <td>@item.StartDate.ToShortDateString()</td>
-                        <td>@item.EndDate.ToShortDateString()</td>
-                        @if (item.LkpStatus == 1 || item.LkpStatus == 0)
-                        {
-                            <td class="d-flex gap-2 align-items-center">
-                                @Lookup.OrderStatus[item.LkpStatus]
-                                <a class="btn btn-primary" asp-controller="Dashboard" asp-action="ApproveOrReject" asp-route-id="@item.OrderId" asp-route-lkpstatus="2">Accept</a>
-                                <a class="btn btn-primary" asp-controller="Dashboard" asp-action="ApproveOrReject" asp-route-id="@item.OrderId" asp-route-lkpstatus="3">Reject</a>
-                            </td>
-                        } else if(item.LkpStatus == 7)
-                        {
-                            <td>@Lookup.OrderStatus[item.LkpStatus]
-                                <a class="btn btn-primary" asp-controller="Dashboard" asp-action="PaymentReceived" asp-route-id="@item.OrderId">Mark as Received</a>
-                            </td>
-                        }
-                        else
-                        {
-                            <td>@Lookup.OrderStatus[item.LkpStatus]</td>
-                        }
+                        <th scope="col">#</th>
+                        <th scope="col">Order Id</th>
+                        <th scope="col">Qunatity</th>
+                        <th scope="col">Product Name</th>
+                        <th scope="col">Total Amount</th>
+                        <th scope="col">Start Rental Date</th>
+                        <th scope="col">End Rental Date</th>
+                        <th scope="col">Status</th>
                     </tr>
+                </thead>
+                <tbody>
+                    @{
+                        int serialNumber = 1;
+                    }
+
+                    @foreach (OrdersModel item in Model)
+                    {
+                        <tr>
+                            <th scope="row">@serialNumber</th>
+                            <td>@item.OrderId</td>
+                            <td>@item.ProductQuantity</td>
+                            <td>@item.Product.Name</td>
+                            <td>@item.TotalAmount</td>
+                            <td>@item.StartDate.ToShortDateString()</td>
+                            <td>@item.EndDate.ToShortDateString()</td>
+                            @if (item.LkpStatus == 1 || item.LkpStatus == 0)
+                            {
+                                <td class="d-flex gap-2 align-items-center">
+                                    @Lookup.OrderStatus[item.LkpStatus]
+                                    <a class="btn btn-primary" asp-controller="Dashboard" asp-action="ApproveOrReject" asp-route-id="@item.OrderId" asp-route-lkpstatus="2">Accept</a>
+                                    <a class="btn btn-primary" asp-controller="Dashboard" asp-action="ApproveOrReject" asp-route-id="@item.OrderId" asp-route-lkpstatus="3">Reject</a>
+                                </td>
+                            }
+                            else if (item.LkpStatus == 7)
+                            {
+                                <td>
+                                    @Lookup.OrderStatus[item.LkpStatus]
+                                    <a class="btn btn-primary" asp-controller="Dashboard" asp-action="PaymentReceived" asp-route-id="@item.OrderId">Mark as Received</a>
+                                </td>
+                            }
+                            else
+                            {
+                                <td>@Lookup.OrderStatus[item.LkpStatus]</td>
+                            }
+                        </tr>
 
 
-                    serialNumber++;
-                }
-            </tbody>
-        </table>
-    }
+                        serialNumber++;
+                    }
+                </tbody>
+            </table>
+
+        </div>
+           }
 
 </div>
