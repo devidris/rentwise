@@ -64,3 +64,17 @@ function contact() {
         }
     });
 }
+function openModal(name, isId = true) {
+    if (isId) {
+        $('#' + name).modal('show')
+    } else {
+        $('.' + name).modal('show')
+    }
+}
+function closeModal(name, isId = true) {
+    if (isId) {
+        $('#' + name).modal('hide')
+    } else {
+        $('.' + name).modal('hide')
+    }
+}

@@ -17,6 +17,9 @@ namespace RentWise.DataAccess.Repository.IRepository
         IOrdersRepository Order { get; }
         IUsersDetailsRepository UsersDetails { get; }
         IContactAdminRepository ContactAdmin { get; }
+
+        IProductImageRepository ProductImage { get; }
+        IWithdrawalHistoryRepository WithdrawalHistory { get; }
         void Save();
     }
 }

@@ -146,6 +146,7 @@ namespace RentWise.Controllers
 
             ProductModel Product = _unitOfWork.Product.Get(u => u.ProductId == ProductId);
             Product.Rating = NewRating;
+            Product.UpdatedAt = DateTime.Now;
             _unitOfWork.Product.Update(Product);
             _unitOfWork.Save();
 
@@ -236,6 +237,7 @@ namespace RentWise.Controllers
                 if (usersDetailsModel != null)
                 {
                     usersDetailsModel.Messages += 1;
+                    usersDetailsModel.UpdatedAt = DateTime.Now;
                     _unitOfWork.UsersDetails.Update(usersDetailsModel);
                 }
                 _unitOfWork.Chat.Add(chat);
@@ -299,6 +301,7 @@ namespace RentWise.Controllers
             {
                 usersDetailsModel.Orders += 1;
                 usersDetailsModel.Messages += 1;
+                usersDetailsModel.UpdatedAt = DateTime.Now;
                 _unitOfWork.UsersDetails.Update(usersDetailsModel);
             }
             _unitOfWork.Order.Add(model);
@@ -322,6 +325,7 @@ namespace RentWise.Controllers
             if (usersDetailsModel != null)
             {
                 usersDetailsModel.Orders = 0;
+                usersDetailsModel.UpdatedAt = DateTime.Now;
                 _unitOfWork.UsersDetails.Update(usersDetailsModel);
                 _unitOfWork.Save();
             }
@@ -344,8 +348,13 @@ namespace RentWise.Controllers
                     IsOrder = true,
                 };
                 _unitOfWork.Chat.Add(chat);
+            order.UpdatedAt = DateTime.Now;
+            _unitOfWork.Order.Update(order);
+            AgentRegistrationModel agent = _unitOfWork.AgentRegistration.Get(u => u.Id == order.AgentId);
+            agent.PayWithCard += order.TotalAmount;
+            agent.UpdatedAt = DateTime.Now;
+                _unitOfWork.AgentRegistration.Update(agent);
             }
-                _unitOfWork.Order.Update(order);
             _unitOfWork.Save();
             TempData["Success"] = "Payment for order no"+ orderId + "was successful";
             return RedirectToAction(nameof(Orders));
@@ -375,6 +384,7 @@ namespace RentWise.Controllers
             {
                 order.LkpPaymentMethod = 1;
                 order.LkpStatus = 7;
+                order.UpdatedAt = DateTime.Now;
                 _unitOfWork.Order.Update(order);
                 _unitOfWork.Save();
                 return Json(new
@@ -388,6 +398,7 @@ namespace RentWise.Controllers
             else if (type == "online")
             {
                 order.LkpPaymentMethod = 2;
+                order.UpdatedAt = DateTime.Now;
                 _unitOfWork.Order.Update(order);
                 _unitOfWork.Save();
 

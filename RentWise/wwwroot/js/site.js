@@ -19,7 +19,6 @@
 }
 function openModal(name, isId = true) {
     if (isId) {
-        console.log($('#' + name))
         $('#' + name).modal('show')
     } else {
         $('.' + name).modal('show')

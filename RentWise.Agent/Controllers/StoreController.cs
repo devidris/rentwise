@@ -172,6 +172,7 @@ namespace RentWise.Agent.Controllers
 
             ProductModel Product = _unitOfWork.Product.Get(u => u.ProductId == ProductId);
             Product.Rating = NewRating;
+            Product.UpdatedAt = DateTime.Now;
             _unitOfWork.Product.Update(Product);
             _unitOfWork.Save();
 

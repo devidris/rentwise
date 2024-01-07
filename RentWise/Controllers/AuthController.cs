@@ -232,7 +232,7 @@ namespace RentWise.Controllers
                     saveImage(userId, profileImageName, image);
                     #endregion
                 }
-               
+               usersDetails.UpdatedAt = DateTime.Now;
                 _unitOfWork.UsersDetails.Update(usersDetails);
                 _unitOfWork.Save();
                 string profilePicture = $"/images/{userId}/";

@@ -105,8 +105,8 @@ namespace RentWise.Models.Identity
         [ValidateNever]
         public string? ReturnAction { get; set; } = "Index";
 
-
-
+        public double PayWithCard { get; set; } = 0;
+        public double PayWithCash { get; set; } = 0;
     }
 
     public class ForgetPasswordModel

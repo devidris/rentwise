@@ -70,9 +70,33 @@ namespace RentWise.Utility
             {1,"Cash"},
             {2,"Online" },
         };
+
+        public static Dictionary<int, string> Banks = new Dictionary<int, string>
+{
+    {1, "Absa Bank Ghana Limited"},
+    {2, "Access Bank Ghana Plc"},
+    {3, "Agricultural Development Bank of Ghana"},
+    {4, "Bank of Africa Ghana Limited"},
+    {5, "CalBank Limited"},
+    {6, "Consolidated Bank Ghana Limited"},
+    {7, "Ecobank Ghana Limited"},
+    {8, "FBN Bank Ghana Limited"},
+    {9, "Fidelity Bank Ghana Limited"},
+    {10, "First Atlantic Bank Limited"},
+    {11, "First National Bank Ghana"},
+    {12, "GCB Bank Limited"},
+    {13, "Guaranty Trust Bank Ghana Limited"},
+    {14, "Mobile Money" },
+    {15, "National Investment Bank Limited"},
+    {16, "OmniBSIC Bank Ghana Limited"},
+    {17, "Prudential Bank Limited"},
+    {18, "Republic Bank Ghana Limited"},
+    {19, "Société Générale Ghana Limited"},
+    {20, "Stanbic Bank Ghana Limited"},
+    {21, "Standard Chartered Bank Ghana Limited"},
+    {22, "United Bank for Africa Ghana Limited"},
+    {23, "Universal Merchant Bank Limited"},
+    {24, "Zenith Bank Ghana Limited"}
+};
     }
-
-
-
-
 }

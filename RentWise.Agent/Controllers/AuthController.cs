@@ -267,6 +267,7 @@ namespace RentWise.Controllers
                 } else
                 {
                     TempData["Success"] = "Update Successful";
+                    model.UpdatedAt = DateTime.Now;
                     _unitOfWork.AgentRegistration.Update(model);
                 }
                     _unitOfWork.Save();
