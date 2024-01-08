@@ -1,6 +1,5 @@
 ﻿using RentWise.DataAccess.Repository.IRepository;
 using RentWise.Models;
-using RentWise.Models.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;

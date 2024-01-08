@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using RentWise.Models;
 using RentWise.Models.Identity;
-using RentWise.Models.Models;
 using System.Reflection.Emit;
 
 namespace RentWise.DataAccess;

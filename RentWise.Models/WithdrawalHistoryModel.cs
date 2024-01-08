@@ -5,16 +5,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RentWise.Models.Models
+namespace RentWise.Models
 {
-    public class WithdrawalHistoryModel
+    public class WithdrawalHistoryModel:DefaultModel
     {
         [Key]
         public int Id { get; set; }
         public string AgentId { get; set; }
         public double WithdrawalAmount { get; set; }
         public string AccountDetails { get; set; }
-        public string LkpBankName { get; set; }
+        public int LkpBankName { get; set; }
         public string FullName { get; set; }
+
+        public bool Pending { get; set; } = true;
     }
 }

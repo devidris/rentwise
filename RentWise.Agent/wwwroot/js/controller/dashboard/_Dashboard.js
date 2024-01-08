@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', function () {
     var ctx = document.getElementById('myChart').getContext('2d');
 
     var data = {
-        labels: ['Total Sales', 'Total number of orders'],
+        labels: ['Total Sales', 'Total number of Reservations'],
         datasets: [{
             label: 'Count',
             data: [totalEarnings, totalOrders],

@@ -49,46 +49,46 @@
     <div class="row mt-5 bg-light px-lg-5 px-sm-1 justify-content-center">
         <div class="col-md-2 col-sm-12 pl-md-5 ">
             <input value="@ViewBag.Action" class="action" hidden/>
-            <ul class="d-flex text-light list-unstyled w-100 justify-content-evenly  lead text-center  bg-dark py-3 rounded sidebar flex-md-column flex-sm-row">
+            <ul class="d-flex text-light list-unstyled w-100 justify-content-evenly  lead text-center  bg-dark py-3 rounded sidebar flex-md-column flex-sm-row flex-wrap g-sm-5">
                 <li onclick="onToggle(1)" class="sidebar sidebar-1">
                     <i class="bi bi-columns-gap p-md-0 px-sm-3"></i>
-                    <span class="d-lg-inline d-md-none d-sm-none d-none">Dashboard</span>
+                    <span class="">Dashboard</span>
                 </li>
                 <hr />
                 <li onclick="onToggle(2)" class="sidebar sidebar-2">
                     <i class="bi bi-chat-right-dots-fill p-md-0 px-sm-3"></i>
-                    <span class="d-lg-inline d-md-none d-sm-none d-none">Messages</span>
+                    <span class="">Messages</span>
                 </li>
                 <hr />
                 <li onclick="onToggle(3)" class="sidebar sidebar-3">
                     <i class="bi bi-calendar-event-fill p-md-0 px-sm-3"></i>
-                    <span class="d-lg-inline d-md-none d-sm-none d-none">Report</span>
+                    <span class="">Report</span>
                 </li>
                 <hr />
                 <li onclick="onToggle(4)" class="sidebar sidebar-4">
                     <i class="bi bi-bookmark-dash-fill p-md-0 px-sm-3"></i>
-                    <span class="d-lg-inline d-md-none d-sm-none d-none">Orders</span>
+                    <span class="">Reservations</span>
                 </li>
                 <hr />
                 <li onclick="onToggle(5)" class="sidebar sidebar-5">
                     <i class="bi bi-list-check p-md-0 px-sm-3"></i>
-                    <span class="d-lg-inline d-md-none d-sm-none d-none">Review</span>
+                    <span class="">Review</span>
                 </li>
                 <hr />
                 <li onclick="onToggle(6)" class="sidebar sidebar-6">
                     <i class="bi bi-person-fill p-md-0 px-sm-3"></i>
-                    <span class="d-lg-inline d-md-none d-sm-none d-none">Profile</span>
+                    <span class="">Profile</span>
                 </li>
                 <hr />
                 <li onclick="onToggle(7)" class="sidebar sidebar-7">
                     <i class="bi bi-card-checklist p-md-0 px-sm-3"></i>
-                    <span class="d-lg-inline d-md-none d-sm-none d-none">Withdraw</span>
+                    <span class="">Withdraw</span>
                 </li>
                 <hr />
                 <li>
                     <a asp-controller="Store" asp-action="Index" class="link-light text-decoration-none">
                         <i class="bi bi-shop-window p-md-0 px-sm-3"></i>
-                        <span class="d-lg-inline d-md-none d-sm-none d-none">Store</span>
+                        <span class="">Store</span>
                     </a>
                 </li>
                 <hr />
@@ -96,7 +96,7 @@
                     <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
                         <button id="logout" type="submit" class="bg-transparent btn text-white w-100">
                             <i class="bi bi-box-arrow-left p-md-0 px-sm-3"></i>
-                            <span class="d-lg-inline d-md-none d-sm-none d-none">Logout</span>
+                            <span class="">Logout</span>
                         </button>
                     </form>
                    
@@ -112,7 +112,7 @@
             <partial name="_Orders" model="ViewBag.Orders" />
             <partial name="_Reviews" model="ViewBag.Reviews" />
             <partial name="_Profile" model="ViewBag.Agent" />
-            <partial name="_Withdrawal" />
+            <partial name="_Withdrawal" model="ViewBag.Withdrawals" />
 
 
         </div>
