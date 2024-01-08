@@ -2,13 +2,13 @@
 @model List<OrdersModel>
 <link href="~/css/controller/store/Orders.css"/>
 <div class="content content-4">
-    <h1 class="h2">Orders</h1>
+    <h1 class="h2">Reservations</h1>
     <hr />
     @if (Model.Count == 0)
     {
         <div class="d-flex flex-column align-items-center">
             <i class="bi bi-bell-slash-fill text-primary fs-1"></i>
-            <p>No orders</p>
+            <p>No Reservations</p>
         </div>
     }
     else

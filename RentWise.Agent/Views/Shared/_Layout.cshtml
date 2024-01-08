@@ -21,28 +21,28 @@
         </div>
     </main>
     @inject IOptions<RentWiseConfig> _config;
-    <footer class="bg-primary p-5 text-white text-center">
+    <footer class="bg-primary p-md-5 py-4 text-white text-center">
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-4 col-sm-12 mt-sm-4">
 
                     <p class="mb-3">
-                        <a href="https://www.instagram.com/rentwise_gh" class="text-decoration-none mb-3 link-light" target="_blank">
+                        <a href="https://www.instagram.com/rentwise_gh" class="text-decoration-none mb-3 link-light fs-4" target="_blank">
                             <b>Follow us at</b> <i class="bi bi-instagram"></i>
                         </a>
                     </p>
                     <ul class="list-unstyled mt-4">
-                        <li><a href="@_config.Value.ClientWebsiteLink/Page/About" target="_blank" class="link-light text-decoration-none">About Us</a></li>
-                        <li><a href="@_config.Value.ClientWebsiteLink/Page/LegalAndPolicy" target="_blank" class="link-light text-decoration-none">Legal Terms & Privacy Policy</a></li>
-                        <li><a href="@_config.Value.ClientWebsiteLink/Page/TOS" target="_blank" class="link-light text-decoration-none">Terms Of Service</a></li>
-                        <li><a href="@_config.Value.ClientWebsiteLink/Page/AvoidScam" target="_blank" class="link-light text-decoration-none">Avoid Scams and Fraud</a></li>
+                        <li><a href="@_config.Value.ClientWebsiteLink/Page/About" target="_blank" class="link-light text-decoration-none fs-5">About Us</a></li>
+                        <li><a href="@_config.Value.ClientWebsiteLink/Page/LegalAndPolicy" target="_blank" class="link-light text-decoration-none fs-5">Legal Terms & Privacy Policy</a></li>
+                        <li><a href="@_config.Value.ClientWebsiteLink/Page/TOS" target="_blank" class="link-light text-decoration-none fs-5">Terms Of Service</a></li>
+                        <li><a href="@_config.Value.ClientWebsiteLink/Page/AvoidScam" target="_blank" class="link-light text-decoration-none fs-5">Avoid Scams and Fraud</a></li>
                     </ul>
                 </div>
                 <div class="col-md-4 col-sm-12  mt-sm-4">
                     <ul>
-                        <li><a href="@_config.Value.ClientWebsiteLink/Auth/Register" target="_blank" class="link-light text-decoration-none">Register as Cusotmer</a></li>
-                        <li><a asp-controller="Home" asp-action="Index" class="link-light text-decoration-none">Become an Agent</a></li>
-                        <li><a href="@_config.Value.ClientWebsiteLink/Auth/Login" target="_blank" class="link-light text-decoration-none">Login</a></li>
+                        <li><a href="@_config.Value.ClientWebsiteLink/Auth/Register" target="_blank" class="link-light text-decoration-none fs-5">Register as Customer</a></li>
+                        <li><a asp-controller="Home" asp-action="Index" class="link-light text-decoration-none fs-5">Become an Agent</a></li>
+                        <li><a href="@_config.Value.ClientWebsiteLink/Auth/Login" target="_blank" class="link-light text-decoration-none fs-5">Login</a></li>
                     </ul>
                 </div>
                 <div class="col-md-4 col-sm-12  mt-sm-4">

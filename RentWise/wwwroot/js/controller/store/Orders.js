@@ -59,6 +59,7 @@ function payNow() {
         },
         error: function (data) {
             Swal.fire('Error', 'Something went wrong', 'error');
+            console.log(data)
         }
     })
 }

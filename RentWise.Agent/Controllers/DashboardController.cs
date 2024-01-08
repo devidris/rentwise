@@ -2,14 +2,16 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using RentWise.DataAccess.Repository.IRepository;
 using RentWise.Models;
 using RentWise.Models.Identity;
-using RentWise.Models.Models;
 using RentWise.Utility;
 using System.Net;
 using System.Security.Claims;
+using RestSharp;
+using static NuGet.Packaging.PackagingConstants;
 
 namespace RentWise.Agent.Controllers
 {
@@ -19,11 +21,13 @@ namespace RentWise.Agent.Controllers
         private readonly IUnitOfWork _unitOfWork;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly IWebHostEnvironment _webHostEnvironment;
-        public DashboardController(IUnitOfWork unitOfWork, UserManager<IdentityUser> userManager, IWebHostEnvironment webHostEnvironment)
+        private readonly IOptions<RentWiseConfig> _config;
+        public DashboardController(IUnitOfWork unitOfWork, UserManager<IdentityUser> userManager, IWebHostEnvironment webHostEnvironment, IOptions<RentWiseConfig> config)
         {
             _unitOfWork = unitOfWork;
             _userManager = userManager;
             _webHostEnvironment = webHostEnvironment;
+            _config = config;
         }
         public async Task<IActionResult> Index(string Id = "")
         {
@@ -75,6 +79,10 @@ namespace RentWise.Agent.Controllers
              ViewBag.totalAmount = Math.Round(filteredOrders.Any() ? filteredOrders.Sum(order => order.TotalAmount) : 0, 2);
             ViewBag.averageTotalAmount =Math.Round(filteredOrders.Any() ? filteredOrders.Average(order => order.TotalAmount) : 0,2);
             ViewBag.totalPendingAmount = Math.Round(pendingOrders.Any() ? pendingOrders.Sum(order => order.TotalAmount) : 0,2);
+
+            IEnumerable<WithdrawalHistoryModel> withdrawals = _unitOfWork.WithdrawalHistory.GetAll(u => u.AgentId == userId);
+            ViewBag.Withdrawals = withdrawals;
+
 
             ViewBag.totalReview = reviews.Any() ? reviews.Count() : 0;
             ViewBag.avergeRating = reviews.Any() ? reviews.Average(review => review.RatingValue) : 0;
@@ -199,7 +207,7 @@ namespace RentWise.Agent.Controllers
                 _unitOfWork.Order.Update(order);
                 _unitOfWork.Save();
             }
-            TempData["active"] = 4;
+            TempData["Action"] = 4;
             return RedirectToAction("Index","Dashboard");
         }
         public IActionResult PaymentReceived(int Id)
@@ -290,19 +298,23 @@ namespace RentWise.Agent.Controllers
         {
             string UserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             AgentRegistrationModel agent = _unitOfWork.AgentRegistration.Get(u => u.Id == UserId);
+            bool error = false;
             if(String.IsNullOrEmpty(lkpBank))
             {
                 TempData["Error"] = "Please select a bank";
+                error = true;
             }
             if(String.IsNullOrEmpty(name))
             {
                 TempData["Error"] = "Please enter your name to proceed";
+                error = true;
             }
             if (String.IsNullOrEmpty(acc))
             {
                 TempData["Error"] = "Please enter your account number";
+                error = true;
             }
-            if (TempData["Error"] == null)
+            if (!error)
             {
                 double totalPaidCash = agent.PayWithCash;
                 double totalPaidOnline = agent.PayWithCard;
@@ -312,13 +324,14 @@ namespace RentWise.Agent.Controllers
                 double totalOwingOnline = agent.PayWithCard * 0.1;
                 double totalOwing = totalOwingCash + totalOwingOnline;
 
-                double totalPending = totalPaid - totalOwing;
+                double totalPending = totalPaidOnline - totalOwing;
                 WithdrawalHistoryModel withdrawalHistoryModel = new WithdrawalHistoryModel{
                     AgentId = UserId,
                     WithdrawalAmount = totalPending,
                     FullName = name,
-                    LkpBankName = lkpBank,
-                    AccountDetails = acc
+                    LkpBankName = Int32.Parse(lkpBank),
+                    AccountDetails = acc,
+                    Pending = false
                 };
                 _unitOfWork.WithdrawalHistory.Add(withdrawalHistoryModel);
                 agent.PayWithCard = 0;
@@ -331,6 +344,73 @@ namespace RentWise.Agent.Controllers
             return RedirectToAction("Index", "Dashboard");
         }
 
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> Pay()
+        {
+            string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (userId == null)
+            {
+                TempData["ToastMessage"] = "Please login to pay";
+                return Json(new
+                {
+                    StatusCode = (int)HttpStatusCode.Unauthorized,
+                    Message = Lookup.ResponseMessages[4],
+                    Data = "Unauthorized",
+                    Success = false
+                });
+            }
+            AgentRegistrationModel agent = _unitOfWork.AgentRegistration.Get(u => u.Id == userId);
+            Random random = new Random();
+            int randomNumber = random.Next(1, 101);
+            string reference = agent.Id.ToString() + "-RENTWISE-" + randomNumber;
 
+            // Populate JSON payload from the order variable
+            // Create variables for amount, description, and reference
+            double totalPaidCash = agent.PayWithCash;
+            double totalPaidOnline = agent.PayWithCard;
+            double totalPaid = totalPaidCash + totalPaidOnline;
+
+            double totalOwingCash = agent.PayWithCash * 0.1;
+            double totalOwingOnline = agent.PayWithCard * 0.1;
+            double totalOwing = totalOwingCash + totalOwingOnline;
+
+            double totalPending = totalOwing - totalPaidOnline;
+            double totalAmount = totalPending;
+                string description = agent.Id; // Adjust this based on your actual structure
+                string clientReference = reference;
+                string link = _config.Value.ClientWebsiteLink + "/Dashboard/Success?id=" + agent.Id;
+            string pageLink = _config.Value.AgentWebsiteLink + "/Dashboard/Index?active=7";
+                // Create the JSON string using variables
+                string jsonBody = $"{{\"totalAmount\":{totalAmount},\"description\":\"{description}\",\"callbackUrl\":\"{pageLink}?orderId={agent}\",\"returnUrl\":\"{link}\",\"cancellationUrl\":\"{pageLink}\",\"merchantAccountNumber\":\"2018934\",\"clientReference\":\"{clientReference}\"}}";
+
+
+                var options = new RestClientOptions("https://payproxyapi.hubtel.com/items/initiate");
+                var client = new RestClient(options);
+                var request = new RestRequest("");
+                request.AddHeader("accept", "application/json");
+                request.AddHeader("authorization", "Basic bkc2dldCRTo1YzU0NmY1YTZkNTI0Y2VkYjYzOGUzNmQxNmVlYjM5MQ==");
+                request.AddJsonBody(jsonBody, false);
+                var response = await client.PostAsync(request);
+                return Json(new
+                {
+                    StatusCode = (int)HttpStatusCode.OK,
+                    Message = "Order Placed Successfully",
+                    Data = JsonConvert.SerializeObject(response),
+                    Success = true
+                });
+        }
+
+        public IActionResult Success(string id = "", string checokutId = "")
+        {
+            AgentRegistrationModel agent = _unitOfWork.AgentRegistration.Get(u=>u.Id == id);
+            agent.PayWithCard = 0;
+            agent.PayWithCash = 0;
+            agent.UpdatedAt = DateTime.Now;
+            _unitOfWork.AgentRegistration.Update(agent);
+            _unitOfWork.Save();
+            TempData["Success"] = "Payment successful";
+            return RedirectToAction(nameof(Index));
+        }
     }
 }

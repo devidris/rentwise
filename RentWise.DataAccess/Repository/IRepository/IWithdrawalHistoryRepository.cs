@@ -1,4 +1,4 @@
-﻿using RentWise.Models.Models;
+﻿using RentWise.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
