@@ -137,5 +137,8 @@ namespace RentWise.Models.Identity
         public int Orders { get; set; } = 0;
         public int Messages { get; set; } = 0;
         public string Username { get; set; }
+        [ForeignKey("Id")]
+        [ValidateNever]
+        public AgentRegistrationModel Agent { get; set; }
     }
 }

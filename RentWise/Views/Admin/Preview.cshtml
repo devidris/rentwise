@@ -1,0 +1,98 @@
+﻿@using Microsoft.AspNetCore.Identity;
+@using Microsoft.Extensions.Options;
+@model UsersDetailsModel
+
+@{
+    IdentityUser user = ViewBag.User;
+}
+<form id="change-password-form" method="post" class="w-75 m-auto" enctype="multipart/form-data">
+    <div asp-validation-summary="All" class="text-danger" role="alert"></div>
+    <label for="image" class="d-block w-fit m-auto mb-3 cursor-pointer">
+        <img src="@Url.Content(@ViewBag.ProfilePicture)" alt="Profile Picture" width="200" class="image-display" />
+    </label>
+    <div class="form-floating mb-3">
+        <input asp-for="@Model.Username" class="form-control" readonly />
+        <label asp-for="@Model.Username" class="form-label"></label>
+        <span asp-validation-for="@Model.Username" class="text-danger"></span>
+    </div>
+    <div class="form-floating mb-3">
+        <input asp-for="@user.NormalizedUserName" class="form-control" readonly />
+        <label asp-for="@user.NormalizedUserName" class="form-label"></label>
+        <span asp-validation-for="@user.NormalizedUserName" class="text-danger"></span>
+    </div>
+    @if (Model.Agent != null)
+    {
+        <div class="form-floating mb-3">
+            <input asp-for="@Model.Agent.FirstName" class="form-control" readonly />
+            <label asp-for="@Model.Agent.FirstName" class="form-label"></label>
+            <span asp-validation-for="@Model.Agent.FirstName" class="text-danger"></span>
+        </div>
+        <div class="form-floating mb-3">
+            <input asp-for="@Model.Agent.LastName" class="form-control" readonly />
+            <label asp-for="@Model.Agent.LastName" class="form-label"></label>
+            <span asp-validation-for="@Model.Agent.LastName" class="text-danger"></span>
+        </div>
+        <div class="form-floating mb-3">
+            <input asp-for="@Model.Agent.PhoneNumber" class="form-control" readonly />
+            <label asp-for="@Model.Agent.PhoneNumber" class="form-label"></label>
+            <span asp-validation-for="@Model.Agent.PhoneNumber" class="text-danger"></span>
+        </div>
+
+        <div class="form-floating mb-3">
+            <input asp-for="@Model.Agent.StoreName" class="form-control" readonly />
+            <label asp-for="@Model.Agent.StoreName" class="form-label"></label>
+            <span asp-validation-for="@Model.Agent.StoreName" class="text-danger"></span>
+        </div>
+
+        <div class="form-floating mb-3">
+            <input asp-for="@Model.Agent.StoreAddress" class="form-control" readonly />
+            <label asp-for="@Model.Agent.StoreAddress" class="form-label"></label>
+            <span asp-validation-for="@Model.Agent.StoreAddress" class="text-danger"></span>
+        </div>
+        <div class="form-floating mb-3">
+            <input asp-for="@Model.Agent.Country" class="form-control" readonly />
+            <label asp-for="@Model.Agent.Country" class="form-label"></label>
+            <span asp-validation-for="@Model.Agent.Country" class="text-danger"></span>
+        </div>
+
+        <div class="form-floating mb-3">
+            <input asp-for="@Model.Agent.State" class="form-control" readonly />
+            <label asp-for="@Model.Agent.State" class="form-label"></label>
+            <span asp-validation-for="@Model.Agent.State" class="text-danger"></span>
+        </div>
+
+
+        <div class="d-flex flex-wrap justify-content-evenly">
+            @inject IOptions<RentWiseConfig> _config;
+            @{
+
+                string logo = $"{_config.Value.AgentWebsiteLink}/images/agent/{Model.Id}/registration/Logo.Png";
+                string PP = $"{_config.Value.AgentWebsiteLink}/images/agent/{Model.Id}/registration/ProfilePicture.Png";
+                string NC = $"{_config.Value.AgentWebsiteLink}/images/agent/{Model.Id}/registration/NationalCard.Png";
+            }
+            <div class="d-flex align-items-center flex-column">
+                <h1 class="display-4 text-align">Logo</h1>
+                <img src="@Url.Content(logo)" alt="logo" width="200" height="200" />
+            </div>
+            <div class="d-flex align-items-center flex-column">
+                <h1 class="display-4 text-align">Main Image</h1>
+                <img src="@Url.Content(PP)" alt="Main Image" width="200" height="200" />
+            </div>
+           <div class="d-flex align-items-center flex-column">
+                <h1 class="display-4 text-align">National Card</h1>
+                <img src="@Url.Content(NC)" alt="national card" width="200" height="200" />
+           </div>
+        </div>
+
+        <div class="py-5">
+            <h1>All products <span class="fs-6">Click to preview</span></h1>
+            @foreach (ProductModel product in ViewBag.Products)
+            {
+                string productImage = $"{_config.Value.AgentWebsiteLink}/images/products/{product.AgentId}/{product.ProductId}/MainImage.webp";
+                <a href="/Store/View/@product.ProductId">
+                    <img src="@Url.Content(productImage)" alt="@product.Description" width="100" height="100" class="cursor-pointer" />
+                </a>
+            }
+        </div>
+    }
+</form>

@@ -1,0 +1,102 @@
+﻿@model IEnumerable<UsersDetailsModel>
+@using Microsoft.AspNetCore.Identity
+
+@inject UserManager<IdentityUser> UserManager
+
+<div class="p-5">
+    <div>
+        <a asp-controller="Admin" asp-action="Contact" class="btn btn-primary text-decoration-none">Contact</a>
+    </div>
+    <h1>User Details</h1>
+    <div class="table-responsive">
+        <table class="table">
+            <thead class="table-primary">
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">UserId</th>
+                    <th scope="col">Username</th>
+                    <th scope="col">Active</th>
+                    <th scope="col">IsAgent</th>
+                    <th scope="col">Registered At</th>
+                    <th scope="col">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    int serialNumber = 1;
+                }
+
+                @foreach (UsersDetailsModel item in Model)
+                {
+                    <tr>
+                        <th scope="row">@serialNumber</th>
+                        <td>@item.Id</td>
+                        <td>@item.Username</td>
+                        @if (item.Enabled)
+                        {
+                            <td>Active</td>
+                        }
+                        else
+                        {
+                            <td>Deactivate</td>
+                        }
+                        @if (item.Agent != null)
+                        {
+                            @if (item.Agent.Enabled)
+                            {
+                                <td>True (Active) </td>
+                            }
+                            else
+                            {
+                                <td>True (Not Active)</td>
+                            }
+                        }
+                        else
+                        {
+                            <td>False</td>
+                        }
+                        <td>@item.CreatedAt.ToString()</td>
+                        <td>
+                            @if (item.Enabled)
+                            {
+                                <a class="btn btn-primary text-decoration-none" asp-controller="Admin" asp-action="DeactivateAll" asp-route-id="@item.Id">Deactivate All</a>
+                            }
+                            else
+                            {
+                                <a class="btn btn-primary text-decoration-none" asp-controller="Admin" asp-action="ActivateAll" asp-route-id="@item.Id">Activate All</a>
+                            }
+
+                            @if (item.Agent != null)
+                            {
+                                @if (item.Agent.Enabled)
+                                {
+                                    <a class="btn btn-primary text-decoration-none" asp-controller="Admin" asp-action="DeactivateAgent" asp-route-id="@item.Id">Deactivate Agent Account</a>
+                                }
+                                else
+                                {
+                                    <a class="btn btn-primary text-decoration-none" asp-controller="Admin" asp-action="ActivateAgent" asp-route-id="@item.Id">Activate Agent Account</a>
+                                }
+                            }
+                            @{
+                                IdentityUser user = await UserManager.FindByIdAsync(item.Id);
+                            }
+                            @if (user != null && await UserManager.IsInRoleAsync(user, "Admin"))
+                            {
+
+                                <a class="btn btn-primary text-decoration-none" asp-controller="Admin" asp-action="RemoveAdmin" asp-route-id="@item.Id">Remove From Admin</a>
+                            }
+                            else
+                            {
+                                <a class="btn btn-primary text-decoration-none" asp-controller="Admin" asp-action="MakeAdmin" asp-route-id="@item.Id">Make Admin</a>
+                            }
+                            <a class="btn btn-primary text-decoration-none" asp-controller="Admin" asp-action="Preview" asp-route-id="@item.Id">Preview Account Details</a>
+                        </td>
+                    </tr>
+
+
+                    serialNumber++;
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

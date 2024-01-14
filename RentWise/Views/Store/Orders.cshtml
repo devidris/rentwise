@@ -13,52 +13,54 @@
     }
     else
     {
-        <table class="table">
-            <thead class="table-primary">
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Order Id</th>
-                    <th scope="col">Qunatity</th>
-                    <th scope="col">Product Name</th>
-                    <th scope="col">Total Amount</th>
-                    <th scope="col">Start Rental Date</th>
-                    <th scope="col">End Rental Date</th>
-                    <th scope="col">Status</th>
-                </tr>
-            </thead>
-            <tbody>
-                @{
-                    int serialNumber = 1;
-                }
-
-                @foreach (var item in Model)
-                {
+        <div class="table-responsive">
+            <table class="table">
+                <thead class="table-primary">
                     <tr>
-                        <th scope="row">@serialNumber</th>
-                        <td>@item.OrderId</td>
-                        <td>@item.ProductQuantity</td>
-                        <td>@item.Product.Name</td>
-                        <td>@item.TotalAmount</td>
-                        <td>@item.StartDate.ToShortDateString()</td>
-                        <td>@item.EndDate.ToShortDateString()</td>
-                        @if (item.LkpStatus == 2)
-                        {
-                            <td class="d-flex gap-2 align-items-center">
-                                @Lookup.OrderStatus[item.LkpStatus]
-                                <button class="btn btn-primary" onclick="pay('@item.OrderId')">Pay</button>
-                            </td>
-                        }
-                        else
-                        {
-                            <td>@Lookup.OrderStatus[item.LkpStatus]</td>
-                        }
+                        <th scope="col">#</th>
+                        <th scope="col">Order Id</th>
+                        <th scope="col">Qunatity</th>
+                        <th scope="col">Product Name</th>
+                        <th scope="col">Total Amount</th>
+                        <th scope="col">Start Rental Date</th>
+                        <th scope="col">End Rental Date</th>
+                        <th scope="col">Status</th>
                     </tr>
+                </thead>
+                <tbody>
+                    @{
+                        int serialNumber = 1;
+                    }
+
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <th scope="row">@serialNumber</th>
+                            <td>@item.OrderId</td>
+                            <td>@item.ProductQuantity</td>
+                            <td>@item.Product.Name</td>
+                            <td>@item.TotalAmount</td>
+                            <td>@item.StartDate.ToShortDateString()</td>
+                            <td>@item.EndDate.ToShortDateString()</td>
+                            @if (item.LkpStatus == 2)
+                            {
+                                <td class="d-flex gap-2 align-items-center">
+                                    @Lookup.OrderStatus[item.LkpStatus]
+                                    <button class="btn btn-primary" onclick="pay('@item.OrderId')">Pay</button>
+                                </td>
+                            }
+                            else
+                            {
+                                <td>@Lookup.OrderStatus[item.LkpStatus]</td>
+                            }
+                        </tr>
 
 
-                    serialNumber++;
-                }
-            </tbody>
-        </table>
+                        serialNumber++;
+                    }
+                </tbody>
+            </table>
+        </div>
     }
 
 </div>

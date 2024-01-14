@@ -56,6 +56,7 @@ namespace RentWise.DataAccess.Repository
         public IEnumerable<T> GetAll(Expression<Func<T, bool>>? filter, string? includeProperties = null)
         {
             IQueryable<T> query = dbSet;
+            
             if (filter != null)
             {
                 query = query.Where(filter);
