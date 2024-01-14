@@ -88,8 +88,8 @@ namespace RentWise.Agent.Controllers
                 for (int i = 0; i < otherImages.Count; i++)
                 {
                     IFormFile otherImage = otherImages[i];
-                    string otherImageName = String.Join("", Lookup.Upload[10].Split(" ")) + "-" + i + ".webp";
-                    saveImage(model.AgentId, otherImageName, otherImage, model.ProductId);
+                    string otherImageName = Guid.NewGuid().ToString() + ".webp";
+                    saveImages(model.AgentId, otherImageName, otherImage, model.ProductId);
                 }
                 #endregion
 
@@ -127,6 +127,26 @@ namespace RentWise.Agent.Controllers
             }
 
         }
+        public void saveImages(string userId, string fileName, IFormFile file, string productId)
+        {
+            string wwwRootPath = _webHostEnvironment.WebRootPath;
+            string filePath = @"images\" + "\\products\\" + userId + "\\" + productId + "\\";
+            string finalPath = Path.Combine(wwwRootPath, filePath);
+
+            if (!Directory.Exists(finalPath))
+            {
+                Directory.CreateDirectory(finalPath);
+            }
+
+            using (FileStream fileStream = new FileStream(Path.Combine(finalPath, fileName), FileMode.Create))
+            {
+                file.CopyTo(fileStream);
+            }
+            ProductImageModel model = new ProductImageModel();
+            model.ProductId = productId;
+            model.Name = fileName;
+            _unitOfWork.ProductImage.Add(model);
+        }
 
         public async Task<IActionResult> Preview(string? id)
         {
@@ -134,11 +154,11 @@ namespace RentWise.Agent.Controllers
             ProductModel model = new ProductModel();
             if (String.IsNullOrEmpty(id))
             {
-                model = _unitOfWork.Product.Get(u => u.AgentId == userId, "Agent");
+                model = _unitOfWork.Product.Get(u => u.AgentId == userId, "Agent,ProductImages");
             }
             else
             {
-                model = _unitOfWork.Product.Get(u => u.ProductId == id, "Agent");
+                model = _unitOfWork.Product.Get(u => u.ProductId == id, "Agent,ProductImages");
 
             }
             IEnumerable<ReviewModel> Reviews = _unitOfWork.Review.GetAll(u => u.ProductId == model.ProductId);

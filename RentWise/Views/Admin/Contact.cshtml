@@ -1,0 +1,36 @@
+﻿@model IEnumerable<ContactAdminModel>
+
+<div class="p-5">
+    <div>
+        <a asp-controller="Admin" asp-action="Index" class="btn btn-primary text-decoration-none">User Details</a>
+    </div>
+    <h1>Contacts</h1>
+    <div class="table-responsive">
+        <table class="table">
+            <thead class="table-primary">
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Full Name</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Message</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    int serialNumber = 1;
+                }
+
+                @foreach (ContactAdminModel item in Model)
+                {
+                    <tr>
+                        <th scope="row">@serialNumber</th>
+                        <td>@item.FirstName @item.LastName</td>
+                        <td>@item.Email</td>
+                        <td>@item.Message</td>
+                    </tr>
+                    serialNumber++;
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
