@@ -34,7 +34,7 @@ namespace RentWise.Controllers
             ViewBag.Lng = Lng;
             ViewBag.Lat = Lat;
             ViewBag.Link = _config.Value.AgentWebsiteLink;
-            List<ProductModel> products = _unitOfWork.Product.GetAll(u=>u.LkpCategory == Category,"Agent").ToList();
+            List<ProductModel> products = _unitOfWork.Product.GetAll(u=>u.LkpCategory == Category,"Agent,ProductImages").ToList();
             if(Min > 0)
             {
                 products = products.FindAll(product => product.PriceDay >= Min).ToList();

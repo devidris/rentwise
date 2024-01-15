@@ -3,10 +3,23 @@
 <div>
     <partial name="_Nav2" />
     <form class="p-5" method="post"  enctype="multipart/form-data">
-       <input value="@Model.ProductId" class="product-id" hidden />
+       @* <input value="@Model.ProductId" class="product-id" hidden /> *@
+        <input  value="@Model.Includes" class="includes" hidden/>
+        <input  value="@Model.Rules" class="rules" hidden/>
+        <input  value="@Model.Address" class="location" hidden />
+        @if(Model.Agent != null)
+        {
+            <input value="@Model.ProductImages.Count()" class="product-image-count" hidden/>
+            <input asp-for="@Model.ProductId" hidden/>
+        }
+        else
+        {
+            <input value="0" class="product-image-count" hidden/>
+        }
+
         <div asp-validation-summary="All" class="text-danger" role="alert"></div>
         <input class="category-input d-none" hidden aria-required="true" asp-for="@Model.LkpCategory" />
-        <div class="content content-1 text-center @(Model.Agent != null ? "d-none" : "")">
+        <div class="content content-1 text-center @(Model.Agent == null ? "" : "d-none")">
             <h3 class="mt-5">List your property on <span class="font-ilalic">Rent Wise</span> and start welcoming renters in no time!</h3>
             <p class="my-3">To get started, choose the category of Rental you want to list on Rent Wise</p>
             <div class="d-flex flex-wrap p-5 justify-content-evenly">
@@ -178,45 +191,24 @@
                 </div>
 
                 <div class="row">
-                    <div class="col-3">
+                    <div class="col-md-6 col-sm-12">
                          <label class="form-label" asp-for="@Model.PriceDay">Daily Rental Price</label>
                         <div class="input-group mb-3">
                             <div class="input-group-prepend ">
                                 <span class="input-group-text text-white">₵</span>
                             </div>
-                            <input class="form-control" aria-label="Price / Day" asp-for="@Model.PriceDay" placeholder="Price / Day" value="@Model.PriceWeekend">
+                            <input class="form-control" aria-label="Price / Day" asp-for="@Model.PriceDay" placeholder="Price / Day">
                             <span class="text-danger" asp-validation-for="@Model.PriceDay"></span>
                         </div>
                     </div>
 
-                    <div class="col-3">
-                        <label class="form-label" asp-for="@Model.PriceWeekend">Weekend Rental Price</label>
-                        <div class="input-group mb-3">
-                            <div class="input-group-prepend ">
-                                <span class="input-group-text text-white">₵</span>
-                            </div>
-                            <input class="form-control" aria-label="Price / Weekend" asp-for="@Model.PriceWeekend" placeholder="Price / Weekend" value="@Model.PriceWeekend">
-                            <span class="text-danger" asp-validation-for="@Model.PriceWeekend"></span>
-                        </div>
-                    </div>
-
-                    <div class="col-3">
-                        <label class="form-label" asp-for="@Model.PriceWeek">Weekly Rental Price</label>
-                        <div class="input-group mb-3">
-                            <div class="input-group-prepend ">
-                                <span class="input-group-text text-white">₵</span>
-                            </div>
-                            <input class="form-control" aria-label="Price / Week" asp-for="@Model.PriceWeek" placeholder="Price / Week" value="@Model.PriceWeek">
-                            <span class="text-danger" asp-validation-for="@Model.PriceWeek"></span>
-                        </div>
-                    </div>
-                    <div class="col-3">
+                    <div class="col-md-6 col-sm-12">
                         <label class="form-label" asp-for="@Model.MaxRentalDays">Maximum Rental Days</label>
                         <div class="input-group mb-3">
                             <div class="input-group-prepend ">
                                 <span class="input-group-text text-white">Days</span>
                             </div>
-                            <input class="form-control" aria-label="Max Rental Days" asp-for="@Model.MaxRentalDays" placeholder="Maximum Rental Days" value="0">
+                            <input class="form-control" aria-label="Max Rental Days" asp-for="@Model.MaxRentalDays" placeholder="Maximum Rental Days">
                             <span class="text-danger" asp-validation-for="@Model.MaxRentalDays"></span>
                         </div>
                     </div>
@@ -262,8 +254,10 @@
                 <div class="w-100 d-flex flex-wrap gap-3 p-4">
                         @foreach(ProductImageModel image in Model.ProductImages)
                         {
-                            string main = $"~/images/products/{Model.AgentId}/{Model.ProductId}/{image.Name}.webp";
-                            <img src="@image"/>
+                            string main = $"~/images/products/{Model.AgentId}/{Model.ProductId}/{image.Name}";
+                            <div class="image-container" id="@image.Id">
+                                <img src="@Url.Content(main)" style="width: 100px; height: 100px;"><span class="delete-icon"><i class="bi bi-trash3-fill" onclick="deleteImage('@image.Id')"></i></span>
+                                </div>
                         }
                     </div>
                 }

@@ -56,22 +56,25 @@ namespace RentWise.Agent.Controllers
         {
             ProductModel product = new ProductModel(){};
             if(id != null) {
-                product = _unitOfWork.Product.Get(u => u.ProductId == id);
+                product = _unitOfWork.Product.Get(u => u.ProductId == id,"Agent,ProductImages");
             }
             return View(product);
         }
         [HttpPost]
-        public async Task<IActionResult> Upsert(ProductModel model, IFormFile? mainImage, List<IFormFile> otherImages)
+        public async Task<IActionResult> Upsert(ProductModel model, IFormFile? mainImage, List<IFormFile>? otherImages)
         {
             string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             model.AgentId = userId;
-            if (mainImage == null)
+            if(model.ProductId == null)
             {
-                ModelState.AddModelError(string.Join("", Lookup.Upload[9].Split(" ")), "Main Image upload is compulsory.");
-            }
-            if (otherImages == null || otherImages.Count < 4)
-            {
-                ModelState.AddModelError(string.Join("", Lookup.Upload[10].Split(" ")), "Other Images upload is compulsory and must be more than or equal to 4 images.");
+                if (mainImage == null)
+                {
+                    ModelState.AddModelError(string.Join("", Lookup.Upload[9].Split(" ")), "Main Image upload is compulsory.");
+                }
+                if (otherImages == null || otherImages.Count < 4)
+                {
+                    ModelState.AddModelError(string.Join("", Lookup.Upload[10].Split(" ")), "Other Images upload is compulsory and must be more than or equal to 4 images.");
+                }
             }
             if (ModelState.IsValid)
             {
@@ -79,21 +82,25 @@ namespace RentWise.Agent.Controllers
                 model.Name = SharedFunctions.Capitalize(model.Name);
 
                 #region Saving Main Product
-                string mainImageName = String.Join("", Lookup.Upload[9].Split(" ")) + ".webp";
-
-                saveImage(model.AgentId, mainImageName, mainImage, model.ProductId);
-                #endregion
-
-                #region Saving Other Images
-                for (int i = 0; i < otherImages.Count; i++)
+               if(mainImage != null)
                 {
-                    IFormFile otherImage = otherImages[i];
-                    string otherImageName = Guid.NewGuid().ToString() + ".webp";
-                    saveImages(model.AgentId, otherImageName, otherImage, model.ProductId);
+                    string mainImageName = String.Join("", Lookup.Upload[9].Split(" ")) + ".webp";
+
+                    saveImage(model.AgentId, mainImageName, mainImage, model.ProductId);
                 }
                 #endregion
 
-                model.NoOfImages = otherImages.Count;
+                #region Saving Other Images
+               if(otherImages != null && otherImages.Any())
+                {
+                    for (int i = 0; i < otherImages.Count; i++)
+                    {
+                        IFormFile otherImage = otherImages[i];
+                        string otherImageName = Guid.NewGuid().ToString() + ".webp";
+                        saveImages(model.AgentId, otherImageName, otherImage, model.ProductId);
+                    }
+                }
+                #endregion
                 if (String.IsNullOrEmpty(model.Includes))
                 {
                     model.Includes = ",,rw,,";
@@ -102,7 +109,13 @@ namespace RentWise.Agent.Controllers
                 {
                     model.Rules = ",,rw,,";
                 }
-                _unitOfWork.Product.Add(model);
+                if(model.ProductId != null) {
+                    _unitOfWork.Product.Update(model);
+                } else
+                {
+                    model.ProductId = Guid.NewGuid().ToString();
+                    _unitOfWork.Product.Add(model);
+                }
                 _unitOfWork.Save();
 
                 return RedirectToAction("Preview", "Store", new { id = model.ProductId });
@@ -172,7 +185,7 @@ namespace RentWise.Agent.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddRating(int RatingValue, string RatingDescription, string ProductId, string AgentId)
+       public async Task<IActionResult> AddRating(int RatingValue, string RatingDescription, string ProductId, string AgentId)
         {
             string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             ReviewModel Review = new()
@@ -198,6 +211,20 @@ namespace RentWise.Agent.Controllers
 
 
             return RedirectToAction("Preview", "Store");
+        }
+
+        [HttpDelete]
+        public ActionResult DeleteImage(int Id)
+        {
+            ProductImageModel productImage = _unitOfWork.ProductImage.Get(u => u.Id == Id);
+            _unitOfWork.ProductImage.Remove(productImage);
+            _unitOfWork.Save();
+            return Json(new
+            {
+                StatusCode = (int)HttpStatusCode.OK,
+                Message = "Image deleted successfully",
+                Success = true
+            });
         }
 
     }

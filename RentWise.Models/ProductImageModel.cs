@@ -12,7 +12,7 @@ namespace RentWise.Models
     public class ProductImageModel
     {
         [Key]
-        public int Key { get; set; }
+        public int Id { get; set; }
         public string Name { get; set; }
         public string ProductId { get; set; }
 

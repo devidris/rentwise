@@ -80,29 +80,72 @@ function displayImages(file) {
         reader.readAsDataURL(file);
     }
 }
-let includes = 0
-function addIncludes() {
-    if (includes > 10) {
+let includesNo = 0
+function addIncludes(value = false) {
+    if (includesNo > 10) {
         toastr.error("Can add more than 10 product includes")
         return
     }
-    const input = `<input type="text" placeholder="Your product include" class="form-control mb-4 include-input"/>`
+    let input = `<input type="text" placeholder="Your product include" class="form-control mb-4 include-input include-input-${includesNo}"/>`
+    if (value) {
+        input = `<input type="text" placeholder="Your product include" class="form-control mb-4 include-input include-input-${includesNo}" value="${value}"/>`
+    }
     $('.includesContainer').prepend(input)
-    includes++
+    if(!value) {
+        $(`.include-input-${includesNo}`).focus()
+    }
+    includesNo++
 }
-let rules = 0
-function addRules() {
-    if (rules > 10) {
+function declareIncludes() {
+    const includes = $('.includes').val().split(',,')
+    $('.includes').remove()
+    if (includes.length > 0) {
+        includes.forEach(include => {
+            if (include.length > 0) {
+                addIncludes(include)
+            }
+        })
+    }
+}
+let rulesNo = 0
+function addRules(value) {
+    if (rulesNo > 10) {
         toastr.error("Can add more than 10 product rules")
         return
     }
-    const input = `<input type="text" placeholder="Rule" class="form-control mb-4 rule-input"/>`
+    let input = `<input type="text" placeholder="Rule" class="form-control mb-4 rule-input  rule-input-${rulesNo}"/>`
+    if (value) {
+        input = `<input type="text" placeholder="Rule" class="form-control mb-4 rule-input rule-input-${rulesNo}" value="${value} "/>`
+    } 
     $('.rulesContainer').prepend(input)
-    rules++
+    if(!value) {
+        $(`.rule-input-${rulesNo}`).focus()
+    }
+    rulesNo++
+}
+function declareRules() {
+    const rules = $('.rules').val().split(',,')
+    $('.rules').remove()
+    if (rules.length > 0) {
+        rules.forEach(rule => {
+            if (rule.length > 0) {
+            addRules(rule)
+            }
+        })
+    }
 }
 
+function declareLocation() {
+    const location = $('.location').val()
+    $('.location').remove()
+    if (location) {
+        $('#autocomplete-input').val(location)
+        getLocationDetails()
+    }
+}
+let OldImageCount = $('.product-image-count').val()
 function saveChanges() {
-    if (fileList.files.length < 4) {
+    if (fileList.files.length + OldImageCount < 4) {
         toastr.error('Minimum of 4 images')
         return
     }
@@ -152,7 +195,9 @@ const autocomplete = new google.maps.places.Autocomplete(document.getElementById
 autocomplete.setTypes(['address']);
 
 // Listen for the event when a place is selected
-autocomplete.addListener('place_changed', function () {
+autocomplete.addListener('place_changed', getLocationDetails);
+
+function getLocationDetails() {
     const place = autocomplete.getPlace();
     $('.store-address').val(place.formatted_address)
     if (place.geometry && place.geometry.location) {
@@ -193,4 +238,36 @@ autocomplete.addListener('place_changed', function () {
             });
 
     }
-});
+}
+
+function deleteImage(id) {
+    Swal.fire({
+        title: 'Are you sure?',
+        text: 'You won\'t be able to revert this!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                method: "DELETE",
+                url: "/Store/DeleteImage?Id=" + id,
+                success: function (res) {
+                    Swal.fire('Success', 'You have successfully deleted image.', 'success');
+                    $('#' + id).remove()
+                    OldImageCount--
+                },
+                error: function (err) {
+                    Swal.fire('Error', 'Something went wrong', 'error');
+                }
+
+            })
+        }
+    });
+}
+// Main 
+declareIncludes()
+declareRules()
+declareLocation()

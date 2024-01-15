@@ -12,9 +12,9 @@
         <div class="jcarousel-pl" onclick="navigate('@Model.ProductId')">
             <ul>
                 <li><img src=@imagePath width="270" height="250" alt=""></li>
-                @for (int i = 0; i < Model.NoOfImages; i++)
+                @foreach (ProductImageModel image in Model.ProductImages)
                 {
-                    string otherImagePath = $"{ViewBag.Link}/images/products/{Model.AgentId}/{Model.ProductId}/OtherImages-{i}.webp";
+                    string otherImagePath = $"{ViewBag.Link}/images/products/{Model.AgentId}/{Model.ProductId}/{image.Name}";
                     <li><img src=@otherImagePath width="270" height="250" alt=""></li>
                 }
             </ul>

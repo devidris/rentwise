@@ -17,8 +17,6 @@
 
 <div class="preview">
     <partial name="_Nav2" />
-    <input value="@Model.PriceWeek" class="price-week" hidden />
-    <input value="@Model.PriceWeekend" class="price-weekend" hidden />
     <input value="@Model.PriceDay" class="price-day" hidden />
     <p class="px-5 py-2 fs-5 m-0">
         <span>Home</span>
@@ -70,11 +68,9 @@ filter:brightness(70%)
             <div class="jcarousel-wrapper">
                 <div class="jcarousel">
                     <ul>
-                        @for (int i = 0; i < Model.NoOfImages; i++)
+                        @foreach(ProductImageModel image in Model.ProductImages)
                         {
-
-                            string otherImagePath = $"/images/products/{Model.AgentId}/{Model.ProductId}/OtherImages-{i}.webp";
-
+                            string otherImagePath = $"/images/products/{Model.AgentId}/{Model.ProductId}/{image.Name}";
                             <li>
                                 <figure style="width:250px;height:250px;object-fit:cover">
                                     <img src="@otherImagePath" alt="Image 1" style="width:250px;height:250px;object-fit:cover">
