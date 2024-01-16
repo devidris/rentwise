@@ -227,5 +227,25 @@ namespace RentWise.Agent.Controllers
             });
         }
 
+        public IActionResult ModifyProduct(string Id,string type)
+        {
+            ProductModel product = _unitOfWork.Product.Get(u => u.ProductId == Id);
+            if(type == "DELETE") { 
+            _unitOfWork.Product.Remove(product);
+            } 
+            if(type == "ENABLE")
+            {
+                product.Enabled = true;
+             _unitOfWork.Product.Update(product);
+            }
+            if(type == "DISABLE")
+            {
+                product.Enabled = false;
+                _unitOfWork.Product.Update(product);
+            }
+            _unitOfWork.Save();
+            return RedirectToAction(nameof(Index));
+        }
+
     }
 }

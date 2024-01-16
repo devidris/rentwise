@@ -255,7 +255,7 @@
                         @foreach(ProductImageModel image in Model.ProductImages)
                         {
                             string main = $"~/images/products/{Model.AgentId}/{Model.ProductId}/{image.Name}";
-                            <div class="image-container" id="@image.Id">
+                            <div class="image-container cursor-pointer" id="@image.Id">
                                 <img src="@Url.Content(main)" style="width: 100px; height: 100px;"><span class="delete-icon"><i class="bi bi-trash3-fill" onclick="deleteImage('@image.Id')"></i></span>
                                 </div>
                         }
