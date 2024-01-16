@@ -38,3 +38,39 @@ function filter() {
     // Set the updated URL
     location.href = url.toString();
 }
+function chooseCurrentLocation() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                const userLocation = {
+                    lat: position.coords.latitude,
+                    lng: position.coords.longitude
+                };
+                getAddress(userLocation.lat, userLocation.lng);
+            },
+            (error) => {
+                // Error callback
+                console.error("Error getting user location:", error.message);
+            }
+        );
+    } else {
+        alert("Geolocation is not supported by your browser.");
+    }
+}
+
+function getAddress(lat, lng) {
+    const geocoder = new google.maps.Geocoder();
+
+    geocoder.geocode({ 'location': { lat, lng } }, (results, status) => {
+        if (status === 'OK') {
+            if (results[0]) {
+                document.getElementById('autocomplete-input').value = results[0].formatted_address;
+                getLatLng()
+            } else {
+                console.error('No results found');
+            }
+        } else {
+            console.error('Geocoder failed due to: ' + status);
+        }
+    });
+}

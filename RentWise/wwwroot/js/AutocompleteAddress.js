@@ -6,7 +6,9 @@ const autocomplete = new google.maps.places.Autocomplete(document.getElementById
 autocomplete.setTypes(['address']);
 
 // Listen for the event when a place is selected
-autocomplete.addListener('place_changed', function () {
+autocomplete.addListener('place_changed', getLatLng);
+
+function getLatLng() {
     const place = autocomplete.getPlace();
     if (place.geometry && place.geometry.location) {
         const latitude = place.geometry.location.lat();
@@ -14,4 +16,4 @@ autocomplete.addListener('place_changed', function () {
         lat = latitude
         lng = longitude
     }
-});
+}
