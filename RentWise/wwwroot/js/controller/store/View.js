@@ -5,9 +5,6 @@ let days = 0
 let totalPrice = 0
 function calculatePrice(selectedDates) {
     datesSelected = selectedDates
-    let weekdaysCount = 0;
-    let weekendsCount = 0;
-    let weeksCount
     let firstDate = null;
     let lastDate = null;
 
@@ -24,15 +21,6 @@ function calculatePrice(selectedDates) {
                 if (lastDate === null || iterDate > lastDate) {
                     lastDate = iterDate;
                 }
-
-                if (dayOfWeek >= 1 && dayOfWeek <= 5) {
-                    // Weekday (Monday to Friday)
-                    weekdaysCount++;
-                } else {
-                    // Weekend (Saturday or Sunday)
-                    weekendsCount++;
-                }
-
                 return monthTotal + 1; // Increment the total count
             }, 0);
         }, 0);
@@ -41,48 +29,21 @@ function calculatePrice(selectedDates) {
         toastr.error($('.maxRentalDay').val() + " days is the maximum allowed rental date")
         return
     }
-    weeksCount = Math.floor(weekdaysCount / 5);
-    weekdaysCount = weekdaysCount - (weeksCount * 5)
 
     const priceDay = $('.price-day').val()
-    const totalDayPrice = priceDay * weekdaysCount * noOfProduct
+    const totalDayPrice = priceDay * days * noOfProduct
     const calDaysPrice = `
                 <p>
-                ₵${priceDay}/Day * ${weekdaysCount} Day * ${noOfProduct} Product
+                ₵${priceDay}/Day * ${days} Day * ${noOfProduct} Product
                 </p>
                 <p>
                 ₵${totalDayPrice}
                 </p>
                 `
     $('.day').html(calDaysPrice)
-
-
-    const priceWeekend = $('.price-weekend').val()
-    const totalWeekendPrice =
-        priceWeekend * weekendsCount * noOfProduct
-    const calWeekendPrice = `
-                    <p>
-                        ₵${priceWeekend}/Day * ${weekendsCount} Weekend * ${noOfProduct} Product
-                    </p>
-                    <p>
-                        ₵${totalWeekendPrice}
-                    </p>
-                    `
-    $('.weekend').html(calWeekendPrice)
-
-    const priceWeek = $('.price-week').val()
-    const totalWeekPrice = priceWeek * weeksCount * noOfProduct
-    const calWeekPrice = `
-                        <p>
-                            ₵${priceWeek}/Day * ${weeksCount} Week * ${noOfProduct} Product
-                        </p>
-                        <p>
-                            ₵${totalWeekPrice}
-                        </p>
-                        `
-    $('.week').html(calWeekPrice)
-    totalPrice = totalDayPrice + totalWeekendPrice + totalWeekPrice
-    $('.total-price').text('₵' + totalPrice)
+    let rentwisePercentge = (totalDayPrice * 0.05).toFixed(2)*1
+    totalPrice = totalDayPrice + rentwisePercentge
+    $('.total-price').text('₵' + totalPrice + " (5% rentwise charges ₵" + rentwisePercentge + ")" )
     $('.start-date').text(formatDate(firstDate))
     $('.end-date').text(formatDate(lastDate))
 }
@@ -229,7 +190,8 @@ $.ajax({
                     } else {
                         Swal.fire('Error', 'Something went wrong', 'error');
                     }
-                }, erorr: function (e) {
+    }, erorr: function (e) {
+                    console.log(e)
                     Swal.fire('Error', 'Something went wrong', 'error');
                 }
             })

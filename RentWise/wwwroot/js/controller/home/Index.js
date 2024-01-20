@@ -3,8 +3,6 @@ const category = $('#category').val()
 $('.hr').addClass('d-none')
 if (category) {
     $('.' + category).removeClass('d-none')
-} else {
-    $('.2').removeClass('d-none')
 }
 
 function selectCategory(lkpCategory) {

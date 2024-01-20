@@ -71,6 +71,17 @@ namespace RentWise.Utility
             {2,"Online" },
         };
 
+        public static Dictionary<int, string> EmailContent = new Dictionary<int, string>
+        {
+            {1,"Pending Order Client Waiting"},
+            {2,"Pending Order Waiting for Agent"},
+            {3,"Agent Accepted Order"},
+            {4,"Agent Rejected Order"},
+            {5,"Client has made payment online"},
+            {6,"Client want to pay with cash"},
+            {7,"Agent marked payment as recieved"},
+        };
+
         public static Dictionary<int, string> Banks = new Dictionary<int, string>
 {
     {1, "Absa Bank Ghana Limited"},
@@ -99,4 +110,5 @@ namespace RentWise.Utility
     {24, "Zenith Bank Ghana Limited"}
 };
     }
+
 }
