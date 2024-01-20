@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using RentWise.DataAccess.Repository;
@@ -13,6 +14,7 @@ using RestSharp;
 using System.Net;
 using System.Security.Claims;
 using System.Text;
+using static Org.BouncyCastle.Crypto.Engines.SM2Engine;
 
 namespace RentWise.Controllers
 {
@@ -21,11 +23,13 @@ namespace RentWise.Controllers
         private readonly IUnitOfWork _unitOfWork;
         private readonly IOptions<RentWiseConfig> _config;
         private readonly UserManager<IdentityUser> _userManager;
-        public StoreController(IUnitOfWork unitOfWork, IOptions<RentWiseConfig> config, UserManager<IdentityUser> userManager)
+        private readonly Microsoft.AspNetCore.SignalR.IHubContext<SignalRHub> _hubContext;
+        public StoreController(IUnitOfWork unitOfWork, IOptions<RentWiseConfig> config, UserManager<IdentityUser> userManager, Microsoft.AspNetCore.SignalR.IHubContext<SignalRHub> hubContext)
         {
             _unitOfWork = unitOfWork;
             _config = config;
             _userManager = userManager;
+            _hubContext = hubContext;
         }
         public async Task<IActionResult> Index(int Id = 0, string? Sort = null, string? Name = null, string? PriceRange = null, string? MaxDay = null, double Lat = 0, double Lng = 0)
         {
@@ -107,7 +111,7 @@ namespace RentWise.Controllers
         {
             string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-            ProductModel model = _unitOfWork.Product.Get(u => u.ProductId == id, "Agent");
+            ProductModel model = _unitOfWork.Product.Get(u => u.ProductId == id, "Agent,ProductImages");
             LikeModel like = _unitOfWork.Like.Get(u => u.UserId == userId && u.ProductId == id);
             ViewBag.IsLike = like != null;
             if (userId != null)
@@ -265,7 +269,7 @@ namespace RentWise.Controllers
         [HttpPost]
         [Authorize]
         [AllowAnonymous]
-        public ActionResult Book(string ProductId, int ProductQuantity, DateTime StartDate, DateTime EndDate, int TotalPrice, string AgentId, string Message)
+        public async Task<ActionResult> Book(string ProductId, int ProductQuantity, DateTime StartDate, DateTime EndDate, int TotalPrice, string AgentId, string Message)
         {
             string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (userId == null)
@@ -279,6 +283,7 @@ namespace RentWise.Controllers
                     Success = false
                 });
             }
+            IdentityUser user = await _userManager.FindByIdAsync(userId);
             OrdersModel model = new()
             {
                 ProductId = ProductId,
@@ -307,6 +312,13 @@ namespace RentWise.Controllers
             _unitOfWork.Order.Add(model);
             _unitOfWork.Chat.Add(chat);
             _unitOfWork.Save();
+            ProductModel product = _unitOfWork.Product.Get(u=>u.ProductId == ProductId);
+            AgentRegistrationModel agent = _unitOfWork.AgentRegistration.Get(u=>u.Id == product.AgentId,"User");
+            string emailContentClient = SharedFunctions.EmailContent(usersDetailsModel.Username, 1, product.Name,model.ProductQuantity, TotalPrice);
+            string emailContentAgent = SharedFunctions.EmailContent(agent.FirstName, 2, product.Name, model.ProductQuantity, model.TotalAmount);
+            SharedFunctions.SendEmail(user.UserName, "Reservation has been made", emailContentClient);
+            SharedFunctions.SendEmail(agent.User.UserName, "Reservation has been made", emailContentAgent);
+            _hubContext.Clients.All.SendAsync("ReceiveMessage", AgentId, "Reservation has been made");
             return Json(new
             {
                 StatusCode = (int)HttpStatusCode.OK,
@@ -350,10 +362,12 @@ namespace RentWise.Controllers
                 _unitOfWork.Chat.Add(chat);
             order.UpdatedAt = DateTime.Now;
             _unitOfWork.Order.Update(order);
-            AgentRegistrationModel agent = _unitOfWork.AgentRegistration.Get(u => u.Id == order.AgentId);
+            AgentRegistrationModel agent = _unitOfWork.AgentRegistration.Get(u => u.Id == order.AgentId, "User");
             agent.PayWithCard += order.TotalAmount;
             agent.UpdatedAt = DateTime.Now;
                 _unitOfWork.AgentRegistration.Update(agent);
+            string emailContentAgent = SharedFunctions.EmailContent(agent.FirstName, 5, order.Product.Name, order.ProductQuantity, order.TotalAmount);
+            SharedFunctions.SendEmail(agent.User.UserName, "Payment has  been made for Reservation", emailContentAgent);
             }
             _unitOfWork.Save();
             TempData["Success"] = "Payment for order no"+ orderId + "was successful";
@@ -377,6 +391,8 @@ namespace RentWise.Controllers
                 });
             }
             OrdersModel order = _unitOfWork.Order.Get(u => u.OrderId == orderId, "Product");
+            ProductModel product = _unitOfWork.Product.Get(u => u.ProductId == order.ProductId, "Agent");
+            AgentRegistrationModel agent = _unitOfWork.AgentRegistration.Get(u => u.Id == product.AgentId,"User");
             Random random = new Random();
             int randomNumber = random.Next(1, 101);
             string reference = order.OrderId.ToString() + "-RENTWISE-" + randomNumber;
@@ -387,6 +403,8 @@ namespace RentWise.Controllers
                 order.UpdatedAt = DateTime.Now;
                 _unitOfWork.Order.Update(order);
                 _unitOfWork.Save();
+                string emailContentAgent = SharedFunctions.EmailContent(agent.FirstName, 6, order.Product.Name, order.ProductQuantity, order.TotalAmount);
+                SharedFunctions.SendEmail(agent.User.UserName, "Payment with cash", emailContentAgent);
                 return Json(new
                 {
                     StatusCode = (int)HttpStatusCode.OK,

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace RentWise.Models
 {
-    public class ContactAdminModel
+    public class ContactAdminModel:DefaultModel
     {
         [Key]
         public int Id { get; set; }

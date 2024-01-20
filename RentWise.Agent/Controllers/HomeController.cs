@@ -53,7 +53,7 @@ namespace RentWise.Agent.Controllers
                     ModelState.AddModelError("", errorMessage); // Add errors back to ModelState
                 }
             }
-
+            ViewBag.Categories = Lookup.Categories;
             return View(model);
         }
 

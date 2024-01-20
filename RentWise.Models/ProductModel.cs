@@ -17,20 +17,13 @@ namespace RentWise.Models
         [StringLength(2000, ErrorMessage = "Description cannot exceed 2000 characters")]
         public string Description { get; set; }
         [Key]
-        public string ProductId { get; set; } = Guid.NewGuid().ToString();
+        public string ProductId { get; set; }
         [Range(0, int.MaxValue, ErrorMessage = "The daily rental price must be higher than zero")]
         [Display(Name = "Price per day")]
         public int PriceDay { get; set; } = 0;
-        [Range(0, int.MaxValue, ErrorMessage = "The weekend rental price must be higher than zero")]
-        [Display(Name = "Price per weekend")]
-        public int PriceWeekend { get; set; } = 0;
-        [Range(0, int.MaxValue, ErrorMessage = "The weekly rental price must be higher than zero")]
-        [Display(Name = "Price per week")]
-        public int PriceWeek { get; set; } = 0;
         [NotMapped]
         [Display(Name = "Main Image")]
         public string? MainImage { get; set; }
-        public int NoOfImages { get; set; }
         public string? Includes { get; set; }
         public string? Rules { get; set; }
         public DateTime RegistrationDate { get; set; } = DateTime.Now;

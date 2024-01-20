@@ -66,3 +66,34 @@ function sendMessage(receipient, messageInput) {
         }
     })
 }
+
+const connection = new signalR.HubConnectionBuilder()
+    .withUrl("/signalhub")
+    .build();
+
+connection.on("ReceiveMessage", (user, message) => {
+    const userId = $('.user-id').val()
+    if (userId == user || user == "all") { 
+    if ('Notification' in window) {
+        Notification.requestPermission().then(function (permission) {
+            if (permission === 'granted') {
+                // Create a notification
+                var notification = new Notification(message, {
+                    body: 'This is a notification message.',
+                    icon: 'https://rentwisegh.com/img/logo.png'
+                });
+                //notification.onclick = function () {
+                //    console.log('Notification clicked!');
+                //};
+            } else {
+                console.warn('Notification permission denied');
+            }
+        });
+    } else {
+        console.warn('Notification API not supported');
+    }
+    }
+
+});
+
+connection.start().catch(err => console.error(err));

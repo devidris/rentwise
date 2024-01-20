@@ -65,6 +65,7 @@
             <input asp-for="@Model.Longitude" class="longitude" hidden />
             <input asp-for="@Model.State" class="state" hidden />
             <input asp-for="@Model.Country" class="country" hidden />
+            <button class="btn btn-primary" onclick="chooseCurrentLocation()">Choose current location</button>
         <span asp-validation-for="@Model.StoreAddress" class="text-danger"></span>
     </div>
     <div class="form-floating mb-3">
@@ -99,7 +100,45 @@
 }
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
+
+    document.addEventListener('DOMContentLoaded', getLatLng());
+function chooseCurrentLocation() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                const userLocation = {
+                    lat: position.coords.latitude,
+                    lng: position.coords.longitude
+                };
+                getAddress(userLocation.lat, userLocation.lng);
+            },
+            (error) => {
+                // Error callback
+                console.error("Error getting user location:", error.message);
+            }
+        );
+    } else {
+        alert("Geolocation is not supported by your browser.");
+    }
+}
+
+function getAddress(lat, lng) {
+    const geocoder = new google.maps.Geocoder();
+
+    geocoder.geocode({ 'location': { lat, lng } }, (results, status) => {
+        if (status === 'OK') {
+            if (results[0]) {
+                document.getElementById('autocomplete-input').value = results[0].formatted_address;
+                getLatLng()
+            } else {
+                console.error('No results found');
+            }
+        } else {
+            console.error('Geocoder failed due to: ' + status);
+        }
+    });
+}
+function getLatLng() {
         const slugInput = document.getElementById('slugInput');
         const slugDisplay = document.getElementById('slugDisplay');
         slugDisplay.textContent = "https://www.rentwise.com/store/" + slugInput.value;
@@ -157,6 +196,5 @@
                 });
 
         }
-    });
-
+    }
 </script>

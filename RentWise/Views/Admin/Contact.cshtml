@@ -5,6 +5,10 @@
         <a asp-controller="Admin" asp-action="Index" class="btn btn-primary text-decoration-none">User Details</a>
     </div>
     <h1>Contacts</h1>
+    <div class="d-flex flex-wrap my-3 gap-3">
+        <button class="btn btn-primary" onclick="openReply('All','All')">Send Email To All Registered User</button>
+        <button class="btn btn-primary" onclick="openModal('notificationModal')">Send Notification to Everyone</button>
+    </div>
     <div class="table-responsive">
         <table class="table">
             <thead class="table-primary">
@@ -13,6 +17,7 @@
                     <th scope="col">Full Name</th>
                     <th scope="col">Email</th>
                     <th scope="col">Message</th>
+                    <th scope="col">Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -27,10 +32,79 @@
                         <td>@item.FirstName @item.LastName</td>
                         <td>@item.Email</td>
                         <td>@item.Message</td>
+                        <td>
+                            @if (item.Enabled)
+                            {
+                                <button class="btn btn-primary" onclick="openReply('@item.Email','@item.FirstName','@item.Id')">Reply Email</button>
+                            } else
+                            {
+                                <span>Reply Sent</span>
+                            }
+                        </td>
                     </tr>
                     serialNumber++;
                 }
             </tbody>
         </table>
     </div>
+    <div class="modal fade" id="replyModal" tabindex="-1" role="dialog" aria-labelledby="replyModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="replyModalLabel">Reply to Email</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="closeModal('replyModal')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Email: <span id="emailInPopup"></span></p>
+                    <form id="replyForm" asp-controller="Admin" asp-action="ReplyEmail">
+                        <input class="emailInPopup" name="email" hidden />
+                        <input class="Id" name="Id" hidden />
+                        <input class="name" name="name" hidden />
+                        <div class="form-group">
+                            <label for="header">Header:</label>
+                            <input type="text" class="form-control" id="header" name="header" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="body">Body:</label>
+                            <textarea class="form-control" id="body" name="body" rows="5" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Send Reply</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="notificationModal" tabindex="-1" role="dialog" aria-labelledby="notificationModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="replyModalLabel">Send Notification</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="closeModal('notificationModal')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="notificationForm" asp-controller="Admin" asp-action="SendNotificationToAll">
+                        <div class="form-group">
+                            <label for="body">Message:</label>
+                            <input class="form-control" id="body" name="message" rows="5" />
+                        </div>
+                        <button type="submit" class="btn btn-primary">Send Notification</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
+<script>
+    function openReply(email,firstname,id){
+        $('#emailInPopup').text(email)
+        $('.emailInPopup').val(email)
+        $('.Id').val(id)
+        $('.name').val(firstname)
+        openModal('replyModal')
+    }
+</script>

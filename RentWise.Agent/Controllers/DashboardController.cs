@@ -176,7 +176,7 @@ namespace RentWise.Agent.Controllers
         public IActionResult ApproveOrReject(int Id,int LkpStatus)
         {
             string UserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            OrdersModel order = _unitOfWork.Order.Get(u => u.OrderId == Id && u.AgentId == UserId);
+            OrdersModel order = _unitOfWork.Order.Get(u => u.OrderId == Id && u.AgentId == UserId,"Product");
             if (order != null)
             {
                 UsersDetailsModel usersDetailsModel = _unitOfWork.UsersDetails.Get(u=>u.Id == order.UserId);
@@ -189,10 +189,16 @@ namespace RentWise.Agent.Controllers
                     _unitOfWork.Save();
                 }
                 string Message = "Your order has been rejected";
+                string emailContentClient = String.Empty;
                 if (Id == 2)
                 {
                   Message = "Your order has been accepted";
-                }  
+                    emailContentClient = SharedFunctions.EmailContent(usersDetailsModel.Username, 3, order.Product.Name, order.ProductQuantity, order.TotalAmount);
+                }   else
+                {
+                    emailContentClient = SharedFunctions.EmailContent(usersDetailsModel.Username, 4, order.Product.Name, order.ProductQuantity, order.TotalAmount);
+                }
+                    SharedFunctions.SendEmail(usersDetailsModel.Username, "There is an update on your Reservation", emailContentClient);
                 ChatModel chat = new()
                 {
                     FromUserId = order.AgentId,
@@ -210,9 +216,11 @@ namespace RentWise.Agent.Controllers
             TempData["Action"] = 4;
             return RedirectToAction("Index","Dashboard");
         }
-        public IActionResult PaymentReceived(int Id)
+        public async Task<IActionResult> PaymentReceived(int Id)
         {
             string UserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            IdentityUser user = await _userManager.FindByIdAsync(UserId);
+            UsersDetailsModel usersDetails = _unitOfWork.UsersDetails.Get(u=>u.Id == UserId);
             OrdersModel order = _unitOfWork.Order.Get(u => u.OrderId == Id && u.AgentId == UserId);
             if (order != null)
             {
@@ -224,6 +232,7 @@ namespace RentWise.Agent.Controllers
                     Message = Message,
                     IsOrder = true,
                 };
+               
 
                 _unitOfWork.Chat.Add(chat);
                 order.LkpStatus = 4;
@@ -235,6 +244,8 @@ namespace RentWise.Agent.Controllers
                 agent.UpdatedAt = DateTime.Now;
                 _unitOfWork.AgentRegistration.Update(agent);
                 _unitOfWork.Save();
+                string emailContentClient = SharedFunctions.EmailContent(usersDetails.Username, 7, order.Product.Name, order.ProductQuantity, order.TotalAmount);
+                SharedFunctions.SendEmail(user.UserName, "Payment has  been recieved for Reservation", emailContentClient);
             }
             TempData["Action"] = 4;
             return RedirectToAction("Index", "Dashboard");
