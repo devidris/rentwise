@@ -1,4 +1,6 @@
-﻿@using Microsoft.Extensions.Options;
+﻿@using Microsoft.AspNetCore.Identity;
+@using Microsoft.Extensions.Options;
+@using System.Security.Claims;
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -23,6 +25,13 @@
         </div>
     </main>
     @inject IOptions<RentWiseConfig> _config;
+    @inject SignInManager<IdentityUser> SignInManager
+    @inject UserManager<IdentityUser> UserManager
+
+    @{
+        string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+    }
+    <input value="@userId" class="user-id" hidden />
     <footer class="bg-primary p-md-5 py-4 text-white text-center">
         <div class="container-fluid">
             <div class="row">
@@ -45,7 +54,7 @@
                         @{
                             string agentRegistrationLink = $"{_config.Value.AgentWebsiteLink}/Home/Index";
                         }
-                        <li><a asp-controller="Auth" asp-action="Register" class="link-light text-decoration-none fs-5">Register as Cusotmer</a></li>
+                        <li><a asp-controller="Auth" asp-action="Register" class="link-light text-decoration-none fs-5">Register as Customer</a></li>
                         <li><a href="@agentRegistrationLink" class="link-light text-decoration-none fs-5">Become an Agent</a></li>
                         <li><a asp-controller="Auth" asp-action="Login" class="link-light text-decoration-none fs-5">Login</a></li>
                     </ul>
@@ -58,12 +67,14 @@
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js" asp-append-version="true"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/3.1.9/signalr.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCSk8XumgpnSn3AcgoPqQm_zZwrq8Ll6UY&libraries=places"></script>
     <script src="https://cdn.jsdelivr.net/npm/@@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jcarousel/0.3.6/jquery.jcarousel.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.15.7/dist/sweetalert2.all.min.js"></script>
+
 
 
     @await RenderSectionAsync("Scripts", required: false)

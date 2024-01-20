@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using RentWise.DataAccess.Repository;
@@ -13,6 +14,7 @@ using RestSharp;
 using System.Net;
 using System.Security.Claims;
 using System.Text;
+using static Org.BouncyCastle.Crypto.Engines.SM2Engine;
 
 namespace RentWise.Controllers
 {
@@ -21,11 +23,13 @@ namespace RentWise.Controllers
         private readonly IUnitOfWork _unitOfWork;
         private readonly IOptions<RentWiseConfig> _config;
         private readonly UserManager<IdentityUser> _userManager;
-        public StoreController(IUnitOfWork unitOfWork, IOptions<RentWiseConfig> config, UserManager<IdentityUser> userManager)
+        private readonly Microsoft.AspNetCore.SignalR.IHubContext<SignalRHub> _hubContext;
+        public StoreController(IUnitOfWork unitOfWork, IOptions<RentWiseConfig> config, UserManager<IdentityUser> userManager, Microsoft.AspNetCore.SignalR.IHubContext<SignalRHub> hubContext)
         {
             _unitOfWork = unitOfWork;
             _config = config;
             _userManager = userManager;
+            _hubContext = hubContext;
         }
         public async Task<IActionResult> Index(int Id = 0, string? Sort = null, string? Name = null, string? PriceRange = null, string? MaxDay = null, double Lat = 0, double Lng = 0)
         {
@@ -314,6 +318,7 @@ namespace RentWise.Controllers
             string emailContentAgent = SharedFunctions.EmailContent(agent.FirstName, 2, product.Name, model.ProductQuantity, model.TotalAmount);
             SharedFunctions.SendEmail(user.UserName, "Reservation has been made", emailContentClient);
             SharedFunctions.SendEmail(agent.User.UserName, "Reservation has been made", emailContentAgent);
+            _hubContext.Clients.All.SendAsync("ReceiveMessage", AgentId, "Reservation has been made");
             return Json(new
             {
                 StatusCode = (int)HttpStatusCode.OK,

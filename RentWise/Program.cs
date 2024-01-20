@@ -29,7 +29,7 @@ namespace RentWise
                                       .AllowAnyHeader()
                                       .AllowAnyMethod());
             });
-
+            builder.Services.AddSignalR();
             builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
             //builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<ApplicationDbContext>();
             builder.Services.AddScoped<IEmailSender, EmailSender>();
@@ -71,7 +71,7 @@ namespace RentWise
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
-
+             app.MapHub<SignalRHub>("/signalhub");
             app.Run();
 
             void SeedDatabase()

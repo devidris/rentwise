@@ -157,7 +157,7 @@ function bookNow() {
         Swal.fire('Maximum rental days exceded',$('.maxRentalDay').val() + " day(s) is the maximum allowed rental date",'error')
         return
     }
-    const orderMessage = "Pleaced an order for " + noOfProduct + " " + $('.product-name').val() + " product(s) for " + days + " day(s) at $" + totalPrice + " from " + $('.start-date').text() + " to " + $('.end-date').text() + "."
+    const orderMessage = "Pleaced a reservation for " + noOfProduct + " " + $('.product-name').val() + " product(s) for " + days + " day(s) at ₵" + totalPrice + " from " + $('.start-date').text() + " to " + $('.end-date').text() + "."
     const alertMessage = "You are about to place an order for " + noOfProduct + " " + $('.product-name').val() + " product(s) for " + days + " day(s) at ₵" + totalPrice + " from " + $('.start-date').text() + " to " + $('.end-date').text() + "."
     // Show SweetAlert confirmation
     Swal.fire({

@@ -14,7 +14,7 @@ namespace RentWise.Utility
             {2, "Car Rentals"},
             {3, "Office Items/Personal Items"},
             {4, "Events/ Equipment Rentals"},
-            {5, "Sales Of Vehicles Trackers"},
+            {5, "Guest House"},
             {6, "Bill board" },
             {7,"Shot Stay Rooms" },
             {8,"Motel" },

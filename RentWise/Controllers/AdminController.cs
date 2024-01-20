@@ -1,11 +1,14 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using RentWise.DataAccess.Repository;
 using RentWise.DataAccess.Repository.IRepository;
 using RentWise.Models;
 using RentWise.Models.Identity;
 using RentWise.Utility;
+using Microsoft.AspNetCore.SignalR;
 
 namespace RentWise.Controllers
 {
@@ -14,12 +17,15 @@ namespace RentWise.Controllers
         public readonly IUnitOfWork _unitOfWork;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly Microsoft.AspNetCore.SignalR.IHubContext<SignalRHub> _hubContext;
 
-        public AdminController(IUnitOfWork unitOfWork, UserManager<IdentityUser> userManager, IWebHostEnvironment webHostEnvironment)
+
+        public AdminController(IUnitOfWork unitOfWork, UserManager<IdentityUser> userManager, IWebHostEnvironment webHostEnvironment, Microsoft.AspNetCore.SignalR.IHubContext<SignalRHub> hubContext)
         {
             _unitOfWork = unitOfWork;
             _userManager = userManager;
             _webHostEnvironment = webHostEnvironment;
+            _hubContext = hubContext;
         }
         public IActionResult Index()
         {
@@ -107,13 +113,14 @@ namespace RentWise.Controllers
             return View(contactAdmins);
         }
 
-        public async Task<IActionResult> Preview(string Id) {
-        UsersDetailsModel usersDetails = _unitOfWork.UsersDetails.Get(u=>u.Id==Id,"Agent");
-        IdentityUser user = await _userManager.FindByIdAsync(Id);
-        ViewBag.User = user;
-        string profilePicture = $"images/{usersDetails.Id}";
-        string wwwRootPath = _webHostEnvironment.WebRootPath;
-        string finalPath = Path.Combine(wwwRootPath, profilePicture);
+        public async Task<IActionResult> Preview(string Id)
+        {
+            UsersDetailsModel usersDetails = _unitOfWork.UsersDetails.Get(u => u.Id == Id, "Agent");
+            IdentityUser user = await _userManager.FindByIdAsync(Id);
+            ViewBag.User = user;
+            string profilePicture = $"images/{usersDetails.Id}";
+            string wwwRootPath = _webHostEnvironment.WebRootPath;
+            string finalPath = Path.Combine(wwwRootPath, profilePicture);
             if (Directory.Exists(finalPath))
             {
                 profilePicture = $"~/images/{usersDetails.Id}/{String.Join("", Lookup.Upload[5].Split(" "))}.png";
@@ -123,9 +130,38 @@ namespace RentWise.Controllers
                 profilePicture = "~/img/profile.png";
             }
             ViewBag.ProfilePicture = profilePicture;
-        IEnumerable<ProductModel> products = _unitOfWork.Product.GetAll(u=>u.AgentId == Id);
+            IEnumerable<ProductModel> products = _unitOfWork.Product.GetAll(u => u.AgentId == Id);
             ViewBag.Products = products;
             return View(usersDetails);
+        }
+
+        public async Task<ActionResult> SendNotificationToAll(string message)
+        {
+            _hubContext.Clients.All.SendAsync("ReceiveMessage", "all", message);
+
+            return RedirectToAction(nameof(Contact));
+        }
+        public async Task<IActionResult> ReplyEmail(string name, string email, string header, string body,int Id)
+        {
+            string emailContent = SharedFunctions.EmailContentReply(name, header, body);
+            ContactAdminModel contact = _unitOfWork.ContactAdmin.Get(u => u.Id == Id);
+            contact.Enabled = false;
+            _unitOfWork.ContactAdmin.Update(contact);
+            _unitOfWork.Save();
+            if (email == "All")
+            {
+                var users = await _userManager.Users.ToListAsync();
+                foreach (var user in users)
+                {
+                    SharedFunctions.SendEmail(user.Email, "  Message from rentwise", emailContent);
+                }
+
+            }
+            else
+            {
+                SharedFunctions.SendEmail(email, "  Message from rentwise", emailContent);
+            }
+            return RedirectToAction(nameof(Contact));
         }
     }
 
