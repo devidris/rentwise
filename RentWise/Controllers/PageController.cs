@@ -154,7 +154,7 @@ namespace RentWise.Controllers
         {
             return View();
         }
-        public IActionResult Policy()
+        public IActionResult Privacy()
         {
             return View();
         }

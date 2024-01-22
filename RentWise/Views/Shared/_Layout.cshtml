@@ -50,12 +50,12 @@
                     </ul>
                 </div>
                 <div class="col-md-4 col-sm-12  mt-sm-4">
-                    <ul>
+                    <ul class="d-flex flex-column gap-2">
                         @{
                             string agentRegistrationLink = $"{_config.Value.AgentWebsiteLink}/Home/Index";
                         }
                         <li><a asp-controller="Auth" asp-action="Register" class=" text-decoration-none fs-5 btn btn-outline-secondary">Register as Customer</a></li>
-                        <li><a href="@agentRegistrationLink" class="text-decoration-none fs-5 btn btn-outline-secondary">Become an Agent</a></li>
+                        <li><a href="@agentRegistrationLink" class="text-decoration-none fs-5 btn btn-outline-secondary link-secondary">Become an Agent</a></li>
                         <li><a asp-controller="Auth" asp-action="Login" class="text-decoration-none fs-5 btn btn-outline-secondary">Login</a></li>
                     </ul>
                 </div>
