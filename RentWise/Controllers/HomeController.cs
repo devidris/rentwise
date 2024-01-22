@@ -39,11 +39,11 @@ namespace RentWise.Controllers
                 List<ProductModel> products;
                 if (Category == 0)
                 {
-                    products = _unitOfWork.Product.GetAll(u => true, "Agent,ProductImages").ToList();
+                    products = _unitOfWork.Product.GetAll(u => u.Enabled == true, "Agent,ProductImages").ToList();
                 }
                 else
                 {
-                    products = _unitOfWork.Product.GetAll(u => u.LkpCategory == Category, "Agent,ProductImages").ToList();
+                    products = _unitOfWork.Product.GetAll(u => u.LkpCategory == Category && u.Enabled == true, "Agent,ProductImages").ToList();
                 }
                 if (Min > 0)
                 {
