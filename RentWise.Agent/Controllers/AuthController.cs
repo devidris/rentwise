@@ -159,7 +159,7 @@ namespace RentWise.Controllers
             }
             return View();
         }
-
+        
         [Authorize]
         public async Task<IActionResult> RegisterAgent(AgentRegistrationModel model, IFormFile? logo, IFormFile? nationalCard, IFormFile? profilePicture)
         {
@@ -214,14 +214,12 @@ namespace RentWise.Controllers
             {
                 ModelState.AddModelError(string.Join("", Lookup.Upload[7].Split(" ")), "Store Name is already in use.");
             }
-            if (isCreate)
-            {
-                model.Id = user.Id;
-            }
+           
             if (ModelState.IsValid)
             {
                 if (isCreate)
                 {
+                    model.Id = user.Id;
                     model.FirstName = SharedFunctions.Capitalize(model.FirstName);
                     model.LastName = SharedFunctions.Capitalize(model.LastName);
                 } else
@@ -283,6 +281,14 @@ namespace RentWise.Controllers
           .ToList();
 
             TempData["ErrorMessages"] = errorMessages; // Store the error messages in TempData
+            if(!ModelState.IsValid)
+            {
+               return RedirectToAction("Index","Home");
+            }
+            if (isCreate)
+            {
+                RedirectToAction("Login", "Auth");
+            }
             return RedirectToAction(model.ReturnAction,model.ReturnController);
         }
 

@@ -27,6 +27,41 @@ function contact() {
         message: $('.message').val()
     };
 
+    if (formData.firstName === null || formData.firstName.trim() === "") {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'First name is required. Please enter a value.'
+        });
+        return;
+    }
+
+    if (formData.lastName === null || formData.lastName.trim() === "") {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Last name is required. Please enter a value.'
+        });
+        return;
+    }
+
+    if (formData.email === null || formData.email.trim() === "") {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Email is required. Please enter a value.'
+        });
+        return;
+    }
+
+    if (formData.message === null || formData.message.trim() === "") {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Message is required. Please enter a value.'
+        });
+        return;
+    }
     $.ajax({
         type: 'POST',
         url: 'https://localhost:7192/page/ContactAdmin',
