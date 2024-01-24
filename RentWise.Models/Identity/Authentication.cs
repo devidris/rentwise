@@ -15,6 +15,10 @@ namespace RentWise.Models.Identity
 {
     public class Authentication
     {
+        [Required]
+        [Phone]
+        [Display(Name = "Phone Number")]
+        public string PhoneNumber { get; set; }tion
 
         [Required]
         [EmailAddress]
@@ -32,6 +36,7 @@ namespace RentWise.Models.Identity
         public string ConfirmPassword { get; set; }
 
         public string ReturnUrl { get; set; }
+        public string OTP { get; set; }
     }
 
     public class AuthenticationLogin
@@ -43,10 +48,6 @@ namespace RentWise.Models.Identity
         [Display(Name = "Email")]
         public string Email { get; set; }
         [Required]
-        [Phone]
-        [Display(Name = "Phone Number")]
-        public string PhoneNumber { get; set; }
-        [Required]
         [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
         [DataType(DataType.Password)]
         [Display(Name = "Password")]
@@ -56,8 +57,6 @@ namespace RentWise.Models.Identity
 
         [Display(Name = "Remember me?")]
         public bool RememberMe { get; set; }
-
-        public string OTP { get; set; }
     }
 
     public class AgentRegistrationModel : DefaultModel

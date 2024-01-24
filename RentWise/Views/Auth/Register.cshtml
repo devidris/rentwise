@@ -3,6 +3,17 @@
     <h2>Create a new account.</h2>
     <hr />
     <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+    <div class="form-floating d-flex mb-3 gap-2">
+        <input asp-for="@Model.PhoneNumber" class="form-control" aria-required="true" placeholder="+233242207779" />
+        <label asp-for="@Model.PhoneNumber" class="form-label">Phone Number</label>
+        <span asp-validation-for="@Model.PhoneNumber" class="text-danger"></span>
+        <button type="button" class="btn btn-primary" onclick="sendOtp">Get OTP</button>
+    </div>
+    <div class="form-floating mb-3">
+        <input asp-for="@Model.OTP" class="form-control" aria-required="true" placeholder="*****" />
+        <label asp-for="@Model.OTP" class="form-label">Enter OTP</label>
+        <span asp-validation-for="@Model.OTP" class="text-danger"></span>
+    </div>
     <div class="form-floating mb-3">
         <input asp-for="@Model.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
         <label asp-for="@Model.Email">Email</label>
@@ -33,4 +44,12 @@
 </form>
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script>
+        async function sendOtp() {
+            const data = await $.ajax({
+                method: "POST",
+                url: "/auth/sendotp"
+            })
+        }
+    </script>
 }
