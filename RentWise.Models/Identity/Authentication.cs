@@ -18,7 +18,7 @@ namespace RentWise.Models.Identity
         [Required]
         [Phone]
         [Display(Name = "Phone Number")]
-        public string PhoneNumber { get; set; }tion
+        public string PhoneNumber { get; set; }
 
         [Required]
         [EmailAddress]
