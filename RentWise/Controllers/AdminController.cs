@@ -9,9 +9,11 @@ using RentWise.Models;
 using RentWise.Models.Identity;
 using RentWise.Utility;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.AspNetCore.Authorization;
 
 namespace RentWise.Controllers
 {
+    [Authorize(Roles="Admin")]
     public class AdminController : Controller
     {
         public readonly IUnitOfWork _unitOfWork;
