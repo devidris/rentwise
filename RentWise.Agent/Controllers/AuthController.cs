@@ -281,13 +281,13 @@ namespace RentWise.Controllers
           .ToList();
 
             TempData["ErrorMessages"] = errorMessages; // Store the error messages in TempData
-            if(!ModelState.IsValid)
-            {
-               return RedirectToAction("Index","Home");
-            }
             if (isCreate)
             {
                 RedirectToAction("Login", "Auth");
+            }
+            if(!ModelState.IsValid)
+            {
+               return RedirectToAction("Index","Home");
             }
             return RedirectToAction(model.ReturnAction,model.ReturnController);
         }
@@ -309,5 +309,12 @@ namespace RentWise.Controllers
             }
         }
 
+        [HttpPost]
+        [AllowAnonymous]
+        public ActionResult SendOtp()
+        {
+
+            return Json( new {});
+        }
     }
 }
