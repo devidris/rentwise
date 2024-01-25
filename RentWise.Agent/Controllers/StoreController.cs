@@ -65,7 +65,8 @@ namespace RentWise.Agent.Controllers
         {
             string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             model.AgentId = userId;
-            if(model.ProductId == null)
+            string priductId = Guid.NewGuid().ToString();
+            if (model.ProductId == null)
             {
                 if (mainImage == null)
                 {
@@ -86,7 +87,7 @@ namespace RentWise.Agent.Controllers
                 {
                     string mainImageName = String.Join("", Lookup.Upload[9].Split(" ")) + ".webp";
 
-                    saveImage(model.AgentId, mainImageName, mainImage, model.ProductId);
+                    saveImage(model.AgentId, mainImageName, mainImage, priductId);
                 }
                 #endregion
 
@@ -97,7 +98,7 @@ namespace RentWise.Agent.Controllers
                     {
                         IFormFile otherImage = otherImages[i];
                         string otherImageName = Guid.NewGuid().ToString() + ".webp";
-                        saveImages(model.AgentId, otherImageName, otherImage, model.ProductId);
+                        saveImages(model.AgentId, otherImageName, otherImage, priductId);
                     }
                 }
                 #endregion
@@ -113,7 +114,7 @@ namespace RentWise.Agent.Controllers
                     _unitOfWork.Product.Update(model);
                 } else
                 {
-                    model.ProductId = Guid.NewGuid().ToString();
+                    model.ProductId = priductId;
                     _unitOfWork.Product.Add(model);
                 }
                 _unitOfWork.Save();

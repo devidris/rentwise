@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using RentWise.Models;
@@ -9,6 +10,7 @@ using System.Diagnostics;
 
 namespace RentWise.Agent.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
         private readonly SignInManager<IdentityUser> _signInManager;
@@ -24,15 +26,11 @@ namespace RentWise.Agent.Controllers
 
         public async Task<IActionResult> Index()
         {
-            if (!_signInManager.IsSignedIn(User))
-            {
-                return RedirectToAction("Register", "Auth");
-            }
-
-
             IdentityUser user = await _userManager.GetUserAsync(User);
-            bool isUser = await _userManager.IsInRoleAsync(user, Lookup.Roles[3]);
-            if (!isUser)
+            bool isUserAdminOrAgent = await _userManager.IsInRoleAsync(user, Lookup.Roles[1]) ||
+                           await _userManager.IsInRoleAsync(user, Lookup.Roles[2]);
+
+            if (isUserAdminOrAgent)
             {
                 return RedirectToAction("Index", "Store");
             }
