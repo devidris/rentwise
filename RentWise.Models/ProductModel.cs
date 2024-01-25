@@ -17,7 +17,7 @@ namespace RentWise.Models
         [StringLength(2000, ErrorMessage = "Description cannot exceed 2000 characters")]
         public string Description { get; set; }
         [Key]
-        public string ProductId { get; set; }
+        public string ? ProductId { get; set; }
         [Range(0, int.MaxValue, ErrorMessage = "The daily rental price must be higher than zero")]
         [Display(Name = "Price per day")]
         public int PriceDay { get; set; } = 0;
