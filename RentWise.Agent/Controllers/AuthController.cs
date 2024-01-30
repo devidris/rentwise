@@ -158,6 +158,11 @@ namespace RentWise.Controllers
 
         public async Task<IActionResult> Login(AuthenticationLogin model)
         {
+            UsersDetailsModel usersDetailsModel = _unitOfWork.UsersDetails.Get(u => u.PhoneNumber == model.Email);
+            if (usersDetailsModel != null)
+            {
+                model.Email = usersDetailsModel.Email;
+            }
 
             if (ModelState.IsValid)
             {
