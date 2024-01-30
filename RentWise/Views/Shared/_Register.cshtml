@@ -50,24 +50,22 @@
         </div>
     </form>
 </div>
-@section Scripts {
-    <partial name="_ValidationScriptsPartial" />
     <script>
         async function sendOtp(type) {
             const value = $('.' + type).val()
             if (!value || value == "") {
-                toastr.error(value + "cannot be empty", "Error")
+                toastr.error("Please input a phone number", "Error")
                 return
             }
             const data = await $.ajax({
                 method: "POST",
                 url: "/auth/sendotp?type=" + type + "&value=" + value
             })
+            console.log(data)
             if (data.success) {
                 toastr.success("Success", "Otp sent successfully")
             }
         }
     </script>
-}
 
 
