@@ -349,9 +349,11 @@ namespace RentWise.Controllers
             order.Paid = true;
             order.LkpStatus = 4;
             string UserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            AgentRegistrationModel agent = _unitOfWork.AgentRegistration.Get(u => u.Id == order.AgentId,"User");
+            string agentPhoneNumber = agent.PhoneNumber;
             if (order != null)
             {
-                string Message = "Payment received by renter";
+                string Message = "Payment received by renter, contact renter on"+  agentPhoneNumber;
                 ChatModel chat = new()
                 {
                     FromUserId = order.AgentId,
@@ -362,7 +364,6 @@ namespace RentWise.Controllers
                 _unitOfWork.Chat.Add(chat);
             order.UpdatedAt = DateTime.Now;
             _unitOfWork.Order.Update(order);
-            AgentRegistrationModel agent = _unitOfWork.AgentRegistration.Get(u => u.Id == order.AgentId, "User");
             agent.PayWithCard += order.TotalAmount;
             agent.UpdatedAt = DateTime.Now;
                 _unitOfWork.AgentRegistration.Update(agent);
