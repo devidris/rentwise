@@ -221,12 +221,11 @@ namespace RentWise.Agent.Controllers
             string UserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             IdentityUser user = await _userManager.FindByIdAsync(UserId);
             UsersDetailsModel usersDetails = _unitOfWork.UsersDetails.Get(u=>u.Id == UserId);
-            OrdersModel order = _unitOfWork.Order.Get(u => u.OrderId == Id && u.AgentId == UserId);
-            AgentRegistrationModel agent = _unitOfWork.AgentRegistration.Get(u => u.Id == order.AgentId, "User");
-            string agentPhoneNumber = agent.PhoneNumber;
+            OrdersModel order = _unitOfWork.Order.Get(u => u.OrderId == Id && u.AgentId == UserId,"Product");
+            AgentRegistrationModel agent = _unitOfWork.AgentRegistration.Get(u => u.Id == order.AgentId);
             if (order != null)
             {
-                string Message = "Payment received by renter, contact renter on"+  agentPhoneNumber;
+                string Message = "Payment received by renter, contact renter on"+ agent.PhoneNumber;
                 ChatModel chat = new()
                 {
                     FromUserId = order.AgentId,

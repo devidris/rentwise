@@ -105,10 +105,10 @@
     </div>
     @if (TempData["Success"] != null)
     {
-        <input value="@TempData["Success"]" class="status" />
+        <input value="@TempData["Success"]" class="status" hidden />
     } else
     {
-        <input value="0" class="status" />
+        <input value="0" class="status" hidden />
     }
 
 </div>

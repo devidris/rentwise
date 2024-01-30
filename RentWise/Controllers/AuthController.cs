@@ -67,7 +67,11 @@ namespace RentWise.Controllers
         public async Task<IActionResult> Register(Authentication model)
         {
             OtpVerification phoneOtp = _unitOfWork.Otp.Get(u => u.Value == model.PhoneNumber && u.OTP == model.NumberOTP);
-            OtpVerification emailOtp = _unitOfWork.Otp.Get(u => u.Value == model.PhoneNumber && u.OTP == model.NumberOTP);
+            UsersDetailsModel usersDetails = _unitOfWork.UsersDetails.Get(u => u.PhoneNumber == model.PhoneNumber);
+            if (usersDetails != null)
+            {
+                ModelState.AddModelError(string.Empty, "Phone number has been used to register an account");
+            }
 
             if (phoneOtp == null)
             {
@@ -361,22 +365,26 @@ namespace RentWise.Controllers
 
                     var response = await client.PostAsync(request);
                 }
-                if(type == "email" && _webHostEnvironment.IsProduction())
+                if (type == "email" && _webHostEnvironment.IsProduction())
                 {
-                    SharedFunctions.SendEmail(value,"Rentwise Registration Token",message,false);
+                    SharedFunctions.SendEmail(value, "Rentwise Registration Token", message, false);
                 }
-                OtpVerification otpVerification = new OtpVerification
+
+                OtpVerification oldOtpVerification = _unitOfWork.Otp.Get(u => u.Value == value);
+                if (oldOtpVerification != null)
                 {
-                    Value = value,
-                    OTP = otp,
-                };
-                OtpVerification oldOtpVerification = _unitOfWork.Otp.Get(u=>u.Value == value);
-                if(oldOtpVerification != null)
+                    oldOtpVerification.Value = value;
+                    oldOtpVerification.OTP = otp;
+                    oldOtpVerification.UpdatedAt = DateTime.Now;
+                    _unitOfWork.Otp.Update(oldOtpVerification);
+                }
+                else
                 {
-                    otpVerification.UpdatedAt = DateTime.Now;
-                    _unitOfWork.Otp.Update(otpVerification);
-                } else
-                {
+                    OtpVerification otpVerification = new OtpVerification
+                    {
+                        Value = value,
+                        OTP = otp,
+                    };
                     _unitOfWork.Otp.Add(otpVerification);
                 }
                 _unitOfWork.Save();

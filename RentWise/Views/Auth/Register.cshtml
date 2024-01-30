@@ -49,7 +49,7 @@
         async function sendOtp(type) {
             const value = $('.'+type).val()
             if (!value || value == "") {
-                toastr.error(value + "cannot be empty", "Error")
+                toastr.error("Please input a phone number", "Error")
                 return
             }
             const data = await $.ajax({
