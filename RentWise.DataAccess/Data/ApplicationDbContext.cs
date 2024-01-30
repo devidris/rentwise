@@ -32,6 +32,8 @@ public class ApplicationDbContext : IdentityDbContext<IdentityUser>
 
     public DbSet<WithdrawalHistoryModel> WithdrawalHistories { get; set; }
     public DbSet<ProductImageModel> ProductImages { get; set; }
+
+    public DbSet<OtpVerification> OtpVerifications { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);

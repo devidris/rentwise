@@ -737,6 +737,20 @@ namespace RentWise.Utility
 
         return content;
     }
+        public static string GenerateOTP(int length = 6)
+        {
+            const string characters = "0123456789";
+            Random random = new Random();
+
+            char[] otpArray = new char[length];
+            for (int i = 0; i < length; i++)
+            {
+                otpArray[i] = characters[random.Next(characters.Length)];
+            }
+
+            return new string(otpArray);
+        }
+
     }
 
 }

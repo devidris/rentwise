@@ -20,6 +20,8 @@ namespace RentWise.DataAccess.Repository.IRepository
 
         IProductImageRepository ProductImage { get; }
         IWithdrawalHistoryRepository WithdrawalHistory { get; }
+
+        IOtpRepository Otp { get; }
         void Save();
     }
 }
