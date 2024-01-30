@@ -28,6 +28,8 @@ namespace RentWise.DataAccess.Repository
 
         public IWithdrawalHistoryRepository WithdrawalHistory { get; private set; }
 
+        public IOtpRepository Otp { get; private set; }
+
         public UnitOfWork(ApplicationDbContext db)
         {
             _db = db;
@@ -41,6 +43,7 @@ namespace RentWise.DataAccess.Repository
             ContactAdmin = new ContactAdminRepository(_db);
             ProductImage = new ProductImageRepository(_db);
             WithdrawalHistory = new WithdrawalHistoryRepository(_db);
+            Otp = new OtpRepository(_db);
         }
 
         public void Save()

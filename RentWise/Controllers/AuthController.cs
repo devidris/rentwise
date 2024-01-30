@@ -13,6 +13,9 @@ using Microsoft.Extensions.Options;
 using RentWise.Models;
 using Microsoft.AspNetCore.Hosting;
 using RentWise.DataAccess.Repository.IRepository;
+using RestSharp;
+using System.Net;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace RentWise.Controllers
 {
@@ -33,7 +36,7 @@ namespace RentWise.Controllers
             IUserStore<IdentityUser> userStore,
             SignInManager<IdentityUser> signInManager,
             ILogger<Authentication> logger,
-            IEmailSender emailSender, IOptions<RentWiseConfig> config, IWebHostEnvironment webHostEnvironment,IUnitOfWork unitOfWork)
+            IEmailSender emailSender, IOptions<RentWiseConfig> config, IWebHostEnvironment webHostEnvironment, IUnitOfWork unitOfWork)
 
         {
 
@@ -53,11 +56,35 @@ namespace RentWise.Controllers
             return View();
         }
 
+        private bool HasPassed10Minutes(DateTime targetDateTime)
+        {
+            TimeSpan timeDifference = DateTime.Now - targetDateTime;
+            return timeDifference.TotalMinutes >= 10;
+        }
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(Authentication model)
         {
+            OtpVerification phoneOtp = _unitOfWork.Otp.Get(u => u.Value == model.PhoneNumber && u.OTP == model.NumberOTP);
+            OtpVerification emailOtp = _unitOfWork.Otp.Get(u => u.Value == model.PhoneNumber && u.OTP == model.NumberOTP);
+
+            if (phoneOtp == null)
+            {
+                ModelState.AddModelError(string.Empty, "Phone number otp is wrong");
+            }
+            if (emailOtp == null)
+            {
+                ModelState.AddModelError(string.Empty, "Email otp is wrong");
+            }
+            if (HasPassed10Minutes(phoneOtp.UpdatedAt))
+            {
+                ModelState.AddModelError(string.Empty, "Phone number otp has expired");
+            }
+            if (HasPassed10Minutes(emailOtp.UpdatedAt))
+            {
+                ModelState.AddModelError(string.Empty, "Email otp has expired");
+            }
             if (ModelState.IsValid)
             {
                 var user = CreateUser();
@@ -72,6 +99,8 @@ namespace RentWise.Controllers
                     await _userManager.AddToRoleAsync(user, Lookup.Roles[3]);
                     UsersDetailsModel usersDetailsModel = new UsersDetailsModel
                     {
+                        Email = model.Email,
+                        PhoneNumber = model.PhoneNumber,
                         Username = model.Email.Split('@')[0],
                         Id = user.Id,
                     };
@@ -92,7 +121,7 @@ namespace RentWise.Controllers
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
             }
-           
+
             return View();
         }
 
@@ -192,14 +221,14 @@ namespace RentWise.Controllers
         {
             string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             ChangePasswordModel model = new ChangePasswordModel();
-            UsersDetailsModel usersDetails = _unitOfWork.UsersDetails.Get(u=>u.Id == userId);
+            UsersDetailsModel usersDetails = _unitOfWork.UsersDetails.Get(u => u.Id == userId);
             model.Username = usersDetails.Username;
             string profilePicture = $"images/{userId}";
             string wwwRootPath = _webHostEnvironment.WebRootPath;
             string finalPath = Path.Combine(wwwRootPath, profilePicture);
             if (Directory.Exists(finalPath))
             {
-                profilePicture = $"~/images/{userId}/{String.Join("", Lookup.Upload[5].Split(" "))}.png";
+                profilePicture = $"~/images/{userId}/{System.String.Join("", Lookup.Upload[5].Split(" "))}.png";
             }
             else
             {
@@ -216,24 +245,24 @@ namespace RentWise.Controllers
             string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             ViewBag.UserId = userId;
             UsersDetailsModel usersDetails = _unitOfWork.UsersDetails.Get(u => u.Id == userId);
-            if (_unitOfWork.UsersDetails.Get(u => u.Username == model.Username) != null && usersDetails.Username != model.Username )
+            if (_unitOfWork.UsersDetails.Get(u => u.Username == model.Username) != null && usersDetails.Username != model.Username)
             {
-                    ModelState.AddModelError("Username", "Username is already in use.");
+                ModelState.AddModelError("Username", "Username is already in use.");
             }
             if (usersDetails.Username != model.Username)
             {
                 usersDetails.Username = model.Username;
             }
-                if (ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 if (image != null)
                 {
                     #region Saving Profile Image
-                    string profileImageName = String.Join("", Lookup.Upload[5].Split(" ")) + ".png";
+                    string profileImageName = System.String.Join("", Lookup.Upload[5].Split(" ")) + ".png";
                     saveImage(userId, profileImageName, image);
                     #endregion
                 }
-               usersDetails.UpdatedAt = DateTime.Now;
+                usersDetails.UpdatedAt = DateTime.Now;
                 _unitOfWork.UsersDetails.Update(usersDetails);
                 _unitOfWork.Save();
                 string profilePicture = $"/images/{userId}/";
@@ -241,15 +270,16 @@ namespace RentWise.Controllers
                 string finalPath = Path.Combine(wwwRootPath, profilePicture);
                 if (Directory.Exists(finalPath))
                 {
-                    profilePicture = $"/images/{userId}/{String.Join("", Lookup.Upload[5].Split(" "))}.png";
-                } else
+                    profilePicture = $"/images/{userId}/{System.String.Join("", Lookup.Upload[5].Split(" "))}.png";
+                }
+                else
                 {
                     profilePicture = "~/img/profile.png";
                 }
 
                 ViewBag.ProfilePicture = profilePicture;
 
-                if(!String.IsNullOrEmpty(model.OldPassword))
+                if (!System.String.IsNullOrEmpty(model.OldPassword))
                 {
                     var user = await _userManager.GetUserAsync(User);
                     var changePasswordResult = await _userManager.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
@@ -263,11 +293,11 @@ namespace RentWise.Controllers
                     }
                     await _signInManager.RefreshSignInAsync(user);
                 }
-                TempData["ToastMessage"] = "Profile Updated Successfully";  
+                TempData["ToastMessage"] = "Profile Updated Successfully";
                 return RedirectToAction("Profile", "Auth");
             }
 
-            return RedirectToAction("Profile","Auth");
+            return RedirectToAction("Profile", "Auth");
         }
 
         public void saveImage(string userId, string fileName, IFormFile file)
@@ -304,6 +334,74 @@ namespace RentWise.Controllers
             var userToDelete = await userManager.FindByIdAsync(userId);
             var result = await userManager.DeleteAsync(userToDelete);
             return RedirectToAction("Index", "Home");
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<ActionResult> SendOtp(string type, string value)
+        {
+            try
+            {
+                string otp = SharedFunctions.GenerateOTP();
+                string message = $"Your verification code is: {otp}";
+                if (type == "number" && _webHostEnvironment.IsProduction())
+                {
+                    string endPoint = "https://api.mnotify.com/api/sms/quick";
+                    string apiKey = "uuFHV8HVMVM3gt8rlEdJhUvhS";
+                    Dictionary<string, object> data = new Dictionary<string, object>
+        {
+            { "recipient", new List<string> {value } },
+            { "sender", "Rentwise" },
+            { "message", message },
+            { "is_schedule", "false" },
+            { "schedule_date", "" }
+        };
+                    string url = $"{endPoint}?key={apiKey}";
+                    var options = new RestClientOptions(url);
+                    var client = new RestClient(options);
+                    var request = new RestRequest("");
+                    request.AddHeader("Accept", "application/json");
+                    request.AddJsonBody(data);
+
+                    var response = await client.PostAsync(request);
+                }
+                if(type == "email" && _webHostEnvironment.IsProduction())
+                {
+                    SharedFunctions.SendEmail(value,"Rentwise Registration Token",message,false);
+                }
+                OtpVerification otpVerification = new OtpVerification
+                {
+                    Value = value,
+                    OTP = otp,
+                };
+                OtpVerification oldOtpVerification = _unitOfWork.Otp.Get(u=>u.Value == value);
+                if(oldOtpVerification != null)
+                {
+                    otpVerification.UpdatedAt = DateTime.Now;
+                    _unitOfWork.Otp.Update(otpVerification);
+                } else
+                {
+                    _unitOfWork.Otp.Add(otpVerification);
+                }
+                _unitOfWork.Save();
+                return Json(new
+                {
+                    StatusCode = (int)HttpStatusCode.OK,
+                    Message = "Message Sent Successfully",
+                    Data = "Ok",
+                    Success = true
+                });
+            }
+            catch (Exception err)
+            {
+                return Json(new
+                {
+                    StatusCode = (int)HttpStatusCode.InternalServerError,
+                    Message = Lookup.ResponseMessages[1],
+                    Data = "Internal Server Error",
+                    Success = false
+                });
+            }
         }
 
     }

@@ -13,6 +13,9 @@ using System.Linq;
 using RentWise.DataAccess.Repository.IRepository;
 using Microsoft.EntityFrameworkCore;
 using RentWise.Agent;
+using RestSharp;
+using RentWise.Models;
+using System.Net;
 
 namespace RentWise.Controllers
 {
@@ -55,13 +58,35 @@ namespace RentWise.Controllers
         {
             return View();
         }
-
+        private bool HasPassed10Minutes(DateTime targetDateTime)
+        {
+            TimeSpan timeDifference = DateTime.Now - targetDateTime;
+            return timeDifference.TotalMinutes >= 10;
+        }
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(Authentication model)
         {
+            OtpVerification phoneOtp = _unitOfWork.Otp.Get(u => u.Value == model.PhoneNumber && u.OTP == model.NumberOTP);
+            OtpVerification emailOtp = _unitOfWork.Otp.Get(u => u.Value == model.PhoneNumber && u.OTP == model.NumberOTP);
 
+            if (phoneOtp == null)
+            {
+                ModelState.AddModelError(string.Empty, "Phone number otp is wrong");
+            }
+            if (emailOtp == null)
+            {
+                ModelState.AddModelError(string.Empty, "Email otp is wrong");
+            }
+            if (HasPassed10Minutes(phoneOtp.UpdatedAt))
+            {
+                ModelState.AddModelError(string.Empty, "Phone number otp has expired");
+            }
+            if (HasPassed10Minutes(emailOtp.UpdatedAt))
+            {
+                ModelState.AddModelError(string.Empty, "Email otp has expired");
+            }
             if (ModelState.IsValid)
             {
                 if (!_roleManager.RoleExistsAsync(Lookup.Roles[1]).GetAwaiter().GetResult())
@@ -81,6 +106,8 @@ namespace RentWise.Controllers
                     await _userManager.AddToRoleAsync(user, Lookup.Roles[3]);
                     UsersDetailsModel usersDetailsModel = new UsersDetailsModel
                     {
+                        Email = model.Email,
+                        PhoneNumber = model.PhoneNumber,
                         Username = model.Email.Split('@')[0],
                         Id = user.Id,
                     };
@@ -159,7 +186,7 @@ namespace RentWise.Controllers
             }
             return View();
         }
-        
+
         [Authorize]
         public async Task<IActionResult> RegisterAgent(AgentRegistrationModel model, IFormFile? logo, IFormFile? nationalCard, IFormFile? profilePicture)
         {
@@ -214,7 +241,7 @@ namespace RentWise.Controllers
             {
                 ModelState.AddModelError(string.Join("", Lookup.Upload[7].Split(" ")), "Store Name is already in use.");
             }
-           
+
             if (ModelState.IsValid)
             {
                 if (isCreate)
@@ -222,14 +249,15 @@ namespace RentWise.Controllers
                     model.Id = user.Id;
                     model.FirstName = SharedFunctions.Capitalize(model.FirstName);
                     model.LastName = SharedFunctions.Capitalize(model.LastName);
-                } else
+                }
+                else
                 {
                     model.FirstName = SharedFunctions.Capitalize(agent.FirstName);
                     model.LastName = SharedFunctions.Capitalize(agent.LastName);
                 }
                 model.StoreName = SharedFunctions.Capitalize(model.StoreName);
 
-                if(logo != null)
+                if (logo != null)
                 {
                     #region Saving Logo
                     string logoName = Lookup.Upload[1] + Path.GetExtension(logo.FileName);
@@ -237,7 +265,7 @@ namespace RentWise.Controllers
                     saveImage(model.Id, logoName, logo);
                     #endregion
                 }
-                if(nationalCard != null)
+                if (nationalCard != null)
                 {
                     #region Saving National Card
                     string nationalCardName = String.Join("", Lookup.Upload[4].Split(" ")) + Path.GetExtension(nationalCard.FileName);
@@ -245,7 +273,7 @@ namespace RentWise.Controllers
                     saveImage(model.Id, nationalCardName, nationalCard);
                     #endregion
                 }
-                if(profilePicture != null)
+                if (profilePicture != null)
                 {
                     #region Saving Profile Picture
                     string profilePictureName = String.Join("", Lookup.Upload[5].Split(" ")) + Path.GetExtension(profilePicture.FileName);
@@ -262,16 +290,17 @@ namespace RentWise.Controllers
                     IList<string> userRoles = await _userManager.GetRolesAsync(user);
                     await _userManager.AddToRoleAsync(user, Lookup.Roles[2]);
                     await _userManager.RemoveFromRoleAsync(user, Lookup.Roles[3]);
-                } else
+                }
+                else
                 {
                     TempData["Success"] = "Update Successful";
                     model.UpdatedAt = DateTime.Now;
                     _unitOfWork.AgentRegistration.Update(model);
                 }
-                    _unitOfWork.Save();
+                _unitOfWork.Save();
 
 
-                
+
                 return RedirectToAction(model.ReturnAction, model.ReturnController);
             }
             TempData.Put("Model", model);
@@ -285,11 +314,11 @@ namespace RentWise.Controllers
             {
                 RedirectToAction("Login", "Auth");
             }
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-               return RedirectToAction("Index","Home");
+                return RedirectToAction("Index", "Home");
             }
-            return RedirectToAction(model.ReturnAction,model.ReturnController);
+            return RedirectToAction(model.ReturnAction, model.ReturnController);
         }
 
         public void saveImage(string userId, string fileName, IFormFile file)
@@ -311,10 +340,72 @@ namespace RentWise.Controllers
 
         [HttpPost]
         [AllowAnonymous]
-        public ActionResult SendOtp()
+        public async Task<ActionResult> SendOtp(string type, string value)
         {
+            try
+            {
+                string otp = SharedFunctions.GenerateOTP();
+                string message = $"Your verification code is: {otp}";
+                if (type == "number" && _webHostEnvironment.IsProduction())
+                {
+                    string endPoint = "https://api.mnotify.com/api/sms/quick";
+                    string apiKey = "uuFHV8HVMVM3gt8rlEdJhUvhS";
+                    Dictionary<string, object> data = new Dictionary<string, object>
+        {
+            { "recipient", new List<string> {value } },
+            { "sender", "Rentwise" },
+            { "message", message },
+            { "is_schedule", "false" },
+            { "schedule_date", "" }
+        };
+                    string url = $"{endPoint}?key={apiKey}";
+                    var options = new RestClientOptions(url);
+                    var client = new RestClient(options);
+                    var request = new RestRequest("");
+                    request.AddHeader("Accept", "application/json");
+                    request.AddJsonBody(data);
 
-            return Json( new {});
+                    var response = await client.PostAsync(request);
+                }
+                if (type == "email" && _webHostEnvironment.IsProduction())
+                {
+                    SharedFunctions.SendEmail(value, "Rentwise Registration Token", message, false);
+                }
+                OtpVerification otpVerification = new OtpVerification
+                {
+                    Value = value,
+                    OTP = otp,
+                };
+                OtpVerification oldOtpVerification = _unitOfWork.Otp.Get(u => u.Value == value);
+                if (oldOtpVerification != null)
+                {
+                    otpVerification.UpdatedAt = DateTime.Now;
+                    _unitOfWork.Otp.Update(otpVerification);
+                }
+                else
+                {
+                    _unitOfWork.Otp.Add(otpVerification);
+                }
+                _unitOfWork.Save();
+                return Json(new
+                {
+                    StatusCode = (int)HttpStatusCode.OK,
+                    Message = "Message Sent Successfully",
+                    Data = "Ok",
+                    Success = true
+                });
+            }
+            catch (Exception err)
+            {
+                return Json(new
+                {
+                    StatusCode = (int)HttpStatusCode.InternalServerError,
+                    Message = Lookup.ResponseMessages[1],
+                    Data = "Internal Server Error",
+                    Success = false
+                });
+            }
         }
+
     }
 }

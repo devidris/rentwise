@@ -36,7 +36,8 @@ namespace RentWise.Models.Identity
         public string ConfirmPassword { get; set; }
 
         public string ReturnUrl { get; set; }
-        public string OTP { get; set; }
+        public string NumberOTP { get; set; }
+        public string EmailOTP { get; set; }
     }
 
     public class AuthenticationLogin
@@ -143,6 +144,10 @@ namespace RentWise.Models.Identity
         public int Orders { get; set; } = 0;
         public int Messages { get; set; } = 0;
         public string Username { get; set; }
+
+        public string PhoneNumber { get; set; }
+
+        public string Email { get; set; }
         [ForeignKey("Id")]
         [ValidateNever]
         public AgentRegistrationModel Agent { get; set; }
