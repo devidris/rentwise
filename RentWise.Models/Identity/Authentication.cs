@@ -37,7 +37,6 @@ namespace RentWise.Models.Identity
 
         public string ReturnUrl { get; set; }
         public string NumberOTP { get; set; }
-        public string EmailOTP { get; set; }
     }
 
     public class AuthenticationLogin
