@@ -348,7 +348,7 @@ namespace RentWise.Controllers
             {
                 string otp = SharedFunctions.GenerateOTP();
                 string message = $"Your verification code is: {otp}";
-                if (type == "number" && _webHostEnvironment.IsProduction())
+                if (_webHostEnvironment.IsProduction())
                 {
                     string endPoint = "https://api.mnotify.com/api/sms/quick";
                     string apiKey = "uuFHV8HVMVM3gt8rlEdJhUvhS";
