@@ -76,10 +76,13 @@ namespace RentWise.Controllers
             if (phoneOtp == null)
             {
                 ModelState.AddModelError(string.Empty, "Phone number otp is wrong");
-            }
+            } else
+            {
             if (HasPassed10Minutes(phoneOtp.UpdatedAt))
             {
                 ModelState.AddModelError(string.Empty, "Phone number otp has expired");
+            }
+
             }
             if (ModelState.IsValid)
             {
