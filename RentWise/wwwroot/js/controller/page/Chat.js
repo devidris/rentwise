@@ -1,6 +1,6 @@
 ﻿const fullMessage = JSON.parse($('.full-message').val());
 const chatSummaries = JSON.parse($('.chat-summaries').val());
-const userId = $('.user-id').val();
+//const userId = $('.user-id').val();
 const receipientId = $('.receipient-id').val();
 
 function displayProfiles() {

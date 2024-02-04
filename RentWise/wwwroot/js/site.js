@@ -67,9 +67,12 @@ function sendMessage(receipient, messageInput) {
     })
 }
 
+
 const connection = new signalR.HubConnectionBuilder()
     .withUrl("/signalhub")
     .build();
+
+
 
 connection.on("ReceiveMessage", (user, message) => {
     const userId = $('.user-id').val()
@@ -77,18 +80,46 @@ connection.on("ReceiveMessage", (user, message) => {
     if ('Notification' in window) {
         Notification.requestPermission().then(function (permission) {
             if (permission === 'granted') {
-                // Create a notification
-                var notification = new Notification(message, {
-                    body: 'This is a notification message.',
-                    icon: 'https://rentwisegh.com/img/logo.png'
+                var restApiKey = 'OGM0MDgxM2UtN2I4Yy00ODQyLWI2NDEtZTJiODhmYjJhMDBl';
+                var appId = 'b88de5c6-032a-4026-a52f-e61732fc390b';
+
+                var notificationData = {
+                    app_id: appId,
+                    contents: { en: message },
+                    included_segments: ['All'],
+                };
+                var notificationData = {
+                    app_id: appId,
+                    contents: { en: message },
+                    //included_segments: ['All'],
+                    "include_aliases": { "external_id": [userId] },
+                    "target_channel": "push",
+                    "headings": { "en": `You've received a notification` },
+                    "name": "Rentwise",
+                };
+
+                $.ajax({
+                    url: 'https://onesignal.com/api/v1/notifications',
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Basic ' + restApiKey,
+                    },
+                    data: JSON.stringify(notificationData),
+                    success: function (data) {
+                        console.log('Push notification sent:', data);
+                    },
+                    error: function (error) {
+                        console.error('Error sending push notification:', error);
+                    }
                 });
-                //notification.onclick = function () {
-                //    console.log('Notification clicked!');
-                //};
+
+
             } else {
                 console.warn('Notification permission denied');
             }
         });
+
     } else {
         console.warn('Notification API not supported');
     }
