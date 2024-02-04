@@ -9,6 +9,8 @@ using MimeKit;
 using MailKit;
 using MailKit.Net.Smtp;
 using System.Security.Cryptography;
+using Org.BouncyCastle.Asn1.Crmf;
+using RestSharp;
 
 namespace RentWise.Utility
 {
@@ -751,6 +753,29 @@ namespace RentWise.Utility
             return new string(otpArray);
         }
 
+        public static async Task SendPushNotification( string userId, string header, string message)
+        {
+            string restApiKey = "OGM0MDgxM2UtN2I4Yy00ODQyLWI2NDEtZTJiODhmYjJhMDBl";
+            string appId = "b88de5c6-032a-4026-a52f-e61732fc390b";
+            var notificationData = new
+            {
+                app_id = appId,
+                contents = new { en = message },
+                include_aliases = new { external_id = new[] { userId } },
+                target_channel = "push",
+                headings = new { en = header },
+                name = "Rentwise",
+            };
+
+            var options = new RestClientOptions("https://onesignal.com/api/v1/notifications");
+            var client = new RestClient(options);
+            var request = new RestRequest("");
+            request.AddHeader("Content-Type", "application/json");
+            request.AddHeader("Authorization", "Basic " + restApiKey);
+            request.AddJsonBody(notificationData);
+
+            var response = await client.PostAsync(request);
+        }
     }
 
 }

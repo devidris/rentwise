@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using RentWise.DataAccess.Repository;
@@ -246,6 +247,7 @@ namespace RentWise.Controllers
                 }
                 _unitOfWork.Chat.Add(chat);
                 _unitOfWork.Save();
+                SharedFunctions.SendPushNotification(Receipient, "You have a new message from "+ SharedFunctions.CapitalizeAllWords(usersDetailsModel.Username), Message);
                 return Json(new
                 {
                     StatusCode = (int)HttpStatusCode.OK,
@@ -319,6 +321,7 @@ namespace RentWise.Controllers
             SharedFunctions.SendEmail(user.UserName, "Reservation has been made", emailContentClient);
             SharedFunctions.SendEmail(agent.User.UserName, "Reservation has been made", emailContentAgent);
             _hubContext.Clients.All.SendAsync("ReceiveMessage", AgentId, "Reservation has been made");
+            SharedFunctions.SendPushNotification(AgentId, "Reservation has been made", Message);
             return Json(new
             {
                 StatusCode = (int)HttpStatusCode.OK,
@@ -369,6 +372,7 @@ namespace RentWise.Controllers
                 _unitOfWork.AgentRegistration.Update(agent);
             string emailContentAgent = SharedFunctions.EmailContent(agent.FirstName, 5, order.Product.Name, order.ProductQuantity, order.TotalAmount);
             SharedFunctions.SendEmail(agent.User.UserName, "Payment has  been made for Reservation", emailContentAgent);
+            SharedFunctions.SendPushNotification(agent.Id, "Reservation payment status", "Client has paid for a reservation and will soon conteact you");
             }
             _unitOfWork.Save();
             TempData["Success"] = "Payment for order no"+ orderId + "was successful";
@@ -406,6 +410,7 @@ namespace RentWise.Controllers
                 _unitOfWork.Save();
                 string emailContentAgent = SharedFunctions.EmailContent(agent.FirstName, 6, order.Product.Name, order.ProductQuantity, order.TotalAmount);
                 SharedFunctions.SendEmail(agent.User.UserName, "Payment with cash", emailContentAgent);
+                SharedFunctions.SendPushNotification(agent.Id, "Reservation payment status", "Client want to pay cash, make sure you recieve money before marking it as paid");
                 return Json(new
                 {
                     StatusCode = (int)HttpStatusCode.OK,
@@ -437,7 +442,9 @@ namespace RentWise.Controllers
                 request.AddHeader("accept", "application/json");
                 request.AddHeader("authorization", "Basic bkc2dldCRTo1YzU0NmY1YTZkNTI0Y2VkYjYzOGUzNmQxNmVlYjM5MQ==");
                 request.AddJsonBody(jsonBody, false);
-                var response = await client.PostAsync(request);
+                try
+                {
+                    var response = await client.PostAsync(request);
                 return Json(new
                 {
                     StatusCode = (int)HttpStatusCode.OK,
@@ -445,6 +452,17 @@ namespace RentWise.Controllers
                     Data = JsonConvert.SerializeObject(response),
                     Success = true
                 });
+                }
+                catch (Exception err)
+                {
+                    return Json(new
+                    {
+                        StatusCode = (int)HttpStatusCode.InternalServerError,
+                        Message = Lookup.ResponseMessages[1],
+                        Data = "Internal Server Error",
+                        Success = false
+                    });
+                }
             }
             return Json(new
             {
