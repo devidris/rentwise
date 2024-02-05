@@ -239,6 +239,7 @@ namespace RentWise.Controllers
                     Message = Message
                 };
                 UsersDetailsModel usersDetailsModel = _unitOfWork.UsersDetails.Get(u => u.Id == Receipient);
+                UsersDetailsModel usersDetailsModel2 = _unitOfWork.UsersDetails.Get(u => u.Id == userId);
                 if (usersDetailsModel != null)
                 {
                     usersDetailsModel.Messages += 1;
@@ -247,7 +248,8 @@ namespace RentWise.Controllers
                 }
                 _unitOfWork.Chat.Add(chat);
                 _unitOfWork.Save();
-                SharedFunctions.SendPushNotification(Receipient, "You have a new message from "+ SharedFunctions.CapitalizeAllWords(usersDetailsModel.Username), Message);
+                string redirectUrl = "https://rentwisegh.com/Page/Chat/"+userId;
+                SharedFunctions.SendPushNotification(Receipient, "You have a new message from "+ SharedFunctions.CapitalizeAllWords(usersDetailsModel2.Username), Message, redirectUrl);
                 return Json(new
                 {
                     StatusCode = (int)HttpStatusCode.OK,

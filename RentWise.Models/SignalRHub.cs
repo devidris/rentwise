@@ -14,5 +14,11 @@ namespace RentWise.Models
             // Broadcast the message to all clients
             await Clients.All.SendAsync("ReceiveMessage", user, message);
         }
+
+        public async Task SendToken(string user, string message)
+        {
+            // Send the message to all clients
+            //await Clients.All.SendAsync("ReceiveMessage", user, message);
+        }
     }
 }
