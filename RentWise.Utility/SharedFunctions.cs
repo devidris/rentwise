@@ -753,7 +753,7 @@ namespace RentWise.Utility
             return new string(otpArray);
         }
 
-        public static async Task SendPushNotification( string userId, string header, string message)
+        public static async Task SendPushNotification( string userId, string header, string message,string redirectUrl = "https://rentwisegh.com/Page/Chat")
         {
             string restApiKey = "OGM0MDgxM2UtN2I4Yy00ODQyLWI2NDEtZTJiODhmYjJhMDBl";
             string appId = "b88de5c6-032a-4026-a52f-e61732fc390b";
@@ -761,10 +761,13 @@ namespace RentWise.Utility
             {
                 app_id = appId,
                 contents = new { en = message },
-                include_aliases = new { external_id = new[] { userId } },
+                //include_aliases = new { external_id = new[] { userId } },
+                include_external_user_ids = new[] { userId },
+                //included_segments =  new[] { "All" } ,
                 target_channel = "push",
                 headings = new { en = header },
                 name = "Rentwise",
+                url = redirectUrl
             };
 
             var options = new RestClientOptions("https://onesignal.com/api/v1/notifications");

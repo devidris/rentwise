@@ -74,27 +74,27 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jcarousel/0.3.6/jquery.jcarousel.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.15.7/dist/sweetalert2.all.min.js"></script>
-    <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" async=""></script>
+    @* <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" async=""></script> *@
     <script defer>
         const userId = $('.user-id').val() ?? ""
-        window.OneSignalDeferred = window.OneSignalDeferred || [];
-        OneSignalDeferred.push(function (OneSignal) {
-            OneSignal.init({
-                appId: "b88de5c6-032a-4026-a52f-e61732fc390b",
-                notifyButton: {
-                    enable: false,
-                },
-                allowLocalhostAsSecureOrigin: true,
-            });
-        });
-        window.connect = async function () {
-                OneSignal.login(userId);
-                OneSignal.Notifications.requestPermission();
-        }
+        // window.OneSignalDeferred = window.OneSignalDeferred || [];
+        // OneSignalDeferred.push(function (OneSignal) {
+        //     OneSignal.init({
+        //         appId: "b88de5c6-032a-4026-a52f-e61732fc390b",
+        //         notifyButton: {
+        //             enable: false,
+        //         },
+        //         allowLocalhostAsSecureOrigin: true,
+        //     });
+        // });
+        // window.connect = async function () {
+        //         OneSignal.login(userId);
+        //         OneSignal.Notifications.requestPermission();
+        // }
 
-        setTimeout(() => {
-            window.connect()
-        },1000)
+        // setTimeout(() => {
+        //     window.connect()
+        // },1000)
     </script>
 
 
