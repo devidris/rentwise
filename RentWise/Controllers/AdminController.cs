@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace RentWise.Controllers
 {
-    [Authorize(Roles="Admin")]
+    //[Authorize(Roles="Admin")]
     public class AdminController : Controller
     {
         public readonly IUnitOfWork _unitOfWork;
