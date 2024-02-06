@@ -88,19 +88,19 @@
    <script defer>
             const userId = $('.user-id').val() ?? ""
 
-        var origin = window.location.origin;
-
             window.OneSignalDeferred = window.OneSignalDeferred || [];
             OneSignalDeferred.push(function (OneSignal) {
                 OneSignal.init({
                     appId: "b88de5c6-032a-4026-a52f-e61732fc390b"
                 });
             });
-        $('.error').val(OneSignal?true:false)
-        $('.test').val(origin)
+       try { setTimeout(() => { $('.test').val(OneSignal.User.PushSubscription.id) }, 5000) }
+       catch (err) {
+           console.log(error)
+        $('.err').val(err)
+       }
 
     </script> 
-
 
 
     @await RenderSectionAsync("Scripts", required: false)
