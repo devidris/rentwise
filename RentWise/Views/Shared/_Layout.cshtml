@@ -94,9 +94,15 @@
                     appId: "b88de5c6-032a-4026-a52f-e61732fc390b"
                 });
             });
-       try { setTimeout(() => { $('.test').val(OneSignal.User.PushSubscription.id) }, 5000) }
+       try { setTimeout(() => { 
+           $('.test').val(OneSignal.User.PushSubscription.id)
+                toastr.success(OneSignal.User.PushSubscription.id + "hello")
+       }
+           
+           , 5000) }
        catch (err) {
            console.log(error)
+           taostr.error("Error")
         $('.err').val(err)
        }
 
