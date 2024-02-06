@@ -89,6 +89,13 @@
                 allowLocalhostAsSecureOrigin: true,
             });
         });
+        setInterval(() => {
+            if(OneSignal.User.PushSubscription.id){
+        $('.test').val(OneSignal?.User.PushSubscription.id)
+            } else{
+                console.log(1)
+            }
+        },1000)
     </script>
 
 
