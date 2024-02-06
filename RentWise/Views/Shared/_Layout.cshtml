@@ -89,19 +89,15 @@
             const userId = $('.user-id').val() ?? ""
 
         var origin = window.location.origin;
-        $('.error').val(location.href)
-        $('.test').val(origin)
 
             window.OneSignalDeferred = window.OneSignalDeferred || [];
             OneSignalDeferred.push(function (OneSignal) {
                 OneSignal.init({
-                    appId: "b88de5c6-032a-4026-a52f-e61732fc390b",
-                    notifyButton: {
-                        enable: false,
-                    },
-                    allowLocalhostAsSecureOrigin: true,
+                    appId: "b88de5c6-032a-4026-a52f-e61732fc390b"
                 });
             });
+        $('.error').val(OneSignal?true:false)
+        $('.test').val(origin)
 
     </script> 
 
