@@ -87,7 +87,7 @@
     <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" async=""></script>
    <script defer>
             const userId = $('.user-id').val() ?? ""
-
+        Swal.fire("Success", userId + "hello", 'success')
             window.OneSignalDeferred = window.OneSignalDeferred || [];
             OneSignalDeferred.push(function (OneSignal) {
                 OneSignal.init({
@@ -96,13 +96,13 @@
             });
        try { setTimeout(() => { 
            $('.test').val(OneSignal.User.PushSubscription.id)
-                toastr.success(OneSignal.User.PushSubscription.id + "hello")
+                Swal.fire("Success", OneSignal.User.PushSubscription.id + "hello", 'success')
        }
            
            , 5000) }
        catch (err) {
            console.log(error)
-           taostr.error("Error")
+          Swal.fire("Error",error,'error')
         $('.err').val(err)
        }
 
