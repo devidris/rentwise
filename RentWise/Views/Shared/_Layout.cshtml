@@ -94,14 +94,14 @@
                     appId: "b88de5c6-032a-4026-a52f-e61732fc390b"
                 });
             });
+        Swal.fire("Success", userId + "hello", 'success')
        try { setTimeout(() => { 
            $('.test').val(OneSignal.User.PushSubscription.id)
                 Swal.fire("Success", OneSignal.User.PushSubscription.id + "hello", 'success')
-       }
-           
-           , 5000) }
+       }, 5000) }
        catch (err) {
            console.log(error)
+            Swal.fire("Success","hello2", 'success')
           Swal.fire("Error",error,'error')
         $('.err').val(err)
        }
