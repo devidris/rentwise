@@ -19,8 +19,7 @@
     </header>
     <main class="container-fluid">
         <div class="row">
-            <div class="col-12">
-              
+            <div class="col-12">   
                 @RenderBody()
             </div>
         </div>
@@ -93,17 +92,8 @@
                     appId: "b88de5c6-032a-4026-a52f-e61732fc390b"
                 });
             });
-        Swal.fire("Success", userId + "userId", 'success')
-       try { setTimeout(() => { 
-                Swal.fire("Success", OneSignal.User.PushSubscription.id + "OneSignal", 'success')
-           $('.test').val(OneSignal.User.PushSubscription.id)
-       }, 5000) }
-       catch (err) {
-           console.log(error)
-            Swal.fire("Success","hello2", 'success')
-          Swal.fire("Error",error,'error')
-        $('.err').val(err)
-       }
+        Swal.fire("Success", userId + "userId" + OneSignal.User.PushSubscription.id, 'success')
+
 
     </script> 
 
