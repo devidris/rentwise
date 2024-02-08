@@ -86,6 +86,7 @@
     <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" async=""></script>
    <script defer>
             const userId = $('.user-id').val() ?? ""
+        $('.test').val(location.href)
             window.OneSignalDeferred = window.OneSignalDeferred || [];
             async function oneSignalConn(){
             await OneSignalDeferred.push(async function (OneSignal) {
@@ -94,6 +95,7 @@
                 });
                 Swal.fire("Success", userId + "userId" + OneSignal.User.PushSubscription.id, 'success')
                 $('.error').val(JSON.stringify(OneSignal.User.PushSubscription))
+              
             });
             }
         oneSignalConn()
