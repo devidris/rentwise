@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="~/RentWise.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" />
+    <link rel="manifest" href="manifest.json" />
 </head>
 <body>
     <header>
@@ -93,6 +94,7 @@
                 await OneSignal.init({
                     appId: "b88de5c6-032a-4026-a52f-e61732fc390b"
                 });
+                OneSignal.Debug.setLogLevel('trace');
                 Swal.fire("Success", userId + "userId" + OneSignal.User.PushSubscription.id, 'success')
                 $('.error').val(JSON.stringify(OneSignal.User.PushSubscription))
               
