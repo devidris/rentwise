@@ -91,10 +91,11 @@
             window.OneSignalDeferred = window.OneSignalDeferred || [];
             async function oneSignalConn(){
             await OneSignalDeferred.push(async function (OneSignal) {
-                await OneSignal.init({
-                    appId: "b88de5c6-032a-4026-a52f-e61732fc390b"
-                });
                 OneSignal.Debug.setLogLevel('trace');
+                await OneSignal.init({
+                    appId: "b88de5c6-032a-4026-a52f-e61732fc390b",
+                    safari_web_id: "web.rentwisegh.com",
+                });
                 Swal.fire("Success", userId + "userId" + OneSignal.User.PushSubscription.id, 'success')
                 $('.error').val(JSON.stringify(OneSignal.User.PushSubscription))
               
