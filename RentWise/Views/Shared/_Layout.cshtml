@@ -139,10 +139,12 @@
         }
         function notification() {
             Swal.fire('success',"Succ",'success')
-            Notification.requestPermission().then(function (permission) {
+            let permission = Notification.permission;
             $('.error').val(JSON.stringify(permission))
-                console.log(permission);
-            });
+            // Notification.requestPermission().then(function (permission) {
+            // $('.error').val(JSON.stringify(permission))
+            //     console.log(permission);
+            // });
         }
     </script>
 @*   <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" async=""></script>
