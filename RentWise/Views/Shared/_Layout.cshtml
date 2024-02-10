@@ -88,13 +88,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.14.0/firebase-messaging-compat.js"></script>
 
     <script>
-        function notification() {
-            Notification.requestPermission().then(function (permission) { 
-                $('.error').val(JSON.stringify(permission))
-            });
-
-
-            return
+        function notification1() {
             // Request permission for notifications
             Notification.requestPermission().then((permission) => {
                 console.log('hello');
@@ -143,7 +137,10 @@
                 console.log('An error occurred while requesting permission:', err);
             });
         }
-
+        function notification() {
+            Swal.fire('success',"Succ",'success')
+            $('.error').val('123')
+        }
     </script>
 @*   <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" async=""></script>
    <script defer>
