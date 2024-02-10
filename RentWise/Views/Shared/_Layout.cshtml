@@ -88,24 +88,35 @@
     <script src="https://www.gstatic.com/firebasejs/9.14.0/firebase-messaging-compat.js"></script>
 
     <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyBaSMKCA0Toe3O_4LFHUxgEEDhf_-avHwY",
-            authDomain: "rent-wise-dc09f.firebaseapp.com",
-            projectId: "rent-wise-dc09f",
-            storageBucket: "rent-wise-dc09f.appspot.com",
-            messagingSenderId: "342704319982",
-            appId: "1:342704319982:web:c238396bf5ebac8aa6b2ff",
-            measurementId: "G-QYWYSJ5BTE"
-        };
-        const app = firebase.initializeApp(firebaseConfig)
-        const messaging = firebase.messaging()
-        messaging.getToken({
-            vapidKey: "BFgdWrAxoxvWLNvT1YGOxkJqiOq-fvwyROvCu1GaSYj5TuqDs_8dkjH2k0YAgMJ9zkBavcvKJvmtWhBPFVQtK5U"})
-        console.log("messaging")
-        messaging.onMessage((payload) => {
-            console.log('Message received ', payload);
+        Notification.requestPermission().then((permission) => {
+            if (permission === 'granted') {
+                $('.test').val('Notification permission granted.')
+                console.log('Notification permission granted.');
+                const firebaseConfig = {
+                    apiKey: "AIzaSyBaSMKCA0Toe3O_4LFHUxgEEDhf_-avHwY",
+                    authDomain: "rent-wise-dc09f.firebaseapp.com",
+                    projectId: "rent-wise-dc09f",
+                    storageBucket: "rent-wise-dc09f.appspot.com",
+                    messagingSenderId: "342704319982",
+                    appId: "1:342704319982:web:c238396bf5ebac8aa6b2ff",
+                    measurementId: "G-QYWYSJ5BTE"
+                };
+                const app = firebase.initializeApp(firebaseConfig)
+                const messaging = firebase.messaging()
+                messaging.getToken({
+                    vapidKey: "BFgdWrAxoxvWLNvT1YGOxkJqiOq-fvwyROvCu1GaSYj5TuqDs_8dkjH2k0YAgMJ9zkBavcvKJvmtWhBPFVQtK5U"
+                })
+                console.log("messaging")
+                messaging.onMessage((payload) => {
+                    console.log('Message received ', payload);
+                })
+                console.log("messaging")
+            } else {
+                console.log('No permission')
+                $('.test').val('No permission')
+            }
         })
-        console.log("messaging")
+      
     </script>
     <script>
         </script>
