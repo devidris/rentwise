@@ -95,10 +95,10 @@
             await OneSignalDeferred.push(async function (OneSignal) {
                 OneSignal.Debug.setLogLevel('trace');
 
-                await OneSignal.init({
-                    appId: "b88de5c6-032a-4026-a52f-e61732fc390b",
-                    safari_web_id: "web.rentwisegh.com",
-                });
+                // await OneSignal.init({
+                //     appId: "b88de5c6-032a-4026-a52f-e61732fc390b",
+                //     safari_web_id: "web.rentwisegh.com",
+                // });
 
                 OneSignal.Slidedown.promptPush({ force: true });
                 Swal.fire("Success", userId + "userId" + OneSignal.User.PushSubscription.id, 'success');
