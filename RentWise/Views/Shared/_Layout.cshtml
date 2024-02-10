@@ -89,6 +89,12 @@
 
     <script>
         function notification() {
+            Notification.requestPermission().then(function (permission) { 
+                $('.error').val(JSON.stringify(permission))
+            });
+
+
+            return
             // Request permission for notifications
             Notification.requestPermission().then((permission) => {
                 console.log('hello');
@@ -139,9 +145,7 @@
         }
 
     </script>
-    <script>
-       </script>
-  <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" async=""></script>
+@*   <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" async=""></script>
    <script defer>
             const userId = $('.user-id').val() ?? ""
         $('.test').val(location.href)
@@ -159,7 +163,7 @@
             });
             }
 
-    </script>  
+    </script>   *@
 
 
     @await RenderSectionAsync("Scripts", required: false)
