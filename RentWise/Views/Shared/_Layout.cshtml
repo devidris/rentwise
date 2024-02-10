@@ -84,88 +84,30 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jcarousel/0.3.6/jquery.jcarousel.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.15.7/dist/sweetalert2.all.min.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.14.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.14.0/firebase-messaging-compat.js"></script>
+  <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" async=""></script>
+    <script defer>
+        const userId = $('.user-id').val() ?? "";
+        $('.test').val(location.href);
 
-    <script>
-        function notification1() {
-            // Request permission for notifications
-            Notification.requestPermission().then((permission) => {
-                console.log('hello');
-                if (permission === 'granted') {
-                    $('.error').val('Notification permission granted.');
-                    console.log('Notification permission granted.');
+        window.OneSignalDeferred = window.OneSignalDeferred || [];
 
-                    // Firebase configuration
-                    const firebaseConfig = {
-                        apiKey: "AIzaSyBaSMKCA0Toe3O_4LFHUxgEEDhf_-avHwY",
-                        authDomain: "rent-wise-dc09f.firebaseapp.com",
-                        projectId: "rent-wise-dc09f",
-                        storageBucket: "rent-wise-dc09f.appspot.com",
-                        messagingSenderId: "342704319982",
-                        appId: "1:342704319982:web:c238396bf5ebac8aa6b2ff",
-                        measurementId: "G-QYWYSJ5BTE"
-                    };
-
-                    // Initialize Firebase app
-                    const app = firebase.initializeApp(firebaseConfig);
-                    const messaging = app.messaging();
-
-                    // Request token for push notifications
-                    messaging.getToken({
-                        vapidKey: "BFgdWrAxoxvWLNvT1YGOxkJqiOq-fvwyROvCu1GaSYj5TuqDs_8dkjH2k0YAgMJ9zkBavcvKJvmtWhBPFVQtK5U"
-                    }).then((currentToken) => {
-                        if (currentToken) {
-                            console.log('Token:', currentToken);
-                        } else {
-                            console.log('No registration token available. Request permission to generate one.');
-                        }
-                    }).catch((err) => {
-                        console.log('An error occurred while retrieving token:', err);
-                    });
-
-                    // Handle incoming messages
-                    messaging.onMessage((payload) => {
-                        console.log('Message received:', payload);
-                    });
-
-                } else {
-                    console.log('No permission');
-                    $('.error').val('No permission');
-                }
-            }).catch((err) => {
-                console.log('An error occurred while requesting permission:', err);
-            });
-        }
-        function notification() {
-            Swal.fire('success',"Succ",'success')
-            let permission = Notification.permission;
-            $('.error').val(JSON.stringify(permission))
-            // Notification.requestPermission().then(function (permission) {
-            // $('.error').val(JSON.stringify(permission))
-            //     console.log(permission);
-            // });
-        }
-    </script>
-@*   <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" async=""></script>
-   <script defer>
-            const userId = $('.user-id').val() ?? ""
-        $('.test').val(location.href)
-            window.OneSignalDeferred = window.OneSignalDeferred || [];
-            async function oneSignalConn(){
+        async function oneSignalConn() {
             await OneSignalDeferred.push(async function (OneSignal) {
                 OneSignal.Debug.setLogLevel('trace');
+
                 await OneSignal.init({
                     appId: "b88de5c6-032a-4026-a52f-e61732fc390b",
                     safari_web_id: "web.rentwisegh.com",
                 });
-                Swal.fire("Success", userId + "userId" + OneSignal.User.PushSubscription.id, 'success')
-                $('.error').val(JSON.stringify(OneSignal.User.PushSubscription))
-              
-            });
-            }
 
-    </script>   *@
+                OneSignal.Slidedown.promptPush({ force: true });
+                Swal.fire("Success", userId + "userId" + OneSignal.User.PushSubscription.id, 'success');
+                $('.error').val(JSON.stringify(OneSignal.User.PushSubscription));
+            });
+        }
+
+    </script>
+
 
 
     @await RenderSectionAsync("Scripts", required: false)
