@@ -84,7 +84,32 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jcarousel/0.3.6/jquery.jcarousel.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.15.7/dist/sweetalert2.all.min.js"></script>
-    <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" async=""></script>
+    <script src="https://www.gstatic.com/firebasejs/9.14.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.14.0/firebase-messaging-compat.js"></script>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyBaSMKCA0Toe3O_4LFHUxgEEDhf_-avHwY",
+            authDomain: "rent-wise-dc09f.firebaseapp.com",
+            projectId: "rent-wise-dc09f",
+            storageBucket: "rent-wise-dc09f.appspot.com",
+            messagingSenderId: "342704319982",
+            appId: "1:342704319982:web:c238396bf5ebac8aa6b2ff",
+            measurementId: "G-QYWYSJ5BTE"
+        };
+        const app = firebase.initializeApp(firebaseConfig)
+        const messaging = firebase.messaging()
+        messaging.getToken({
+            vapidKey: "BFgdWrAxoxvWLNvT1YGOxkJqiOq-fvwyROvCu1GaSYj5TuqDs_8dkjH2k0YAgMJ9zkBavcvKJvmtWhBPFVQtK5U"})
+        console.log("messaging")
+        messaging.onMessage((payload) => {
+            console.log('Message received ', payload);
+        })
+        console.log("messaging")
+    </script>
+    <script>
+        </script>
+@*     <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" async=""></script>
    <script defer>
             const userId = $('.user-id').val() ?? ""
         $('.test').val(location.href)
@@ -103,7 +128,7 @@
             }
         oneSignalConn()
 
-    </script> 
+    </script>  *@
 
 
     @await RenderSectionAsync("Scripts", required: false)
