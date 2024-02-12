@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" />
     <link rel="manifest" href="manifest.json" />
     <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
-    <script>
+@*     <script>
         window.OneSignalDeferred = window.OneSignalDeferred || [];
         OneSignalDeferred.push(function (OneSignal) {
             OneSignal.init({
@@ -25,7 +25,7 @@
                 },
             });
         });
-    </script>
+    </script> *@
 </head>
 <body>
     <header>
@@ -88,7 +88,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jcarousel/0.3.6/jquery.jcarousel.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.15.7/dist/sweetalert2.all.min.js"></script>
-    <script defer>
+  @*   <script defer>
         const userId = $('.user-id').val() ?? "";
         async function oneSignalPrompt() {
             OneSignal.Slidedown.promptPush({ force: true });
@@ -96,7 +96,7 @@
             $('.error').val(JSON.stringify(OneSignal.User.PushSubscription));
         }
 
-    </script>
+    </script> *@
 
 
 
