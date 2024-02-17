@@ -761,8 +761,8 @@ namespace RentWise.Utility
             {
                 app_id = appId,
                 contents = new { en = message },
-                //include_aliases = new { external_id = new[] { userId } },
-                include_external_user_ids = new[] { userId },
+                include_aliases = new { external_id = new[] { userId } },
+                //include_external_user_ids = new[] { userId },
                 //included_segments =  new[] { "All" } ,
                 target_channel = "push",
                 headings = new { en = header },
