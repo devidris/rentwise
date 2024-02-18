@@ -80,6 +80,16 @@
     <script>
         const userId = $('.user-id').val() ?? "rentwise";
     </script>
+    <script>
+        const beamsClient = new PusherPushNotifications.Client({
+            instanceId: '1af28678-57a9-4168-a449-f7c58300c0eb',
+        });
+
+        beamsClient.start()
+            .then(() => beamsClient.addDeviceInterest('hello'))
+            .then(() => console.log('Successfully registered and subscribed!'))
+            .catch(console.error);
+    </script>
 
 
     @await RenderSectionAsync("Scripts", required: false)
