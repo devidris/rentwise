@@ -76,28 +76,12 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jcarousel/0.3.6/jquery.jcarousel.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.15.7/dist/sweetalert2.all.min.js"></script>
-    <script src="https://js.pusher.com/beams/1.0/push-notifications-cdn.js"></script>
     <script>
         const userId = $('.user-id').val() ?? "rentwise";
     </script>
     <script>
-        const beamsClient = new PusherPushNotifications.Client({
-            instanceId: '1af28678-57a9-4168-a449-f7c58300c0eb',
-        });
-
-        beamsClient.start()
-            .then(() => beamsClient.addDeviceInterest('hello'))
-            .then(() => {
-                console.log('Successfully registered and subscribed!');
-                $('.error').val("Successfully registered and subscribed!");
-            })
-            .catch(error => {
-                console.error(error); 
-                $('.error').val(JSON.stringify(error)) 
-            });
-
+        importScripts('https://cdn.onesignal.com/sdks/OneSignalSDKWorker.js');
     </script>
-
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>
