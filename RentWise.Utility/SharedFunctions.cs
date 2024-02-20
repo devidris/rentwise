@@ -778,6 +778,101 @@ namespace RentWise.Utility
 
             var response = await client.PostAsync(request);
         }
+        public static string EmailContent(string Name, string type)
+        {
+            string header = string.Empty;
+            string body = string.Empty;
+            string buttonText = string.Empty;
+            string buttonLink = string.Empty;
+
+            if (type == "ENABLE")
+            {
+                header = "Account Status Notification";
+                if (Name != null)
+                {
+                    body = $"Dear {Name},\n\nYour account has been enabled.";
+                }
+                else
+                {
+                    body = "Dear Agent,\n\nYour account has been enabled.";
+                }
+                buttonLink = "https://agent.rentwisegh.com";
+                buttonText = "Login to Your Account";
+            }
+            else if (type == "DISABLED")
+            {
+                header = "Account Status Notification";
+                if (Name != null)
+                {
+                    body = $"Dear {Name},\n\nYour account has been disabled.";
+                }
+                else
+                {
+                    body = "Dear Agent,\n\nYour account has been disabled.";
+                }
+                body += "\n\nIf you believe this is an error or have any questions, please contact customer support.";
+                buttonLink = "https://rentwisegh.com/Page/Contact";
+                buttonText = "Contact Customer Support";
+            }
+
+            string content = @"
+<!DOCTYPE html>
+<html lang=""en"" xmlns:o=""urn:schemas-microsoft-com:office:office"" xmlns:v=""urn:schemas-microsoft-com:vml"">
+<head>
+<title></title>
+<meta content=""text/html; charset=utf-8"" http-equiv=""Content-Type""/>
+<meta content=""width=device-width, initial-scale=1.0"" name=""viewport""/>
+<link href=""https://fonts.googleapis.com/css?family=Roboto"" rel=""stylesheet"" type=""text/css""/>
+<style>
+    /* CSS styles */
+    * {
+        box-sizing: border-box;
+    }
+    body {
+        margin: 0;
+        padding: 0;
+        background-color: #FFFFFF;
+        -webkit-text-size-adjust: none;
+        text-size-adjust: none;
+    }
+</style>
+</head>
+<body>
+    <table border=""0"" cellpadding=""0"" cellspacing=""0"" class=""nl-container"" role=""presentation"" style=""mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-color: #FFFFFF;"" width=""100%"">
+        <tbody>
+            <tr>
+                <td>
+                    <table align=""center"" border=""0"" cellpadding=""0"" cellspacing=""0"" class=""row row-1"" role=""presentation"" style=""mso-table-lspace: 0pt; mso-table-rspace: 0pt;"" width=""100%"">
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <table align=""center"" border=""0"" cellpadding=""0"" cellspacing=""0"" class=""row-content stack"" role=""presentation"" style=""mso-table-lspace: 0pt; mso-table-rspace: 0pt; color: #000000; width: 600px; margin: 0 auto;"" width=""600"">
+                                        <tbody>
+                                            <tr>
+                                                <td class=""column column-1"" style=""mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-weight: 400; text-align: left; padding-bottom: 5px; padding-top: 5px; vertical-align: top; border-top: 0px; border-right: 0px; border-bottom: 0px; border-left: 0px;"" width=""100%"">
+                                                    <h2 style=""color: #333333; font-family: 'Roboto', sans-serif; font-size: 24px; line-height: 30px; font-weight: bold;"">Header: " + header + @"</h2>
+                                                    <p style=""color: #666666; font-family: 'Roboto', sans-serif; font-size: 16px; line-height: 24px;"">Body: " + body + @"</p>
+                                                    <a href=""" + buttonLink + @""" style=""background-color: #007BFF; border: none; color: white; padding: 10px 20px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; margin-top: 20px;"">" + buttonText + @"</a>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>
+";
+
+
+            return content;
+        }
+
     }
 
 }

@@ -475,6 +475,30 @@ namespace RentWise.Controllers
             });
         }
 
+        public IActionResult ModifyProduct(string Id, string type)
+        {
+            ProductModel product = _unitOfWork.Product.Get(u => u.ProductId == Id);
+            AgentRegistrationModel agent = _unitOfWork.AgentRegistration.Get(u => u.Id == product.AgentId, "User");
+            string emailContent = SharedFunctions.EmailContent(agent.User.UserName,type);
+            if (type == "ENABLE")
+            {
+                product.Enabled = true;
+                _unitOfWork.Product.Update(product);
+                SharedFunctions.SendPushNotification(product.AgentId,"Reservation has been enabled by admin", product.Name + "reservation has been enabled by admin");
+                SharedFunctions.SendEmail(agent.User.UserName, "Your list has been disabled by admin", emailContent);
+            }
+            if (type == "DISABLE")
+            {
+                product.Enabled = false;
+                _unitOfWork.Product.Update(product);
+                SharedFunctions.SendPushNotification(product.AgentId, "Reservation has been disabled by admin", product.Name + "reservation has been disabled by admin");
+                SharedFunctions.SendEmail(agent.User.UserName, "Your list has been disabled by admin", emailContent);
+            }
+            _unitOfWork.Save();
+            return RedirectToAction(nameof(Index));
+        }
+
+
     }
 
 }

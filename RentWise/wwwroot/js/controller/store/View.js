@@ -202,3 +202,22 @@ $.ajax({
 
 
 }
+function resumeProduct(id) {
+    location.href = "/Store/ModifyProduct?Id=" + id + "&type=ENABLE"
+}
+
+function pauseProduct(id) {
+    Swal.fire({
+        title: 'Are you sure?',
+        text: 'You listing will not be visible to potential client until you resume!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#FFD700',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, pause it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            location.href = "/Store/ModifyProduct?Id=" + id + "&type=DISABLE"
+        }
+    });
+}

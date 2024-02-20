@@ -140,7 +140,7 @@ namespace RentWise.Controllers
         public async Task<ActionResult> SendNotificationToAll(string message)
         {
             _hubContext.Clients.All.SendAsync("ReceiveMessage", "all", message);
-
+            SharedFunctions.SendPushNotification("All", "Message from rentwise", message);
             return RedirectToAction(nameof(Contact));
         }
         public async Task<IActionResult> ReplyEmail(string name, string email, string header, string body,int Id)
