@@ -430,7 +430,7 @@ namespace RentWise.Controllers
 
                 // Populate JSON payload from the order variable
                 // Create variables for amount, description, and reference
-                double totalAmount = order.TotalAmount;
+                double totalAmount = order.Product.PriceDay * order.ProductQuantity;
                 string description = order.Product.Description; // Adjust this based on your actual structure
                 string clientReference = reference;
                 string link = _config.Value.ClientWebsiteLink+ "/Store/Success?orderId="+order.OrderId;
@@ -442,12 +442,13 @@ namespace RentWise.Controllers
                 var client = new RestClient(options);
                 var request = new RestRequest("");
                 request.AddHeader("accept", "application/json");
-                request.AddHeader("authorization", "Basic bkc2dldCRTo1YzU0NmY1YTZkNTI0Y2VkYjYzOGUzNmQxNmVlYjM5MQ==");
+                request.AddHeader("content-type", "application/json");
+                request.AddHeader("authorization", "Basic MDB6OE84djpkNGJkNzU4YTQyZGU0NzdhYjIwMTVhMGViMmZkN2IwMg==");
                 request.AddJsonBody(jsonBody, false);
                 try
                 {
                     var response = await client.PostAsync(request);
-                return Json(new
+                    return Json(new
                 {
                     StatusCode = (int)HttpStatusCode.OK,
                     Message = "Order Placed Successfully",
