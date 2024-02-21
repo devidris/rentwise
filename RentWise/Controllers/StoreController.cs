@@ -374,7 +374,7 @@ namespace RentWise.Controllers
                 _unitOfWork.AgentRegistration.Update(agent);
             string emailContentAgent = SharedFunctions.EmailContent(agent.FirstName, 5, order.Product.Name, order.ProductQuantity, order.TotalAmount);
             SharedFunctions.SendEmail(agent.User.UserName, "Payment has  been made for Reservation", emailContentAgent);
-            SharedFunctions.SendPushNotification(agent.Id, "Reservation payment status", "Client has paid for a reservation and will soon conteact you");
+            SharedFunctions.SendPushNotification(agent.Id, "Reservation payment status", "Client has paid for a reservation and will soon contact you soon");
             }
             _unitOfWork.Save();
             TempData["Success"] = "Payment for order no"+ orderId + "was successful";
