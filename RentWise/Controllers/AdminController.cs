@@ -31,7 +31,7 @@ namespace RentWise.Controllers
         }
         public IActionResult Index()
         {
-            IEnumerable<UsersDetailsModel> usersDetails = _unitOfWork.UsersDetails.GetAll(u => true, includeProperties: "Agent");
+            IEnumerable<UsersDetailsModel> usersDetails = _unitOfWork.UsersDetails.GetAll(u => !String.IsNullOrEmpty(u.Id));
             return View(usersDetails);
         }
 
