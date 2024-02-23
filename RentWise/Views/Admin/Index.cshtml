@@ -16,7 +16,6 @@
                     <th scope="col">UserId</th>
                     <th scope="col">Username</th>
                     <th scope="col">Active</th>
-                    @* <th scope="col">IsAgent</th> *@
                     <th scope="col">Registered At</th>
                     <th scope="col">Action</th>
                 </tr>
@@ -39,21 +38,6 @@
                         else
                         {
                             <td>Deactivate</td>
-                        }
-                    @*     @if (item.Agent != null)
-                        {
-                            @if (item.Agent.Enabled)
-                            {
-                                <td>True (Active) </td>
-                            }
-                            else
-                            {
-                                <td>True (Not Active)</td>
-                            }
-                        } *@
-                        else
-                        {
-                            <td>False</td>
                         }
                         <td>@item.CreatedAt.ToString()</td>
                         <td>
