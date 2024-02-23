@@ -118,6 +118,10 @@ namespace RentWise.Controllers
         public async Task<IActionResult> Preview(string Id)
         {
             UsersDetailsModel usersDetails = _unitOfWork.UsersDetails.Get(u => u.Id == Id, "Agent");
+            if(usersDetails == null)
+            {
+                usersDetails = _unitOfWork.UsersDetails.Get(u => u.Id == Id);
+            }
             IdentityUser user = await _userManager.FindByIdAsync(Id);
             ViewBag.User = user;
             string profilePicture = $"images/{usersDetails.Id}";
