@@ -199,6 +199,7 @@ autocomplete.addListener('place_changed', getLocationDetails);
 
 function getLocationDetails() {
     const place = autocomplete.getPlace();
+    console.log('place',place)
     $('.store-address').val(place.formatted_address)
     if (place.geometry && place.geometry.location) {
         const latitude = place.geometry.location.lat();
@@ -207,7 +208,7 @@ function getLocationDetails() {
         $('.longitude').val(longitude)
 
         // Construct the request URL for reverse geocoding
-        const geocodingApiUrl = 'https://maps.googleapis.com/maps/api/geocode/json?latlng=' + latitude + ',' + longitude + '&key=AIzaSyCM2yIul54qUYlxHgjTmvp52goQdqPcUwA';
+        const geocodingApiUrl = 'https://maps.googleapis.com/maps/api/geocode/json?latlng=' + latitude + ',' + longitude + '&key=AIzaSyD0I7pkRONmnFo2S4cZsbCwIPrlRc4WUdw';
 
         // Make a request to the Geocoding API
         fetch(geocodingApiUrl)
@@ -217,7 +218,6 @@ function getLocationDetails() {
                 if (data.results && data.results.length > 0) {
                     // Extract country and state from the first result
                     const components = data.results[0].address_components;
-
                     components.forEach(function (component) {
                         if (component.types.includes('country')) {
                             const country = component.long_name;
