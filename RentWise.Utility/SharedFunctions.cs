@@ -758,24 +758,12 @@ namespace RentWise.Utility
             string restApiKey = "OGM0MDgxM2UtN2I4Yy00ODQyLWI2NDEtZTJiODhmYjJhMDBl";
             string appId = "b88de5c6-032a-4026-a52f-e61732fc390b";
 
-            //var notificationData = new
-            //{
-            //    app_id = appId,
-            //    contents = new { en = message },
-            //    included_segments = new[] { "All" },
-            //    target_channel = "push",
-            //    headings = new { en = header },
-            //    name = "Rentwise",
-            //    url = redirectUrl
-            //};
-            //string playerId = "53ceddc1-99dd-4c55-8dd3-1e7f00bc2831";
-            string externalId = "Rentwise123";
-            //string playerId = "53b8e43c-007a-4812-865b-9e3b8263775e";
             var notificationData = new
             {
                 app_id = appId,
                 contents = new { en = message },
-                include_external_user_ids = new[] { externalId },
+                include_external_user_ids = new[] { userId },
+                ////included_segments = new[] { "All" },
                 headings = new { en = header },
                 url = redirectUrl
             };
