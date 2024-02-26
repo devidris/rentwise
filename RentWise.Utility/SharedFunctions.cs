@@ -757,13 +757,12 @@ namespace RentWise.Utility
         {
             string restApiKey = "OGM0MDgxM2UtN2I4Yy00ODQyLWI2NDEtZTJiODhmYjJhMDBl";
             string appId = "b88de5c6-032a-4026-a52f-e61732fc390b";
-
             var notificationData = new
             {
                 app_id = appId,
                 contents = new { en = message },
-                include_external_user_ids = new[] { userId },
-                ////included_segments = new[] { "All" },
+                //include_external_user_ids = new[] { externalId },
+                included_segments = new[] { "All" },
                 headings = new { en = header },
                 url = redirectUrl
             };
