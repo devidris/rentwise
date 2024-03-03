@@ -81,6 +81,16 @@
         const urlParams = new URLSearchParams(window.location.search);
         const id = urlParams.get('onesignalId');
         $('.id').val(id)
+        console.log(userId , userId != "" , id , id != "")
+        if (userId && userId != "" && id && id != "") {
+            $.ajax({
+                method:"POST",
+                url:"/store/setOnesignalId?id="+id,
+                success: function (data) {
+                console.log(data)
+                }
+            })
+        }
     </script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>

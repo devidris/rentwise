@@ -249,7 +249,8 @@ namespace RentWise.Controllers
                 _unitOfWork.Chat.Add(chat);
                 _unitOfWork.Save();
                 string redirectUrl = "https://rentwisegh.com/Page/Chat/"+userId;
-                SharedFunctions.SendPushNotification(Receipient, "You have a new message from "+ SharedFunctions.CapitalizeAllWords(usersDetailsModel2.Username), Message, redirectUrl);
+                UsersDetailsModel ToUsersDetails = _unitOfWork.UsersDetails.Get(u => u.Id == Receipient);
+                SharedFunctions.SendPushNotification(ToUsersDetails.OneSignalId, "You have a new message from "+ SharedFunctions.CapitalizeAllWords(usersDetailsModel2.Username), Message, redirectUrl);
                 return Json(new
                 {
                     StatusCode = (int)HttpStatusCode.OK,
@@ -323,7 +324,8 @@ namespace RentWise.Controllers
             SharedFunctions.SendEmail(user.UserName, "Reservation has been made", emailContentClient);
             SharedFunctions.SendEmail(agent.User.UserName, "Reservation has been made", emailContentAgent);
             _hubContext.Clients.All.SendAsync("ReceiveMessage", AgentId, "Reservation has been made");
-            SharedFunctions.SendPushNotification(AgentId, "Reservation has been made", Message);
+            UsersDetailsModel ToUsersDetails = _unitOfWork.UsersDetails.Get(u => u.Id == AgentId);
+            SharedFunctions.SendPushNotification(ToUsersDetails.OneSignalId, "Reservation has been made", Message);
             return Json(new
             {
                 StatusCode = (int)HttpStatusCode.OK,
@@ -373,8 +375,9 @@ namespace RentWise.Controllers
             agent.UpdatedAt = DateTime.Now;
                 _unitOfWork.AgentRegistration.Update(agent);
             string emailContentAgent = SharedFunctions.EmailContent(agent.FirstName, 5, order.Product.Name, order.ProductQuantity, order.TotalAmount);
-            SharedFunctions.SendEmail(agent.User.UserName, "Payment has  been made for Reservation", emailContentAgent);
-            SharedFunctions.SendPushNotification(agent.Id, "Reservation payment status", "Client has paid for a reservation and will soon contact you soon");
+                UsersDetailsModel ToUsersDetails = _unitOfWork.UsersDetails.Get(u => u.Id == agent.Id);
+                SharedFunctions.SendEmail(agent.User.UserName, "Payment has  been made for Reservation", emailContentAgent);
+            SharedFunctions.SendPushNotification(ToUsersDetails.OneSignalId, "Reservation payment status", "Client has paid for a reservation and will soon contact you soon");
             }
             _unitOfWork.Save();
             TempData["Success"] = "Payment for order no"+ orderId + "was successful";
@@ -412,7 +415,8 @@ namespace RentWise.Controllers
                 _unitOfWork.Save();
                 string emailContentAgent = SharedFunctions.EmailContent(agent.FirstName, 6, order.Product.Name, order.ProductQuantity, order.TotalAmount);
                 SharedFunctions.SendEmail(agent.User.UserName, "Payment with cash", emailContentAgent);
-                SharedFunctions.SendPushNotification(agent.Id, "Reservation payment status", "Client want to pay cash, make sure you recieve money before marking it as paid");
+                UsersDetailsModel ToUsersDetails = _unitOfWork.UsersDetails.Get(u => u.Id == agent.Id);
+                SharedFunctions.SendPushNotification(ToUsersDetails.OneSignalId, "Reservation payment status", "Client want to pay cash, make sure you recieve money before marking it as paid");
                 return Json(new
                 {
                     StatusCode = (int)HttpStatusCode.OK,
@@ -481,25 +485,54 @@ namespace RentWise.Controllers
             ProductModel product = _unitOfWork.Product.Get(u => u.ProductId == Id);
             AgentRegistrationModel agent = _unitOfWork.AgentRegistration.Get(u => u.Id == product.AgentId, "User");
             string emailContent = SharedFunctions.EmailContent(agent.User.UserName,type);
+                UsersDetailsModel ToUsersDetails = _unitOfWork.UsersDetails.Get(u => u.Id == product.AgentId);
             if (type == "ENABLE")
             {
                 product.Enabled = true;
                 _unitOfWork.Product.Update(product);
-                SharedFunctions.SendPushNotification(product.AgentId,"Reservation has been enabled by admin", product.Name + "reservation has been enabled by admin");
+                SharedFunctions.SendPushNotification(ToUsersDetails.OneSignalId,"Reservation has been enabled by admin", product.Name + "reservation has been enabled by admin");
                 SharedFunctions.SendEmail(agent.User.UserName, "Your list has been disabled by admin", emailContent);
             }
             if (type == "DISABLE")
             {
                 product.Enabled = false;
                 _unitOfWork.Product.Update(product);
-                SharedFunctions.SendPushNotification(product.AgentId, "Reservation has been disabled by admin", product.Name + "reservation has been disabled by admin");
+                SharedFunctions.SendPushNotification(ToUsersDetails.OneSignalId, "Reservation has been disabled by admin", product.Name + "reservation has been disabled by admin");
                 SharedFunctions.SendEmail(agent.User.UserName, "Your list has been disabled by admin", emailContent);
             }
             _unitOfWork.Save();
             return RedirectToAction(nameof(Index));
         }
 
+        [Authorize]
+        [HttpPost]
 
+        public async Task<IActionResult> setOnesignalId(string? id)
+        {
+            string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if(id == null || userId == null)
+            {
+                return Json(new
+                {
+                    StatusCode = (int)HttpStatusCode.InternalServerError,
+                    Message = Lookup.ResponseMessages[1],
+                    Data = "Internal Server Error",
+                    Success = false
+                });
+            }
+           UsersDetailsModel userDetails = _unitOfWork.UsersDetails.Get(u=>u.Id == userId);
+           userDetails.OneSignalId = id;
+            _unitOfWork.UsersDetails.Update(userDetails);
+            _unitOfWork.Save();
+
+            return Json(new
+            {
+                StatusCode = (int)HttpStatusCode.OK,
+                Message = "ID saved Successfully",
+                Data = Lookup.ResponseMessages[5],
+                Success = true
+            });
+        }
     }
 
 }
