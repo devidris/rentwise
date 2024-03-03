@@ -783,7 +783,7 @@ namespace RentWise.Utility
                 {
                     app_id = appId,
                     contents = new { en = message },
-                    include_external_user_ids = new[] { userId },
+                    include_player_ids = new[] { userId },
                     headings = new { en = header },
                     url = redirectUrl
                 };
