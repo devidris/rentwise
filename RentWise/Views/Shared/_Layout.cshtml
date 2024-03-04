@@ -78,24 +78,18 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.15.7/dist/sweetalert2.all.min.js"></script>
     <script>
         const userId = $('.user-id').val() ?? "rentwise";
-    </script>
-    <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
-    <script defer>
-        window.OneSignalDeferred = window.OneSignalDeferred || [];
-        OneSignalDeferred.push(function (OneSignal) {
-            OneSignal.init({
-                appId: "b88de5c6-032a-4026-a52f-e61732fc390b",
-                safari_web_id: "web.onesignal.auto.276b1587-9df2-49f1-886b-c818bd2e0d3c",
-                notifyButton: {
-                    enable: false,
-                },
-                allowLocalhostAsSecureOrigin: true,
-            });
-
-        });
-        window.connect = async function () {
-            OneSignal.login(userId);
-            $('#onesignalid').val(userId)
+        const urlParams = new URLSearchParams(window.location.search);
+        const id = urlParams.get('onesignalId');
+        $('.id').val(id)
+        console.log(userId , userId != "" , id , id != "")
+        if (userId && userId != "" && id && id != "") {
+            $.ajax({
+                method:"POST",
+                url:"/store/setOnesignalId?id="+id,
+                success: function (data) {
+                console.log(data)
+                }
+            })
         }
     </script>
     @await RenderSectionAsync("Scripts", required: false)

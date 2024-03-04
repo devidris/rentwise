@@ -146,6 +146,9 @@ namespace RentWise.Models.Identity
         public string PhoneNumber { get; set; }
 
         public string Email { get; set; }
+
+        public string OneSignalId { get; set; } = String.Empty;
+
         [ForeignKey("Id")]
         [ValidateNever]
         public AgentRegistrationModel Agent { get; set; }
