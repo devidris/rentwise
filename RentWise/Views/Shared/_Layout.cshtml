@@ -80,12 +80,16 @@
         const userId = $('.user-id').val() ?? "rentwise";
         const urlParams = new URLSearchParams(window.location.search);
         const id = urlParams.get('onesignalId');
-        $('.id').val(id)
-        console.log(userId , userId != "" , id , id != "")
-        if (userId && userId != "" && id && id != "") {
+        if (id || id != "") {
+            localStorage.setItem("onesignalId", id)
+        }
+        const onesignalId = localStorage.getItem("onesignalId")
+        $('.id').val(onesignalId)
+        console.log(userId, userId != "", onesignalId, onesignalId != "")
+        if (userId && userId != "" && onesignalId && onesignalId != "") {
             $.ajax({
                 method:"POST",
-                url:"/store/setOnesignalId?id="+id,
+                url: "/store/setOnesignalId?id=" + onesignalId,
                 success: function (data) {
                 console.log(data)
                 }
