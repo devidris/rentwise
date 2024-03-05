@@ -760,22 +760,29 @@ namespace RentWise.Utility
 
             if(userId == "All")
             {
-               var notificationData = new
-                {
-                    app_id = appId,
-                    contents = new { en = message },
-                    included_segments = new[] { "All" },
-                    headings = new { en = header },
-                    url = redirectUrl
-                };
-                var options = new RestClientOptions("https://onesignal.com/api/v1/notifications");
-                var client = new RestClient(options);
-                var request = new RestRequest("");
-                request.AddHeader("Content-Type", "application/json");
-                request.AddHeader("Authorization", "Basic " + restApiKey);
-                request.AddJsonBody(notificationData);
+                try {
+                    var notificationData = new
+                    {
+                        app_id = appId,
+                        contents = new { en = message },
+                        included_segments = new[] { "All" },
+                        //include_external_user_ids = new[] { "2aDBegTIw0wEbAeK0bFf1709664437524" },
+                        target_channel =  "push",
+                        headings = new { en = header },
+                        url = redirectUrl
+                    };
+                    var options = new RestClientOptions("https://onesignal.com/api/v1/notifications");
+                    var client = new RestClient(options);
+                    var request = new RestRequest("");
+                    request.AddHeader("Content-Type", "application/json");
+                    request.AddHeader("Authorization", "Basic " + restApiKey);
+                    request.AddJsonBody(notificationData);
 
-                var response = await client.PostAsync(request);
+                    var response = await client.PostAsync(request);
+                }
+                catch(Exception ex) {
+                }
+
             } else
             {
 
@@ -783,7 +790,7 @@ namespace RentWise.Utility
                 {
                     app_id = appId,
                     contents = new { en = message },
-                    include_player_ids = new[] { userId },
+                    include_external_user_ids = new[] { userId },
                     headings = new { en = header },
                     url = redirectUrl
                 };
