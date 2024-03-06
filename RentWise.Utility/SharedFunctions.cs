@@ -760,7 +760,6 @@ namespace RentWise.Utility
 
             if(userId == "All")
             {
-                try {
                     var notificationData = new
                     {
                         app_id = appId,
@@ -777,12 +776,7 @@ namespace RentWise.Utility
                     request.AddHeader("Content-Type", "application/json");
                     request.AddHeader("Authorization", "Basic " + restApiKey);
                     request.AddJsonBody(notificationData);
-
                     var response = await client.PostAsync(request);
-                }
-                catch(Exception ex) {
-                }
-
             } else
             {
 
@@ -790,6 +784,7 @@ namespace RentWise.Utility
                 {
                     app_id = appId,
                     contents = new { en = message },
+                    target_channel = "push",
                     include_external_user_ids = new[] { userId },
                     headings = new { en = header },
                     url = redirectUrl
