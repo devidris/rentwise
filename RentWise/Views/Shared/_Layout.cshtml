@@ -79,14 +79,23 @@
     <script>
         const userId = $('.user-id').val() ?? "rentwise";
         const urlParams = new URLSearchParams(window.location.search);
-        const id = urlParams.get('onesignalId');
+        let id = urlParams.get('onesignalId');
         $('.id').val(id)
+        if(id)
         console.log(userId, userId != "", id, id != "")
         if (id && id != "") {
-            $("#loginForm").attr("action", "/home/index?onesignalId="+id);
+            localStorage.setItem("id", id)
+            $("#loginForm").attr("action", "/home/index?onesignalId=" + id);
             $("#registerForm").attr("action", "/home/index?onesignalId=" + id);
+        } else {
+            const tempId = localStorage.getItem("id")
+            if (tempId && tempId != "") {
+                id = tempId
+            } else {
+                id = "undefined"
+            }
         }
-        console.log($("#loginForm"))
+
         if (userId && userId != "" && id && id != "") {
             $.ajax({
                 method:"POST",
