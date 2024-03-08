@@ -753,7 +753,7 @@ namespace RentWise.Utility
             return new string(otpArray);
         }
 
-        public static async Task SendPushNotification( string userId, string header, string message,string redirectUrl = "https://rentwisegh.com/Page/Chat")
+        public static async Task SendPushNotification( string userId, string header, string message,string redirectUrl = "/Page/Chat")
         {
             string restApiKey = "OGM0MDgxM2UtN2I4Yy00ODQyLWI2NDEtZTJiODhmYjJhMDBl";
             string appId = "b88de5c6-032a-4026-a52f-e61732fc390b";
