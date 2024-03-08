@@ -13,60 +13,81 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" />
     <link rel="manifest" href="manifest.json" />
-
 </head>
 <body>
-    <header>
-        <partial name="_Nav" />
-    </header>
-    <main class="container-fluid">
-        <div class="row">
-            <div class="col-12">   
-                @RenderBody()
-            </div>
-        </div>
-    </main>
-    @inject IOptions<RentWiseConfig> _config;
-    @inject SignInManager<IdentityUser> SignInManager
-    @inject UserManager<IdentityUser> UserManager
+    <div class="page">
+        <div class="page_content">
+            <header>
+                <partial name="_Nav" />
+            </header>
+            <main class="container-fluid">
+                <div class="row">
+                    <div class="col-12">
+                        @RenderBody()
+                    </div>
+                </div>
+            </main>
+            @inject IOptions<RentWiseConfig> _config;
+            @inject SignInManager<IdentityUser> SignInManager
+            @inject UserManager<IdentityUser> UserManager
 
-    @{
-        string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-    }
-    <input value="@userId" class="user-id" hidden />
-    <footer class="bg-primary p-md-5 py-4 text-white text-center">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-md-4 col-sm-12 mt-sm-4">
+            @{
+                string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            }
+            <input value="@userId" class="user-id" hidden />
+            <footer class="bg-primary p-md-5 py-4 text-white text-center">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-4 col-sm-12 mt-sm-4">
 
-                    <p class="mb-3">
-                        <a href="https://www.instagram.com/rentwise_app?igsh=MXJxenJqb3AyemF5bw%3D%3D&utm_source=qr" class="text-decoration-none mb-3 link-light fs-3" target="_blank">
-                            <b>Follow us at</b> <i class="bi bi-instagram"></i>
-                        </a>
-                    </p>
-                    <ul class="list-unstyled mt-4">
-                        <li><a asp-controller="Page" asp-action="About" class="link-light text-decoration-none fs-5">About Us</a></li>
-                        <li><a asp-controller="Page" asp-action="LegalAndPolicy" class="link-light text-decoration-none fs-5">Legal Terms & Privacy Policy</a></li>
-                        <li><a asp-controller="Page" asp-action="TOS" class="link-light text-decoration-none fs-5">Terms Of Service</a></li>
-                        <li><a asp-controller="Page" asp-action="AvoidScam" class="link-light text-decoration-none fs-5">Avoid Scams and Fraud</a></li>
-                    </ul>
+                            <p class="mb-3">
+                                <a href="https://www.instagram.com/rentwise_app?igsh=MXJxenJqb3AyemF5bw%3D%3D&utm_source=qr" class="text-decoration-none mb-3 link-light fs-3" target="_blank">
+                                    <b>Follow us at</b> <i class="bi bi-instagram"></i>
+                                </a>
+                            </p>
+                            <ul class="list-unstyled mt-4">
+                                <li><a asp-controller="Page" asp-action="About" class="link-light text-decoration-none fs-5">About Us</a></li>
+                                <li><a asp-controller="Page" asp-action="LegalAndPolicy" class="link-light text-decoration-none fs-5">Legal Terms & Privacy Policy</a></li>
+                                <li><a asp-controller="Page" asp-action="TOS" class="link-light text-decoration-none fs-5">Terms Of Service</a></li>
+                                <li><a asp-controller="Page" asp-action="AvoidScam" class="link-light text-decoration-none fs-5">Avoid Scams and Fraud</a></li>
+                            </ul>
+                        </div>
+                        <div class="col-md-4 col-sm-12  mt-sm-4">
+                            <ul class="d-flex flex-column gap-2 list-unstyled">
+                                @{
+                                    string agentRegistrationLink = $"{_config.Value.AgentWebsiteLink}/Home/Index";
+                                }
+                                <li><a asp-controller="Auth" asp-action="Register" class=" text-decoration-none fs-5 btn btn-outline-secondary">Register as  Renter</a></li>
+                                <li><a href="@agentRegistrationLink" class="text-decoration-none fs-5 btn btn-outline-secondary link-secondary">Switch to Owner</a></li>
+                                <li><a asp-controller="Auth" asp-action="Login" class="text-decoration-none fs-5 btn btn-outline-secondary">Login</a></li>
+                            </ul>
+                        </div>
+                        <div class="col-md-4 col-sm-12  mt-sm-4">
+                            <partial name="_Contact" />
+                        </div>
+                    </div>
                 </div>
-                <div class="col-md-4 col-sm-12  mt-sm-4">
-                    <ul class="d-flex flex-column gap-2 list-unstyled">
-                        @{
-                            string agentRegistrationLink = $"{_config.Value.AgentWebsiteLink}/Home/Index";
-                        }
-                        <li><a asp-controller="Auth" asp-action="Register" class=" text-decoration-none fs-5 btn btn-outline-secondary">Register as  Renter</a></li>
-                        <li><a href="@agentRegistrationLink" class="text-decoration-none fs-5 btn btn-outline-secondary link-secondary">Switch to Owner</a></li>
-                        <li><a asp-controller="Auth" asp-action="Login" class="text-decoration-none fs-5 btn btn-outline-secondary">Login</a></li>
-                    </ul>
-                </div>
-                <div class="col-md-4 col-sm-12  mt-sm-4">
-                    <partial name="_Contact" />
-                </div>
-            </div>
+            </footer>
         </div>
-    </footer>
+        <div class="page_footer">
+            <a asp-action="Index" asp-controller="Home" class="tab link-primary text-decoration-none">
+                <i class="bi bi-house-door-fill"></i>
+                <span>Home</span>
+            </a>
+            <a asp-action="Chat" asp-controller="Page" class="tab link-primary text-decoration-none">
+                <i class="bi bi-inbox-fill"></i>
+                <span>Inbox</span>
+            </a>
+            <a asp-action="Orders" asp-controller="Store" class="tab link-primary text-decoration-none">
+                <i class="bi bi-newspaper"></i>
+                <span>Reservation</span>
+            </a>
+            <a asp-action="Profile" asp-controller="Auth" class="tab link-primary text-decoration-none">
+                <i class="bi bi-person-fill "></i>
+                <span>Profile</span>
+            </a>
+        </div>
+    </div>
     <script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js" asp-append-version="true"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/3.1.9/signalr.min.js"></script>
@@ -77,6 +98,19 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jcarousel/0.3.6/jquery.jcarousel.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.15.7/dist/sweetalert2.all.min.js"></script>
     <script>
+        $(document).ready(function () {
+            $('body, html').css({
+                width: $(window).width(),
+                height: $(window).height()
+            });
+
+            $(window).resize(function () {
+                $('body, html').css({
+                    width: $(window).width(),
+                    height: $(window).height()
+                });
+            });
+        });
         const userId = $('.user-id').val() ?? "rentwise";
         const urlParams = new URLSearchParams(window.location.search);
         let id = urlParams.get('onesignalId');
@@ -91,10 +125,10 @@
 
         if (userId && userId != "" && id && id != "") {
             $.ajax({
-                method:"POST",
+                method: "POST",
                 url: "/store/setOnesignalId?id=" + id,
                 success: function (data) {
-                console.log(data)
+                    console.log(data)
                 }
             })
         }
