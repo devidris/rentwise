@@ -190,13 +190,16 @@ namespace RentWise.Agent.Controllers
                 }
                 string Message = "Your order has been rejected";
                 string emailContentClient = String.Empty;
+                UsersDetailsModel ToUsersDetails = _unitOfWork.UsersDetails.Get(u => u.Id == order.UserId);
                 if (Id == 2)
                 {
                   Message = "Your order has been accepted";
                     emailContentClient = SharedFunctions.EmailContent(usersDetailsModel.Username, 3, order.Product.Name, order.ProductQuantity, order.TotalAmount);
+                    SharedFunctions.SendPushNotification(ToUsersDetails.OneSignalId, "Your order has been accepted", "Your order has been accepted, you can now make payment");
                 }   else
                 {
                     emailContentClient = SharedFunctions.EmailContent(usersDetailsModel.Username, 4, order.Product.Name, order.ProductQuantity, order.TotalAmount);
+                    SharedFunctions.SendPushNotification(ToUsersDetails.OneSignalId, "Your order has been rejected", "Your order has been rejected, look for another listing");
                 }
                     SharedFunctions.SendEmail(usersDetailsModel.Username, "There is an update on your Reservation", emailContentClient);
                 ChatModel chat = new()
@@ -247,7 +250,7 @@ namespace RentWise.Agent.Controllers
                 _unitOfWork.Save();
                 string emailContentClient = SharedFunctions.EmailContent(usersDetails.Username, 7, order.Product.Name, order.ProductQuantity, order.TotalAmount);
                 SharedFunctions.SendEmail(user.UserName, "Payment has  been recieved for Reservation", emailContentClient);
-                SharedFunctions.SendPushNotification(ToUsersDetails.OneSignalId, "Agent has marked payment as recieved", "Collect your porduct as soon as possible");
+                SharedFunctions.SendPushNotification(ToUsersDetails.OneSignalId, "Agent has marked payment as recieved", "Collect your product as soon as possible");
             }
             TempData["Action"] = 4;
             return RedirectToAction("Index", "Dashboard");
