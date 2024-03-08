@@ -85,16 +85,9 @@
         console.log(userId, userId != "", id, id != "")
         if (id && id != "") {
             localStorage.setItem("id", id)
-            $("#loginForm").attr("action", "/home/index?onesignalId=" + id);
-            $("#registerForm").attr("action", "/home/index?onesignalId=" + id);
-        } else {
-            const tempId = localStorage.getItem("id")
-            if (tempId && tempId != "") {
-                id = tempId
-            } else {
-                id = "undefined"
-            }
-        }
+            $("#loginForm").attr("action", "/Auth/Login?returnUrl=Home/Index?onesignalId=" + id);
+            $("#registerForm").attr("action", "/Auth/Login?returnUrl=Home/Index?onesignalId=" + id);
+        } 
 
         if (userId && userId != "" && id && id != "") {
             $.ajax({
@@ -105,6 +98,21 @@
                 }
             })
         }
+        // Listen for click events on all links
+        $('a').click(function (event) {
+            event.preventDefault();
+
+            const originalUrl = $(this).attr('href');
+
+            const separator = originalUrl.indexOf('?') !== -1 ? '&' : '?';
+
+            let newUrl = originalUrl;
+            if (id && id != "") {
+                newUrl = originalUrl + separator + 'onesignalId=' + id;
+            }
+            // Redirect to the new URL
+            window.location.href = newUrl;
+        });
     </script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>

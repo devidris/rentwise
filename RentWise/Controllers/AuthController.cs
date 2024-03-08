@@ -16,6 +16,7 @@ using RentWise.DataAccess.Repository.IRepository;
 using RestSharp;
 using System.Net;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using System.Web;
 
 namespace RentWise.Controllers
 {
@@ -163,7 +164,30 @@ namespace RentWise.Controllers
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
+                    string[] parts = model.ReturnUrl.Split('?');
+                    if (parts.Length > 1)
+                    {
+                        // Get the query parameters
+                        string query = parts[1];
+
+                        // Parse the query string
+                        var parsedQuery = HttpUtility.ParseQueryString(query);
+
+                        // Get the value of the 'oneSignal' parameter
+                        string oneSignalValue = parsedQuery["onesignalId"];
+
+                        if (!string.IsNullOrEmpty(oneSignalValue))
+                        {
+                            return RedirectToAction("Index", "Home", new { onesignalId = oneSignalValue });
+                        } else
+                        {
+                            return LocalRedirect(model.ReturnUrl);
+                        }
+
+                     
+                    }
                     return LocalRedirect(model.ReturnUrl);
+
                 }
                 if (result.RequiresTwoFactor)
                 {
