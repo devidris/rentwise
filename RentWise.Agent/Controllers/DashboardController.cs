@@ -191,7 +191,7 @@ namespace RentWise.Agent.Controllers
                 string Message = "Your reservation has been rejected";
                 string emailContentClient = String.Empty;
                 UsersDetailsModel ToUsersDetails = _unitOfWork.UsersDetails.Get(u => u.Id == order.UserId);
-                if (Id == 2)
+                if (LkpStatus == 2)
                 {
                   Message = "Your reservation has been accepted";
                     emailContentClient = SharedFunctions.EmailContent(usersDetailsModel.Username, 3, order.Product.Name, order.ProductQuantity, order.TotalAmount);
