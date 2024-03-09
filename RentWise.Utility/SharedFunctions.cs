@@ -768,7 +768,7 @@ namespace RentWise.Utility
                         //include_external_user_ids = new[] { "2aDBegTIw0wEbAeK0bFf1709664437524" },
                         target_channel =  "push",
                         headings = new { en = header },
-                        url = redirectUrl
+                        //url = redirectUrl
                     };
                     var options = new RestClientOptions("https://onesignal.com/api/v1/notifications");
                     var client = new RestClient(options);
@@ -787,7 +787,7 @@ namespace RentWise.Utility
                     target_channel = "push",
                     include_external_user_ids = new[] { userId },
                     headings = new { en = header },
-                    url = redirectUrl
+                    //url = redirectUrl
                 };
 
                 var options = new RestClientOptions("https://onesignal.com/api/v1/notifications");
