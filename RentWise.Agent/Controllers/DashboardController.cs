@@ -229,7 +229,7 @@ namespace RentWise.Agent.Controllers
 
             if (order != null)
             {
-                string Message = "Payment received by owner, contact renter on "+ agent.PhoneNumber;
+                string Message = "Payment received by Owner, Contact Owner on " + agent.PhoneNumber;
                 ChatModel chat = new()
                 {
                     FromUserId = order.AgentId,
