@@ -104,11 +104,24 @@
                 height: $(window).height()
             });
 
-            $(window).resize(function () {
+            $(window).on("resize", function () {
                 $('body, html').css({
                     width: $(window).width(),
                     height: $(window).height()
                 });
+                let currentHeight = window.innerHeight;
+                let previousHeight = $(this).data("previousHeight");
+
+                if (previousHeight && currentHeight < previousHeight * 0.9) {
+                    console.log("Keyboard is open");
+                    $('.page_footer').css('height', '0px'); 
+                } else {
+                    // Assume keyboard is closed
+                    console.log("Keyboard is closed");
+                    $('.page_footer').css('height', '70px');
+                }
+
+                $(this).data("previousHeight", currentHeight);
             });
             const currentPage = window.location.pathname.toLowerCase()
             let isActiveApplied = false
@@ -164,6 +177,25 @@
             }
             // Redirect to the new URL
             window.location.href = newUrl;
+        });
+
+        window.addEventListener("resize", function () {
+            $('body, html').css({
+                width: $(window).width(),
+                height: $(window).height()
+            });
+            var currentHeight = window.innerHeight;
+            var previousHeight = $(this).data("previousHeight");
+
+            if (previousHeight && currentHeight < previousHeight * 0.9) {
+                console.log("Keyboard is open");
+
+            } else {
+                // Assume keyboard is closed
+                console.log("Keyboard is closed");
+            }
+
+            $(this).data("previousHeight", currentHeight);
         });
     </script>
     @await RenderSectionAsync("Scripts", required: false)
