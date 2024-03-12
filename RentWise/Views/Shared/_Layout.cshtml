@@ -70,19 +70,19 @@
             </footer>
         </div>
         <div class="page_footer">
-            <a asp-action="Index" asp-controller="Home" class="tab link-primary text-decoration-none">
+            <a asp-action="Index" asp-controller="Home" class="tab link-primary text-decoration-none home">
                 <i class="bi bi-house-door-fill"></i>
                 <span>Home</span>
             </a>
-            <a asp-action="Chat" asp-controller="Page" class="tab link-primary text-decoration-none">
+            <a asp-action="Chat" asp-controller="Page" class="tab link-dark text-decoration-none">
                 <i class="bi bi-inbox-fill"></i>
                 <span>Inbox</span>
             </a>
-            <a asp-action="Orders" asp-controller="Store" class="tab link-primary text-decoration-none">
+            <a asp-action="Orders" asp-controller="Store" class="tab link-dark text-decoration-none">
                 <i class="bi bi-newspaper"></i>
                 <span>Reservation</span>
             </a>
-            <a asp-action="Profile" asp-controller="Auth" class="tab link-primary text-decoration-none">
+            <a asp-action="Profile" asp-controller="Auth" class="tab link-dark text-decoration-none">
                 <i class="bi bi-person-fill "></i>
                 <span>Profile</span>
             </a>
@@ -104,12 +104,43 @@
                 height: $(window).height()
             });
 
-            $(window).resize(function () {
+            $(window).on("resize", function () {
                 $('body, html').css({
                     width: $(window).width(),
                     height: $(window).height()
                 });
+                let currentHeight = window.innerHeight;
+                let previousHeight = $(this).data("previousHeight");
+
+                if (previousHeight && currentHeight < previousHeight * 0.9) {
+                    console.log("Keyboard is open");
+                    $('.page_footer').css('height', '0px'); 
+                } else {
+                    // Assume keyboard is closed
+                    console.log("Keyboard is closed");
+                    $('.page_footer').css('height', '70px');
+                }
+
+                $(this).data("previousHeight", currentHeight);
             });
+            const currentPage = window.location.pathname.toLowerCase()
+            let isActiveApplied = false
+            $('.page_footer a').each(function () {
+                const href = $(this).attr('href').toLowerCase();
+                console.log(href,currentPage)
+                if (href === currentPage) {
+                    $(this).addClass('link-primary');
+                    $(this).removeClass('link-dark');
+                    isActiveApplied = true
+                } else {
+                    $(this).addClass('link-dark');
+                    $(this).removeClass('link-primary');
+                }
+            });
+            if (!isActiveApplied) {
+                $('.home').addClass('link-primary');
+                $('.home').removeClass('link-dark');
+            }
         });
         const userId = $('.user-id').val() ?? "rentwise";
         const urlParams = new URLSearchParams(window.location.search);
@@ -146,6 +177,25 @@
             }
             // Redirect to the new URL
             window.location.href = newUrl;
+        });
+
+        window.addEventListener("resize", function () {
+            $('body, html').css({
+                width: $(window).width(),
+                height: $(window).height()
+            });
+            var currentHeight = window.innerHeight;
+            var previousHeight = $(this).data("previousHeight");
+
+            if (previousHeight && currentHeight < previousHeight * 0.9) {
+                console.log("Keyboard is open");
+
+            } else {
+                // Assume keyboard is closed
+                console.log("Keyboard is closed");
+            }
+
+            $(this).data("previousHeight", currentHeight);
         });
     </script>
     @await RenderSectionAsync("Scripts", required: false)
