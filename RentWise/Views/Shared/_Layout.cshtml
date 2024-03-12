@@ -70,19 +70,19 @@
             </footer>
         </div>
         <div class="page_footer">
-            <a asp-action="Index" asp-controller="Home" class="tab link-primary text-decoration-none">
+            <a asp-action="Index" asp-controller="Home" class="tab link-primary text-decoration-none home">
                 <i class="bi bi-house-door-fill"></i>
                 <span>Home</span>
             </a>
-            <a asp-action="Chat" asp-controller="Page" class="tab link-primary text-decoration-none">
+            <a asp-action="Chat" asp-controller="Page" class="tab link-dark text-decoration-none">
                 <i class="bi bi-inbox-fill"></i>
                 <span>Inbox</span>
             </a>
-            <a asp-action="Orders" asp-controller="Store" class="tab link-primary text-decoration-none">
+            <a asp-action="Orders" asp-controller="Store" class="tab link-dark text-decoration-none">
                 <i class="bi bi-newspaper"></i>
                 <span>Reservation</span>
             </a>
-            <a asp-action="Profile" asp-controller="Auth" class="tab link-primary text-decoration-none">
+            <a asp-action="Profile" asp-controller="Auth" class="tab link-dark text-decoration-none">
                 <i class="bi bi-person-fill "></i>
                 <span>Profile</span>
             </a>
@@ -110,6 +110,24 @@
                     height: $(window).height()
                 });
             });
+            const currentPage = window.location.pathname.toLowerCase()
+            let isActiveApplied = false
+            $('.page_footer a').each(function () {
+                const href = $(this).attr('href').toLowerCase();
+                console.log(href,currentPage)
+                if (href === currentPage) {
+                    $(this).addClass('link-primary');
+                    $(this).removeClass('link-dark');
+                    isActiveApplied = true
+                } else {
+                    $(this).addClass('link-dark');
+                    $(this).removeClass('link-primary');
+                }
+            });
+            if (!isActiveApplied) {
+                $('.home').addClass('link-primary');
+                $('.home').removeClass('link-dark');
+            }
         });
         const userId = $('.user-id').val() ?? "rentwise";
         const urlParams = new URLSearchParams(window.location.search);
