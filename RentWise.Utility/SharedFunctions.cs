@@ -760,15 +760,16 @@ namespace RentWise.Utility
 
             if(userId == "All")
             {
-                    var notificationData = new
-                    {
-                        app_id = appId,
-                        contents = new { en = message },
-                        target_channel = "push",
-                        include_external_user_ids = new[] { "cb8b143fc87a4326" },
-                        headings = new { en = header },
-                    };
-                    var options = new RestClientOptions("https://onesignal.com/api/v1/notifications");
+                var notificationData = new
+                {
+                    app_id = appId,
+                    contents = new { en = message },
+                    included_segments = new[] { "All" },
+                    //include_external_user_ids = new[] { "2aDBegTIw0wEbAeK0bFf1709664437524" },
+                    target_channel = "push",
+                    headings = new { en = header },
+                };
+                var options = new RestClientOptions("https://onesignal.com/api/v1/notifications");
                     var client = new RestClient(options);
                     var request = new RestRequest("");
                     request.AddHeader("Content-Type", "application/json");
