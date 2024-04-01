@@ -60,6 +60,40 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jcarousel/0.3.6/jquery.jcarousel.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.15.7/dist/sweetalert2.all.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+        <script>
+        let urlParams = new URLSearchParams(window.location.search);
+        const returnUrl = decodeURIComponent(urlParams.get('ReturnUrl'));
+        const returnUrlParams = new URLSearchParams(returnUrl.split('?')[1]);
+        let id = returnUrlParams.get('onesignalId');
+
+            if (id && id != "") {
+                // localStorage.setItem("id", id)
+                $(".loginForm").attr("action", "/Auth/Login?returnUrl=Home/Index?onesignalId=" + id);
+
+                $(".registerForm").attr("action", "/Auth/Login?returnUrl=Home/Index?onesignalId=" + id);
+            } else {
+             urlParams = new URLSearchParams(window.location.search);
+           id = urlParams.get('onesignalId');
+            // localStorage.setItem("id", id)
+            $(".loginForm").attr("action", "/Auth/Login?returnUrl=Home/Index?onesignalId=" + id);
+
+            $(".registerForm").attr("action", "/Auth/Login?returnUrl=Home/Index?onesignalId=" + id);
+        }
+        if (id && id != "") {
+            $.ajax({
+                method: "POST",
+                url: "/store/setOnesignalId?id=" + id,
+                success: function (data) {
+                    console.log(data)
+                },
+                error: function (error) {
+                    console.log(error)
+                }
+            })
+        }
+
+    </script>
+
      @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

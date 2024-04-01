@@ -1,6 +1,6 @@
 ﻿@model RentWise.Models.Identity.AuthenticationLogin
 <partial name="_Nav2" />
-<form id="loginForm" asp-route-returnUrl="/Home/Index" method="post" class="w-md-50 m-auto p-md-5 p-sm-1">
+<form id="loginForm" asp-route-returnUrl="/Home/Index" method="post" class="w-md-50 m-auto p-md-5 p-sm-1 loginForm">
     <h2>Login to your account</h2>
     <hr />
     <div asp-validation-summary="All" class="text-danger" role="alert"></div>
@@ -36,4 +36,17 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script>
+        if (id) {
+            console.log(userId, userId != "", id, id != "")
+        } else {
+            const parsedUrl = location.href.split("onesignalId=")[1]
+            if (parsedUrl) {
+                $(".loginForm").attr("action", "/Auth/Login?returnUrl=Home/Index?onesignalId=" + parsedUrl);
+                console.log("OneSignal ID:", parsedUrl);
+            } else {
+                console.log("OneSignal ID not found in the URL.");
+            }
+        }
+    </script>
 }

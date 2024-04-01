@@ -247,6 +247,31 @@ namespace RentWise.Agent.Controllers
             _unitOfWork.Save();
             return RedirectToAction(nameof(Index));
         }
+        public async Task<IActionResult> setOnesignalId(string? id)
+        {
+            string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (id == null || userId == null)
+            {
+                return Json(new
+                {
+                    StatusCode = (int)HttpStatusCode.InternalServerError,
+                    Message = Lookup.ResponseMessages[1],
+                    Data = "Internal Server Error",
+                    Success = false
+                });
+            }
+            UsersDetailsModel userDetails = _unitOfWork.UsersDetails.Get(u => u.Id == userId);
+            userDetails.OneSignalId = id;
+            _unitOfWork.UsersDetails.Update(userDetails);
+            _unitOfWork.Save();
 
+            return Json(new
+            {
+                StatusCode = (int)HttpStatusCode.OK,
+                Message = "ID saved Successfully",
+                Data = Lookup.ResponseMessages[5],
+                Success = true
+            });
+        }
     }
 }
