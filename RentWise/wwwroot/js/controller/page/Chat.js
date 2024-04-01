@@ -36,38 +36,12 @@ function displayMessagePage() {
 }
 const data = [
 ];
-function displayChat(message = null) {
-    const gridContainer = document.getElementById('grid-container');
-    if (message) {
-        const messageProp = [{ content: message, class: 'left' }]
-        messageProp.forEach(item => {
-            const gridItem = document.createElement('div');
-            gridItem.classList.add('grid-item');
-
-            const widthDiv = document.createElement('div');
-            widthDiv.classList.add('width', item.class);
-            widthDiv.textContent = item.content;
-
-            gridItem.appendChild(widthDiv);
-            gridContainer.appendChild(gridItem);
-        });
-
-        data.push(messageProp)
-    } else {
-        fullMessage.forEach(message => {
-            console.log(message)
-            const messageProp = { content: message.Message }
-            if (message.IsOrder) {
-                messageProp.class = 'center'
-            }
-            else if (message.FromUserId == userId) {
-                messageProp.class = 'left'
-            }
-            else {
-                messageProp.class = 'right'
-            }
-            data.push(messageProp)
-            data.forEach(item => {
+function displayChat(message = null,position = "left") {
+    try {
+        const gridContainer = document.getElementById('grid-container');
+        if (message) {
+            const messageProp = [{ content: message, class: position }]
+            messageProp.forEach(item => {
                 const gridItem = document.createElement('div');
                 gridItem.classList.add('grid-item');
 
@@ -78,8 +52,35 @@ function displayChat(message = null) {
                 gridItem.appendChild(widthDiv);
                 gridContainer.appendChild(gridItem);
             });
-        });
-    }
+
+            data.push(messageProp)
+        } else {
+            fullMessage.forEach(message => {
+                const messageProp = { content: message.Message }
+                if (message.IsOrder) {
+                    messageProp.class = 'center'
+                }
+                else if (message.FromUserId == userId) {
+                    messageProp.class = 'left'
+                }
+                else {
+                    messageProp.class = 'right'
+                }
+                data.push(messageProp)
+                data.forEach(item => {
+                    const gridItem = document.createElement('div');
+                    gridItem.classList.add('grid-item');
+
+                    const widthDiv = document.createElement('div');
+                    widthDiv.classList.add('width', item.class);
+                    widthDiv.textContent = item.content;
+
+                    gridItem.appendChild(widthDiv);
+                    gridContainer.appendChild(gridItem);
+                });
+            });
+        }
+    } catch (err) { }
    
 }
 displayMessagePage()
@@ -107,7 +108,6 @@ function send() {
             if (response.success) {
                 $('#message').val("");
                 displayChat(message)
-                socket.send(message);
             } else {
                 if (response.statusCode == 401) {
                     toastr.error("Please login to like this product");

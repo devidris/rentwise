@@ -217,7 +217,7 @@ namespace RentWise.Controllers
         [HttpPost]
         [Authorize]
         [AllowAnonymous]
-        public ActionResult SendMessage(string Receipient, string Message)
+        public async Task<ActionResult> SendMessage(string Receipient, string Message)
         {
             try
             {
@@ -251,6 +251,7 @@ namespace RentWise.Controllers
                 string redirectUrl = "https://rentwisegh.com/Page/Chat/"+userId;
                 UsersDetailsModel ToUsersDetails = _unitOfWork.UsersDetails.Get(u => u.Id == Receipient);
                 SharedFunctions.SendPushNotification(ToUsersDetails.OneSignalId, "You have a new message from "+ SharedFunctions.CapitalizeAllWords(usersDetailsModel2.Username), Message, redirectUrl);
+                await _hubContext.Clients.All.SendAsync("ReceiveMessage", ToUsersDetails.Id, Message);
                 return Json(new
                 {
                     StatusCode = (int)HttpStatusCode.OK,
@@ -323,7 +324,6 @@ namespace RentWise.Controllers
             string emailContentAgent = SharedFunctions.EmailContent(agent.FirstName, 2, product.Name, model.ProductQuantity, model.TotalAmount);
             SharedFunctions.SendEmail(user.UserName, "Reservation has been made", emailContentClient);
             SharedFunctions.SendEmail(agent.User.UserName, "Reservation has been made", emailContentAgent);
-            _hubContext.Clients.All.SendAsync("ReceiveMessage", AgentId, "Reservation has been made");
             UsersDetailsModel ToUsersDetails = _unitOfWork.UsersDetails.Get(u => u.Id == AgentId);
             SharedFunctions.SendPushNotification(ToUsersDetails.OneSignalId, "Reservation has been made", Message);
             return Json(new
