@@ -1,6 +1,6 @@
 ﻿@model AuthenticationLogin;
 <div class="modal fade" id="login" tabindex="-1" aria-labelledby="loginLabel" aria-hidden="true">
-    <form class="modal-dialog modal-dialog-centered" id="loginForm" asp-route-returnUrl="/Home/Index" method="post" asp-action="Login" asp-controller="Auth">
+    <form class="modal-dialog modal-dialog-centered loginForm" id="loginForm" asp-route-returnUrl="/Home/Index" method="post" asp-action="Login" asp-controller="Auth">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="loginLabel">Login to your account</h5>
@@ -47,8 +47,5 @@
 </div>
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
-    <script>
-        console.log("id",id)
-    </script>
 }
 

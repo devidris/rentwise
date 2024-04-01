@@ -104,14 +104,42 @@ namespace RentWise.Controllers
                         Username = model.Email.Split('@')[0],
                         Id = user.Id,
                     };
-                    _unitOfWork.UsersDetails.Add(usersDetailsModel);
-                    _unitOfWork.Save();
+                    
+                   
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
                         return RedirectToPage("RegisterConfirmation", new { email = model.Email, returnUrl = model.ReturnUrl });
                     }
                     else
                     {
+                        string[] parts = model.ReturnUrl.Split('?');
+                        if (parts.Length > 1)
+                        {
+                            // Get the query parameters
+                            string query = parts[1];
+
+                            // Parse the query string
+                            var parsedQuery = HttpUtility.ParseQueryString(query);
+
+                            // Get the value of the 'oneSignal' parameter
+                            string oneSignalValue = parsedQuery["onesignalId"] ?? "Rentwise";
+
+                            if (!string.IsNullOrEmpty(oneSignalValue))
+                            {
+                                usersDetailsModel.OneSignalId = oneSignalValue;
+                                _unitOfWork.UsersDetails.Add(usersDetailsModel);
+                                _unitOfWork.Save();
+                                return RedirectToAction("Index", "Home", new { onesignalId = oneSignalValue });
+                            }
+                            else
+                            {
+                                _unitOfWork.UsersDetails.Add(usersDetailsModel);
+                                _unitOfWork.Save();
+                                return LocalRedirect(model.ReturnUrl);
+                            }
+                        }
+                        _unitOfWork.UsersDetails.Add(usersDetailsModel);
+                        _unitOfWork.Save();
                         return LocalRedirect(model.ReturnUrl);
 
                     }
@@ -150,10 +178,10 @@ namespace RentWise.Controllers
 
         public async Task<IActionResult> Login(AuthenticationLogin model)
         {
-            UsersDetailsModel usersDetailsModel = _unitOfWork.UsersDetails.Get(u => u.PhoneNumber == model.Email);
-            if(usersDetailsModel != null)
+            UsersDetailsModel usersDetails = _unitOfWork.UsersDetails.Get(u => u.PhoneNumber == model.Email);
+            if(usersDetails != null)
             {
-                model.Email = usersDetailsModel.Email;
+                model.Email = usersDetails.Email;
             }
 
             if (ModelState.IsValid)
@@ -174,10 +202,17 @@ namespace RentWise.Controllers
                         var parsedQuery = HttpUtility.ParseQueryString(query);
 
                         // Get the value of the 'oneSignal' parameter
-                        string oneSignalValue = parsedQuery["onesignalId"];
+                        string oneSignalValue = parsedQuery["onesignalId"] ?? "Rentwise";
 
                         if (!string.IsNullOrEmpty(oneSignalValue))
                         {
+                            usersDetails = _unitOfWork.UsersDetails.Get(u => u.Email == model.Email);
+                           if(usersDetails != null)
+                            {
+                                usersDetails.OneSignalId = oneSignalValue;
+                                _unitOfWork.UsersDetails.Update(usersDetails);
+                                _unitOfWork.Save();
+                            }
                             return RedirectToAction("Index", "Home", new { onesignalId = oneSignalValue });
                         } else
                         {

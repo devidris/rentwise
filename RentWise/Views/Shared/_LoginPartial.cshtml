@@ -1,5 +1,6 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using System.Security.Claims;
+@using Microsoft.Extensions.Options;
 @using RentWise.DataAccess.Repository.IRepository;
 
 @inject SignInManager<IdentityUser> SignInManager
@@ -56,6 +57,10 @@
     }
     else
     {
+          @inject IOptions<RentWiseConfig> _config;
+                @{
+                    string agentRegistrationLink = $"{_config.Value.AgentWebsiteLink}/Home/Index";
+                }
         <li class="nav-item m-0">
             <button type="button" class="btn btn-outline-secondary m-0" data-toggle="modal" data-target="#register">
                 Register
@@ -72,6 +77,10 @@
             @Html.Partial("_Login", authenticationLogin)
 
         </li>
+      
+                <li class="nav-item m">
+            <a href="@agentRegistrationLink" class="btn btn-secondary m-0">Switch to Owner</a>
+                </li>
     }
 </ul>
 

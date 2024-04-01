@@ -24,7 +24,7 @@ namespace RentWise.Agent.Controllers
             _userManager = userManager;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string? onesignalId)
         {
             IdentityUser user = await _userManager.GetUserAsync(User);
             bool isUserAdminOrAgent = await _userManager.IsInRoleAsync(user, Lookup.Roles[1]) ||
@@ -32,7 +32,13 @@ namespace RentWise.Agent.Controllers
 
             if (isUserAdminOrAgent)
             {
+                if(onesignalId != null)
+                {
+                    return RedirectToAction("Index", "Store", new { onesignalId = onesignalId });
+                } else
+                {
                 return RedirectToAction("Index", "Store");
+                }
             }
             ViewBag.UserId = user.Id;
             AgentRegistrationModel model = new AgentRegistrationModel();

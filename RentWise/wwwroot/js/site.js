@@ -77,7 +77,12 @@ const connection = new signalR.HubConnectionBuilder()
 connection.on("ReceiveMessage", (user, message) => {
     const userId = $('.user-id').val()
     if (userId == user || user == "all") { 
-        $('.test').val(OneSignal.User.PushSubscription.id)
+        const path = location.href.split("/")
+        if (path.includes("Chat")) {
+        displayChat(message, "right")
+        const scrollingDiv = $('#grid-container');
+        scrollingDiv.scrollTop(scrollingDiv[0].scrollHeight);
+        }
         //connection.invoke("SendToken", user, userId).catch(function (err) {
         //    return console.error(err.toString());
         //});
