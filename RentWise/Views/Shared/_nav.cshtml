@@ -1,4 +1,5 @@
-﻿<link rel="stylesheet" href="~/css/shared/_Nav.css" asp-append-version="true" />
+﻿@using Microsoft.Extensions.Options;
+<link rel="stylesheet" href="~/css/shared/_Nav.css" asp-append-version="true" />
 <nav class="navbar navbar-expand-lg navbar-light bg-primary py-3 px-2">
     <div class="container-fluid">
         <a class="nav-link" asp-controller="Home" asp-action="Index">
@@ -16,7 +17,7 @@
                         <a class="nav-link" asp-controller="Admin" asp-action="Index">Admin</a>
                     </li>
                 }
-                <a class="nav-link" asp-controller="Admin" asp-action="Index">Admin</a>
+                
                 <li class="nav-item">
                     <a class="nav-link" asp-controller="Page" asp-action="About">About Us</a>
                 </li>
