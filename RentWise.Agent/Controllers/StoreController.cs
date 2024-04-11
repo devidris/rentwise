@@ -182,6 +182,8 @@ namespace RentWise.Agent.Controllers
             IEnumerable<ProductModel> OtherProducts = _unitOfWork.Product.GetAll(u => u.AgentId == userId && u.ProductId != model.ProductId);
             ViewBag.OtherProducts = OtherProducts;
             ViewBag.NoOfOtherProducts = OtherProducts.Count();
+            LikeModel like = _unitOfWork.Like.Get(u => u.UserId == userId && u.ProductId == id);
+            ViewBag.IsLike = like != null;
             return View(model);
         }
 
