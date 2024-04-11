@@ -177,24 +177,7 @@
             window.location.href = newUrl;
         });
 
-        window.addEventListener("resize", function () {
-            $('body, html').css({
-                width: $(window).width(),
-                height: $(window).height()
-            });
-            var currentHeight = window.innerHeight;
-            var previousHeight = $(this).data("previousHeight");
-
-            if (previousHeight && currentHeight < previousHeight * 0.9) {
-                console.log("Keyboard is open");
-
-            } else {
-                // Assume keyboard is closed
-                console.log("Keyboard is closed");
-            }
-
-            $(this).data("previousHeight", currentHeight);
-        });
+      
     </script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
