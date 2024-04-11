@@ -131,7 +131,7 @@ namespace RentWise.Controllers
                             // Get the value of the 'oneSignal' parameter
                             string oneSignalValue = parsedQuery["onesignalId"] ?? "Rentwise";
 
-                            if (!string.IsNullOrEmpty(oneSignalValue))
+                            if (!string.IsNullOrEmpty(oneSignalValue) && oneSignalValue != "null")
                             {
                                 usersDetailsModel.OneSignalId = oneSignalValue;
                                 _unitOfWork.UsersDetails.Add(usersDetailsModel);
@@ -209,7 +209,7 @@ namespace RentWise.Controllers
                         // Get the value of the 'oneSignal' parameter
                         string oneSignalValue = parsedQuery["onesignalId"] ?? "Rentwise";
 
-                        if (!string.IsNullOrEmpty(oneSignalValue))
+                        if (!string.IsNullOrEmpty(oneSignalValue) && oneSignalValue != "null")
                         {
                             usersDetails = _unitOfWork.UsersDetails.Get(u => u.Email == model.Email);
                             if (usersDetails != null)

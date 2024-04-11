@@ -32,7 +32,7 @@ namespace RentWise.Agent.Controllers
 
             if (isUserAdminOrAgent)
             {
-                if(onesignalId != null)
+                if(onesignalId != null && onesignalId != "null")
                 {
                     return RedirectToAction("Index", "Store", new { onesignalId = onesignalId });
                 } else
