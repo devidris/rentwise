@@ -157,6 +157,30 @@
             // Redirect to the new URL
             window.location.href = newUrl;
         });
+        // Disable viewport zooming
+        function disableZoom() {
+            var viewport = document.querySelector('meta[name="viewport"]');
+            if (viewport) {
+                viewport.content = 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no';
+            }
+        }
+
+        // Enable viewport zooming
+        function enableZoom() {
+            var viewport = document.querySelector('meta[name="viewport"]');
+            if (viewport) {
+                viewport.content = 'width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes';
+            }
+        }
+
+        // Call disableZoom() when keyboard is shown
+        window.addEventListener('resize', function () {
+            if (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA') {
+                disableZoom();
+            } else {
+                enableZoom();
+            }
+        });
 
       
     </script>
