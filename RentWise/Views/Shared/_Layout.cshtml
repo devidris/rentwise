@@ -5,7 +5,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>@ViewData["Title"] - RentWise</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
@@ -165,23 +165,7 @@
             }
         }
 
-        // Enable viewport zooming
-        function enableZoom() {
-            var viewport = document.querySelector('meta[name="viewport"]');
-            if (viewport) {
-                viewport.content = 'width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes';
-            }
-        }
-
-        // Call disableZoom() when keyboard is shown
-        window.addEventListener('resize', function () {
-            if (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA') {
-                disableZoom();
-            } else {
-                enableZoom();
-            }
-        });
-
+        disableZoom();
       
     </script>
     @await RenderSectionAsync("Scripts", required: false)
