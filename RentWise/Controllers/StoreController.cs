@@ -447,7 +447,7 @@ namespace RentWise.Controllers
                 var request = new RestRequest("");
                 request.AddHeader("accept", "application/json");
                 request.AddHeader("content-type", "application/json");
-                request.AddHeader("authorization", "Basic MDB6OE84djpkNGJkNzU4YTQyZGU0NzdhYjIwMTVhMGViMmZkN2IwMg==");
+                request.AddHeader("authorization", "Basic RDBvUXpPbjo3YTFkYWI0M2I1MTQ0Y2Q3OTFjMjMwNGU2N2UzNTJjOQ==");
                 request.AddJsonBody(jsonBody, false);
                 try
                 {
