@@ -42,7 +42,7 @@
     display:grid;
     padding:0;
     grid-template-columns:1fr;
-    grid-template-rows:auto 1fr 50px;
+    grid-template-rows:auto 1fr auto auto;
     padding:10px;
 }
 .chat-profile {
@@ -58,6 +58,10 @@
     grid-column: 1/2;
     grid-row: 3/4;
 }
+.chat-send {
+    grid-column: 1/2;
+    grid-row: 4/5;
+}
 .grid-item {
     width: 100%;
 
@@ -72,13 +76,15 @@
     max-width: 50%;
     color: white;
     border-radius: 10px;
+    overflow-wrap: break-word;
 }
 .left {
-   margin-left:auto;
+    margin-left: auto;
 }
 
 .right {
     margin-right: auto;
+    background:#808080eb;
 }
 .center{
     margin: auto;
@@ -109,3 +115,9 @@
         border-radius: 2rem;
         border: none;
     }
+
+#message {
+    min-height: 40px; /* Minimum height to start with */
+    resize: none; /* Prevent manual resizing by the user */
+    overflow-y:auto;
+}

@@ -27,8 +27,11 @@
                     <span class="ml-3">User Name</span>
                 </div>
                 <div class="grid pt-3 px-md-5 px-md-1" id="grid-container"></div>
-                <div class="chat-send row">
-                    <input type="text" value="" placeholder="Message" class="col-10 border rounded-pill px-3" id="message" />
+                <p class="text-center border chat-warn w-100">
+                    Do not make pay outside this app. Your money is protected when you pay through RentWise App. Call 0242207779 for support
+                </p>
+                <div class="chat-send row align-items-center">
+                    <textarea type="text" value="" placeholder="Message" class="col-10 border rounded-2" id="message"></textarea>
                     <button class="btn btn-primary col-2 ml-3" onclick="send()">Send</button>
                 </div>
             </div>
@@ -50,4 +53,5 @@
 </div>
 @section Scripts{
     <script src="~/js/controller/page/Chat.js"></script>
+
 }
