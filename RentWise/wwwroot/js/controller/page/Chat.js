@@ -108,6 +108,8 @@ function send() {
             if (response.success) {
                 $('#message').val("");
                 displayChat(message)
+                const scrollingDiv = $('#grid-container');
+                scrollingDiv.scrollTop(scrollingDiv[0].scrollHeight);
             } else {
                 if (response.statusCode == 401) {
                     toastr.error("Please login to like this product");
@@ -128,6 +130,26 @@ $(document).ready(function () {
     // Select the div with the overflow set to scroll
     const scrollingDiv = $('#grid-container');
 
-    // Set the scrollTop property to the maximum scroll height
-    scrollingDiv.scrollTop(scrollingDiv[0].scrollHeight);
+    if (scrollingDiv) {
+        // Set the scrollTop property to the maximum scroll height
+        scrollingDiv.scrollTop(scrollingDiv[0].scrollHeight);
+    }
+
+
+    const textarea = document.getElementById('message');
+    const lineHeight = parseInt(window.getComputedStyle(textarea).lineHeight);
+
+    // Set initial height
+    const initialRows = 1.6; // Set the initial number of rows
+    textarea.style.height = initialRows * lineHeight + 'px';
+    $('.chat-send').css('height', initialRows * lineHeight + 'px');
+
+    // Add event listener
+    textarea.addEventListener('input', function () {
+        const rows = Math.min(this.scrollHeight / lineHeight, 4); // Limit to 4 lines
+        this.style.height = rows * lineHeight + 'px'; // Set the height of textarea based on content, up to 4 lines
+        $('.chat-send').css('height', rows * lineHeight + 'px'); // Set the height of .chat-send
+    });
+
 });
+
