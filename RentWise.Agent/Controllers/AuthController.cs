@@ -142,7 +142,7 @@ namespace RentWise.Controllers
                             {
                                 _unitOfWork.UsersDetails.Add(usersDetailsModel);
                                 _unitOfWork.Save();
-                                return LocalRedirect(model.ReturnUrl);
+                                return RedirectToAction("Index", "Home");
                             }
                         }
                         _unitOfWork.UsersDetails.Add(usersDetailsModel);
@@ -223,7 +223,7 @@ namespace RentWise.Controllers
                         }
                         else
                         {
-                            return LocalRedirect(model.ReturnUrl);
+                            return RedirectToAction("Index", "Home");
                         }
 
 

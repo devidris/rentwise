@@ -180,3 +180,33 @@ function contact() {
     });
 }
 connection.start().catch(err => console.error(err));
+function shareOrCopy(name,link) {
+    // Check if the browser supports the Web Share API
+    if (navigator.share) {
+        // Use Web Share API to share
+        navigator.share({
+            title: name,
+            text: 'Check out this rentals on rentwisegh',
+            url: link ?? location.href
+        })
+            .then(() => {
+                console.log('Shared successfully');
+            })
+            .catch((error) => {
+                console.error('Error sharing:', error);
+            });
+    } else {
+        // Fallback for browsers that do not support Web Share API
+        console.log('Web Share API not supported, using fallback');
+        // Copy link to clipboard
+        var dummy = document.createElement("input");
+        document.body.appendChild(dummy);
+        dummy.setAttribute("id", "dummy_id");
+        document.getElementById("dummy_id").value = "https://www.example.com";
+        dummy.select();
+        document.execCommand("copy");
+        document.body.removeChild(dummy);
+        // Show toastr notification
+        toastr.success('Link copied to clipboard!');
+    }
+};
