@@ -24,7 +24,7 @@
                 <a class="dropdown-toggle link-white" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <i class="bi bi-person-fill text-white fs-3"></i>
                     @{
-                        int totalNotification = usersDetailsModel.Orders + usersDetailsModel.Messages;
+                        int totalNotification = usersDetailsModel != null ? usersDetailsModel.Orders + usersDetailsModel.Messages : 0;
                     }
                     @if (totalNotification > 0)
                     {
@@ -36,7 +36,7 @@
 
                     <a class="dropdown-item" asp-controller="Page" asp-action="Chat">
                         Message
-                        @if (usersDetailsModel.Messages > 0)
+                        @if (usersDetailsModel != null && usersDetailsModel.Messages > 0)
                         {
                             <sup>@usersDetailsModel.Messages</sup>
                         }
@@ -44,7 +44,7 @@
 
                     <a class="dropdown-item" asp-controller="Store" asp-action="Orders">
                         Reservations
-                        @if (usersDetailsModel.Orders > 0)
+                        @if (usersDetailsModel != null && usersDetailsModel.Orders > 0)
                         {
                             <sup>@usersDetailsModel.Orders</sup>
                         }

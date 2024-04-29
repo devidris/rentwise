@@ -350,8 +350,7 @@ namespace RentWise.Controllers
                 _unitOfWork.Save();
 
 
-
-                return RedirectToAction(model.ReturnAction, model.ReturnController);
+                return RedirectToAction("Login", "Auth");
             }
             TempData.Put("Model", model);
             List<string> errorMessages = ModelState.Values
@@ -362,13 +361,13 @@ namespace RentWise.Controllers
             TempData["ErrorMessages"] = errorMessages; // Store the error messages in TempData
             if (isCreate)
             {
-                RedirectToAction("Login", "Auth");
+               return RedirectToAction("Login", "Auth");
             }
             if (!ModelState.IsValid)
             {
                 return RedirectToAction("Index", "Home");
             }
-            return RedirectToAction(model.ReturnAction, model.ReturnController);
+           return RedirectToAction("Login", "Auth");
         }
 
         public void saveImage(string userId, string fileName, IFormFile file)
