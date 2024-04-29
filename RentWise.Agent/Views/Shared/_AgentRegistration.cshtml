@@ -71,16 +71,6 @@
         }
     </div>
     <div class="form-floating mb-3">
-        <input asp-for="@Model.ProfilePicture" class="form-control" aria-required="true" type="file" accept="image/*" name="profilePicture" />
-        <label asp-for="@Model.ProfilePicture" class="form-label">Profile Picture</label>
-        <span asp-validation-for="@Model.ProfilePicture" class="text-danger"></span>
-        @if (Model.Id != null)
-        {
-            string PP = $"~/images/agent/{Model.Id}/registration/ProfilePicture.Png";
-            <img src="@Url.Content(PP)" alt="logo" width="100" height="100" />
-        }
-    </div>
-    <div class="form-floating mb-3">
         <input asp-for="@Model.NationalCard" class="form-control" aria-required="true" type="file" accept="image/*" name="nationalCard" />
         <label asp-for="@Model.NationalCard" class="form-label">National Card</label>
         <span asp-validation-for="@Model.NationalCard" class="text-danger"></span>
