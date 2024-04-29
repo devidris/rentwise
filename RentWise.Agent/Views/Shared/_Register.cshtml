@@ -1,10 +1,10 @@
 ﻿@model Authentication;
-<div class="modal fade" id="register" tabindex="-1" aria-labelledby="registerLabel" aria-hidden="true">
+<div class="modal fade" id="register" tabindex="-1" role="dialog" aria-labelledby="registerLabel" aria-hidden="true">
     <form class="modal-dialog modal-dialog-centered registerForm" id="registerForm" asp-route-returnUrl="/Home/Index" method="post" asp-action="Register" asp-controller="Auth">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="registerLabel">Create a new account</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="closeModal('register')">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -20,6 +20,11 @@
                     <input asp-for="@Model.NumberOTP" class="form-control" aria-required="true" placeholder="*****" />
                     <label asp-for="@Model.NumberOTP" class="form-label">Enter OTP</label>
                     <span asp-validation-for="@Model.NumberOTP" class="text-danger"></span>
+                </div>
+                <div class="form-floating mb-3">
+                    <input asp-for="@Model.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
+                    <label asp-for="@Model.Email">Email</label>
+                    <span asp-validation-for="@Model.Email" class="text-danger"></span>
                 </div>
                 <div class="form-floating mb-3">
                     <input asp-for="@Model.Password" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
@@ -38,27 +43,29 @@
                     <button id="registerSubmit" type="submit" class="btn btn-primary w-50">Register</button>
                 </div>
                 <div class="d-flex w-100 justify-content-between">
-                    <p>Have an account? Sign in</p>
-                    <p>Forget password?</p>
+                    <p>  <a asp-controller="Auth" asp-action="Login">Already have an account, Login</a></p>
+                    <p> <a id="forgot-password" asp-controller="Auth" asp-action="ForgotPassword">Forgot your password?</a></p>
                 </div>
             </div>
         </div>
     </form>
 </div>
-    <script>
-        async function sendOtp(type) {
-            const value = $('#' + type).val()
-            if (!value || value == "") {
-                toastr.error("Please input a phone number", "Error")
-                return
-            }
-            const data = await $.ajax({
-                method: "POST",
-                url: "/auth/sendotp?type=" + type + "&value=" + value
-            })
-            if (data.success) {
-                toastr.success("Success", "Otp sent successfully")
-            }
+<script>
+    async function sendOtp(type) {
+        const value = $('#' + type).val()
+        if (!value || value == "") {
+            toastr.error("Please input a phone number", "Error")
+            return
         }
-    </script>
+        const data = await $.ajax({
+            method: "POST",
+            url: "/auth/sendotp?type=" + type + "&value=" + value
+        })
+        console.log(data)
+        if (data.success) {
+            toastr.success("Success", "Otp sent successfully")
+        }
+    }
+</script>
+
 

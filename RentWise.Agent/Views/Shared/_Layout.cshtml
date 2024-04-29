@@ -82,14 +82,14 @@
                 // localStorage.setItem("id", id)
                 $(".loginForm").attr("action", "/Auth/Login?returnUrl=Home/Index?onesignalId=" + id);
 
-                $(".registerForm").attr("action", "/Auth/Login?returnUrl=Home/Index?onesignalId=" + id);
+                $(".registerForm").attr("action", "/Auth/Register?returnUrl=Home/Index?onesignalId=" + id);
             } else {
              urlParams = new URLSearchParams(window.location.search);
            id = urlParams.get('onesignalId');
             // localStorage.setItem("id", id)
             $(".loginForm").attr("action", "/Auth/Login?returnUrl=Home/Index?onesignalId=" + id);
 
-            $(".registerForm").attr("action", "/Auth/Login?returnUrl=Home/Index?onesignalId=" + id);
+            $(".registerForm").attr("action", "/Auth/Register?returnUrl=Home/Index?onesignalId=" + id);
         }
         if (id && id != "") {
             $.ajax({
