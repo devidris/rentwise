@@ -91,11 +91,6 @@ namespace RentWise.Models.Identity
         [ValidateNever]
         [NotMapped]
         public string Logo { get; set; }
-
-        [NotMapped]
-        [ValidateNever]
-        [Display(Name = "Profile Picture")]
-        public string ProfilePicture { get; set; }
         [NotMapped]
         [ValidateNever]
         [Display(Name = "National Card")]

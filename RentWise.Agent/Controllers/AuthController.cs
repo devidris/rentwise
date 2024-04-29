@@ -249,7 +249,7 @@ namespace RentWise.Controllers
         }
 
         [Authorize]
-        public async Task<IActionResult> RegisterAgent(AgentRegistrationModel model, IFormFile? logo, IFormFile? nationalCard, IFormFile? profilePicture)
+        public async Task<IActionResult> RegisterAgent(AgentRegistrationModel model, IFormFile? logo, IFormFile? nationalCard)
         {
             IdentityUser user = await _userManager.GetUserAsync(User);
             if (!model.Privacy)
@@ -283,10 +283,6 @@ namespace RentWise.Controllers
                 if (nationalCard == null)
                 {
                     ModelState.AddModelError(string.Join("", Lookup.Upload[4].Split(" ")), "National Card upload is compulsory.");
-                }
-                if (profilePicture == null)
-                {
-                    ModelState.AddModelError(string.Join("", Lookup.Upload[5].Split(" ")), "Profile Picture upload is compulsory.");
                 }
             }
 
@@ -334,14 +330,7 @@ namespace RentWise.Controllers
                     saveImage(model.Id, nationalCardName, nationalCard);
                     #endregion
                 }
-                if (profilePicture != null)
-                {
-                    #region Saving Profile Picture
-                    string profilePictureName = String.Join("", Lookup.Upload[5].Split(" ")) + Path.GetExtension(profilePicture.FileName);
-
-                    saveImage(model.Id, profilePictureName, profilePicture);
-                    #endregion
-                }
+                
                 if (model.Slug == null) { model.Slug = model.Id.ToString(); }
 
                 if (isCreate)
