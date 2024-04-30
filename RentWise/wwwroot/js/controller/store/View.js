@@ -169,7 +169,8 @@ function bookNow() {
         cancelButtonText: 'No, cancel',
     }).then((result) => {
         if (result.isConfirmed) {
-$.ajax({
+            showLoading()
+        $.ajax({
                 url: '/Store/Book',
                 method: 'POST',
                 data: {
@@ -181,7 +182,8 @@ $.ajax({
                     agentId: $('.agent-id').val(),
                     message:orderMessage
                 },
-                success: function (result) {
+            success: function (result) {
+                hideLoading()
                     if (result.statusCode == 401) {
                         toastr.error("Please login to place an order");
                         location.href = '/Auth/Login'

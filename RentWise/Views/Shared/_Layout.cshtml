@@ -14,6 +14,11 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" />
 </head>
 <body>
+    <div class="loading hidden">
+        <div class='uil-ring-css'>
+            <div></div>
+        </div>
+    </div>
     <div class="page">
         <div class="page_content">
             <header>
@@ -53,12 +58,12 @@
 
                             <div>
                                 <h2>Get our app</h2>
-                                <div class="d-flex gap-3 flex-wrap align-items-center justify-content-center">
+                                <div class="d-flex gap-3 flex-wrap align-items-center justify-content-center nb-3">
                                     <a href="https://apps.apple.com/ng/app/rentwise-gh/id6475678851">
-                                        <img src="img/appstore.png" alt="Get app on app store" class="cursor-pointer" width="200px" />
+                                        <img src="/img/appstore.png" alt="Get app on app store" class="cursor-pointer" width="200px" />
                                     </a>
                                     <a href="https://play.google.com/store/apps/details?id=com.rentwisegh.rentwise&pcampaignid=web_share">
-                                       <img src="img/googleplay.png" alt="Get app on google store" class="cursor-pointer" width="200px"/>
+                                       <img src="/img/googleplay.png" alt="Get app on google store" class="cursor-pointer" width="200px"/>
                                     </a>
                                     
                                 </div>
@@ -109,8 +114,11 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jcarousel/0.3.6/jquery.jcarousel.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.15.7/dist/sweetalert2.all.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
     <script>
+
         $(document).ready(function () {
+            hideLoading()
             $('body, html').css({
                 width: $(window).width(),
                 height: $(window).height()
@@ -137,13 +145,15 @@
         const userId = $('.user-id').val() ?? "rentwise";
         const urlParams = new URLSearchParams(window.location.search);
         let id = urlParams.get('onesignalId');
+        let toastrMessage = urlParams.get('message')
+        if(toastrMessage){
+            toastr.success(toastrMessage)
+        }
         $('.id').val(id)
         if(id)
-        console.log(userId, userId != "", id, id != "")
         if (id && id != "") {
             $(".loginForm").attr("action", "/Auth/Login?returnUrl=Home/Index?onesignalId=" + id);
             $(".registerForm").attr("action", "/Auth/Register?returnUrl=Home/Index?onesignalId=" + id);
-            console.log($(".loginForm"))
         } 
 
         if (userId && userId != "" && id && id != "") {
@@ -158,9 +168,11 @@
         // Listen for click events on all links
         $('a').click(function (event) {
             event.preventDefault();
-
+           
             const originalUrl = $(this).attr('href');
-
+            if(originalUrl && originalUrl != '#'){
+                showLoading()
+            }
             const separator = originalUrl.indexOf('?') !== -1 ? '&' : '?';
 
             let newUrl = originalUrl;
@@ -169,6 +181,10 @@
             }
             // Redirect to the new URL
             window.location.href = newUrl;
+        });
+        // Event listener for submit buttons
+        $('button[type="submit"]').on('click', function (event) {
+            showLoading()
         });
         // Disable viewport zooming
         function disableZoom() {
@@ -181,7 +197,6 @@
         disableZoom();
       
     </script>
-    @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
 

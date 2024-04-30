@@ -12,7 +12,7 @@
     Authentication authentication = new Authentication(); // or null if you want to pass null
     AuthenticationLogin authenticationLogin = new AuthenticationLogin();
     string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-    UsersDetailsModel usersDetailsModel = _unitOfWork.UsersDetails.Get(u => u.Id == userId);
+    UsersDetailsModel usersDetailsModel = userId != null ? _unitOfWork.UsersDetails.Get(u => u.Id == userId) : new UsersDetailsModel();
     string agentRegistrationLink = $"{_config.Value.AgentWebsiteLink}/Home/Index";
 }
 <link rel="stylesheet" href="~/css/shared/_LoginPartial.css" asp-append-version="true" />

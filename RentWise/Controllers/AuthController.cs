@@ -140,7 +140,7 @@ namespace RentWise.Controllers
                         }
                         _unitOfWork.UsersDetails.Add(usersDetailsModel);
                         _unitOfWork.Save();
-                        return LocalRedirect(model.ReturnUrl);
+                        return RedirectToAction("Index", "Home", new { message = "Regitration Successful" });
 
                     }
                 }
@@ -203,7 +203,6 @@ namespace RentWise.Controllers
 
                         // Get the value of the 'oneSignal' parameter
                         string oneSignalValue = parsedQuery["onesignalId"] ?? "Rentwise";
-
                         if (!string.IsNullOrEmpty(oneSignalValue))
                         {
                             usersDetails = _unitOfWork.UsersDetails.Get(u => u.Email == model.Email);
@@ -213,15 +212,16 @@ namespace RentWise.Controllers
                                 _unitOfWork.UsersDetails.Update(usersDetails);
                                 _unitOfWork.Save();
                             }
-                            return RedirectToAction("Index", "Home", new { onesignalId = oneSignalValue });
+
+                            return RedirectToAction("Index", "Home", new { onesignalId = oneSignalValue, message="Login Successful" }) ;
                         } else
                         {
-                            return LocalRedirect(model.ReturnUrl);
+                            return RedirectToAction("Index", "Home", new { message = "Login Successful" });
                         }
 
                      
                     }
-                    return LocalRedirect(model.ReturnUrl);
+                    return RedirectToAction("Index", "Home", new { message = "Login Successful" });
 
                 }
                 if (result.RequiresTwoFactor)
