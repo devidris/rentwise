@@ -85,6 +85,7 @@ function displayChat(message = null,position = "left") {
 }
 displayMessagePage()
 function navigate(id) {
+    showLoading()
     location.href = `/Page/Chat/${id}`
 }
 
