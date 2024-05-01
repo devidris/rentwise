@@ -119,7 +119,7 @@ namespace RentWise.Agent.Controllers
                 }
                 _unitOfWork.Save();
 
-                return RedirectToAction("Preview", "Store", new { id = model.ProductId });
+                return RedirectToAction("Preview", "Store", new { id = model.ProductId, message = "Created successfully" });
             }
             return View(model);
         }

@@ -136,18 +136,18 @@ namespace RentWise.Controllers
                                 usersDetailsModel.OneSignalId = oneSignalValue;
                                 _unitOfWork.UsersDetails.Add(usersDetailsModel);
                                 _unitOfWork.Save();
-                                return RedirectToAction("Index", "Home", new { onesignalId = oneSignalValue });
+                                return RedirectToAction("Index", "Home", new { onesignalId = oneSignalValue, message = "Regitration Successful" });
                             }
                             else
                             {
                                 _unitOfWork.UsersDetails.Add(usersDetailsModel);
                                 _unitOfWork.Save();
-                                return RedirectToAction("Index", "Home");
+                                return RedirectToAction("Index", "Home", new { message = "Regitration Successful" });
                             }
                         }
                         _unitOfWork.UsersDetails.Add(usersDetailsModel);
                         _unitOfWork.Save();
-                        return LocalRedirect(model.ReturnUrl);
+                        return RedirectToAction("Index", "Home", new { message = "Regitration Successful" });
                     }
                 }
                 foreach (var error in result.Errors)
@@ -218,12 +218,12 @@ namespace RentWise.Controllers
                                 _unitOfWork.UsersDetails.Update(usersDetails);
                                 _unitOfWork.Save();
                             }
-                                return RedirectToAction("Index", "Home", new { onesignalId = oneSignalValue });
+                                return RedirectToAction("Index", "Home", new { onesignalId = oneSignalValue, message = "Login Successful"  });
                        
                         }
                         else
                         {
-                            return RedirectToAction("Index", "Home");
+                            return RedirectToAction("Index", "Home", new { message = "Regitration Successful" });
                         }
 
 
@@ -276,13 +276,21 @@ namespace RentWise.Controllers
             }
             if (isCreate)
             {
-                if (logo == null)
+                if (logo == null || logo.Length < 1)
                 {
                     ModelState.AddModelError(Lookup.Upload[1], "Logo upload is compulsory.");
                 }
-                if (nationalCard == null)
+                if (logo!= null && logo.Length > 5 * 1024 * 1024)
+                {
+                    ModelState.AddModelError(Lookup.Upload[1], "Logo cannot be more than 5 MB.");
+                }
+                    if (nationalCard == null || nationalCard.Length < 1)
                 {
                     ModelState.AddModelError(string.Join("", Lookup.Upload[4].Split(" ")), "National Card upload is compulsory.");
+                }
+                if (nationalCard != null && nationalCard.Length > 5 * 1024 * 1024)
+                {
+                    ModelState.AddModelError(Lookup.Upload[4], "National Card cannot be more than 5 MB.");
                 }
             }
 
@@ -350,7 +358,7 @@ namespace RentWise.Controllers
                 _unitOfWork.Save();
 
 
-                return RedirectToAction("Login", "Auth");
+                return RedirectToAction("Login", "Auth", new { message = "Owner Regitration Successful, login again to activate accouunt" });
             }
             TempData.Put("Model", model);
             List<string> errorMessages = ModelState.Values
@@ -361,13 +369,13 @@ namespace RentWise.Controllers
             TempData["ErrorMessages"] = errorMessages; // Store the error messages in TempData
             if (isCreate)
             {
-               return RedirectToAction("Login", "Auth");
+               return RedirectToAction("Login", "Auth", new { message = "Owner Regitration Successful, login again to activate account" });
             }
             if (!ModelState.IsValid)
             {
                 return RedirectToAction("Index", "Home");
             }
-           return RedirectToAction("Login", "Auth");
+           return RedirectToAction("Login", "Auth", new { message = "Owner Regitration Successful, login again to activate account" });
         }
 
         public void saveImage(string userId, string fileName, IFormFile file)
