@@ -34,10 +34,10 @@ namespace RentWise.Agent.Controllers
             {
                 if(onesignalId != null && onesignalId != "null")
                 {
-                    return RedirectToAction("Index", "Store", new { onesignalId = onesignalId });
+                    return RedirectToAction("Index", "Store", new { onesignalId = onesignalId, message = "Login Successful" });
                 } else
                 {
-                return RedirectToAction("Index", "Store");
+                return RedirectToAction("Index", "Store", new { message = "Login Successful" });
                 }
             }
             ViewBag.UserId = user.Id;

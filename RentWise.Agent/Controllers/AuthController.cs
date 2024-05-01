@@ -228,7 +228,7 @@ namespace RentWise.Controllers
 
 
                     }
-                    return LocalRedirect(model.ReturnUrl);
+                    return RedirectToAction("Index", "Home", new { message = "Regitration Successful" });
                 }
                 if (result.RequiresTwoFactor)
                 {
