@@ -30,6 +30,8 @@ namespace RentWise.DataAccess.Repository
 
         public IOtpRepository Otp { get; private set; }
 
+        public IStateRepository State{ get; private set; }
+        public ICityRepository City { get; private set; }
         public UnitOfWork(ApplicationDbContext db)
         {
             _db = db;
@@ -44,6 +46,8 @@ namespace RentWise.DataAccess.Repository
             ProductImage = new ProductImageRepository(_db);
             WithdrawalHistory = new WithdrawalHistoryRepository(_db);
             Otp = new OtpRepository(_db);
+            State = new StateRepository(_db);
+            City = new CityRepository(_db);
         }
 
         public void Save()

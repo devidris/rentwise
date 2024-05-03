@@ -22,6 +22,9 @@ namespace RentWise.DataAccess.Repository.IRepository
         IWithdrawalHistoryRepository WithdrawalHistory { get; }
 
         IOtpRepository Otp { get; }
+
+        IStateRepository State { get; }
+        ICityRepository City { get; }
         void Save();
     }
 }

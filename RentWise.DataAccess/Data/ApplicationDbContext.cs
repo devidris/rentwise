@@ -34,6 +34,10 @@ public class ApplicationDbContext : IdentityDbContext<IdentityUser>
     public DbSet<ProductImageModel> ProductImages { get; set; }
 
     public DbSet<OtpVerification> OtpVerifications { get; set; }
+
+    public DbSet<State> States { get; set; }
+    public DbSet<City> Cities { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -48,6 +52,10 @@ public class ApplicationDbContext : IdentityDbContext<IdentityUser>
         modelBuilder.Entity<AgentRegistrationModel>()
             .HasIndex(u => u.Slug)
             .IsUnique();
-        
+
+        // Configure the primary keys
+        modelBuilder.Entity<State>().HasKey(s => s.StateId);
+        modelBuilder.Entity<City>().HasKey(c => c.CityId);
+
     }
 }

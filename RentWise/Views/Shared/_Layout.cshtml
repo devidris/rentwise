@@ -146,8 +146,12 @@
         const urlParams = new URLSearchParams(window.location.search);
         let id = urlParams.get('onesignalId');
         let toastrMessage = urlParams.get('message')
+        let errorMessage = urlParams.get('error')
         if(toastrMessage){
             toastr.success(toastrMessage)
+        }
+        if(errorMessage){
+            toastr.error(errorMessage)
         }
         $('.id').val(id)
         if(id)
