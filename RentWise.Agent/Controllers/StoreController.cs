@@ -53,7 +53,7 @@ namespace RentWise.Agent.Controllers
 
         }
 
-        public IActionResult Upsert(string? id;)
+        public IActionResult Upsert(string? id)
         {
 
             ProductModel product = new(){};
