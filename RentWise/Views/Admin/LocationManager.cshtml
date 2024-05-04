@@ -7,8 +7,8 @@
     <h1>Locations</h1>
     <div>
         <form asp-action="AddState" asp-controller="Admin" method="post">
-            <input type="text" class="form-control" placeholder="City" aria-label="State" name="Name" />
-            <button class="btn btn-primary" type="submit">Add City</button>
+            <input type="text" class="form-control" placeholder="Region" aria-label="State" name="Name" />
+            <button class="btn btn-primary" type="submit">Add Region</button>
         </form>
 
         <div>
@@ -24,7 +24,7 @@
                                     string stateName = SharedFunctions.Capitalize(state.Name);
                                 }
                                 @stateName
-                                <button class="btn btn-secondary" data-toggle="collapse" data-target="#cityList-@state.StateId">Show Regions</button>
+                                <button class="btn btn-secondary" data-toggle="collapse" data-target="#cityList-@state.StateId">Show Cities</button>
                                 <div id="cityList-@state.StateId" class="collapse">
                                     <ul>
                                         @if (state.Cities.Count > 0)
@@ -46,26 +46,26 @@
                                         }
                                         else
                                         {
-                                            <li>No regions found.</li>
+                                            <li>No cities found.</li>
                                         }
                                     </ul>
                                     <form asp-action="AddCity" asp-controller="Admin" method="post">
                                         <input type="hidden" value="@state.StateId" name="StateId" />
-                                        <input type="text" class="form-control" placeholder="Region" aria-label="City" name="Name" />
-                                        <button class="btn btn-primary" type="submit">Add Region</button>
+                                        <input type="text" class="form-control" placeholder="City" aria-label="City" name="Name" />
+                                        <button class="btn btn-primary" type="submit">Add City</button>
                                     </form>
                                 </div>
                             </div>
                             <form asp-action="DeleteState" asp-controller="Admin" method="post">
                                 <input type="hidden" value="@state.StateId" name="StateId" />
-                                <button class="btn btn-danger" type="submit">Delete City</button>
+                                <button class="btn btn-danger" type="submit">Delete Redion</button>
                             </form>
                         </li>
                     }
                 }
                 else
                 {
-                    <li class="list-group-item">No cities found. Add a new city.</li>
+                    <li class="list-group-item">No cities found. Add a new Region.</li>
                 }
             </ul>
         </div>
