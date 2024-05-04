@@ -178,3 +178,16 @@ function shareOrCopy(name, link) {
         toastr.success('Link copied to clipboard!');
     }
 };
+
+// Function to show loading animation
+function showLoading() {
+    const loadingOverlay = document.querySelector('.loading');
+    loadingOverlay.classList.remove('hidden');
+
+}
+
+// Function to hide loading animation
+function hideLoading() {
+    const loadingOverlay = document.querySelector('.loading');
+    loadingOverlay.classList.add('hidden');
+}

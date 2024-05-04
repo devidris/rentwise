@@ -1,0 +1,73 @@
+﻿@using RentWise.Utility;
+<div class="p-5">
+    <div>
+        <a asp-controller="Admin" asp-action="Index" class="btn btn-primary text-decoration-none">User Details</a>
+        <a asp-controller="Admin" asp-action="Contact" class="btn btn-primary text-decoration-none">Contact</a>
+    </div>
+    <h1>Locations</h1>
+    <div>
+        <form asp-action="AddState" asp-controller="Admin" method="post">
+            <input type="text" class="form-control" placeholder="City" aria-label="State" name="Name" />
+            <button class="btn btn-primary" type="submit">Add City</button>
+        </form>
+
+        <div>
+            <h2>Cities</h2>
+            <ul class="list-group">
+                @if (ViewBag.States != null && ViewBag.States.Count > 0)
+                {
+                    foreach (State state in ViewBag.States)
+                    {
+                        <li class="list-group-item d-flex justify-content-between flex-wrap">
+                            <div>
+                                @{
+                                    string stateName = SharedFunctions.Capitalize(state.Name);
+                                }
+                                @stateName
+                                <button class="btn btn-secondary" data-toggle="collapse" data-target="#cityList-@state.StateId">Show Regions</button>
+                                <div id="cityList-@state.StateId" class="collapse">
+                                    <ul>
+                                        @if (state.Cities.Count > 0)
+                                        {
+                                            foreach (City city in state.Cities)
+                                            {
+                                               
+                                              string cityName = SharedFunctions.Capitalize(city.Name);
+                                            
+                                                <li class="my-3">
+                                                    @cityName
+                                                   
+                                                    <form asp-action="DeleteCity" asp-controller="Admin" method="post">
+                                                        <input type="hidden" value="@city.CityId" name="CityId" />
+                                                        <button class="btn btn-danger" type="submit">Delete</button>
+                                                    </form>
+                                                </li>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <li>No regions found.</li>
+                                        }
+                                    </ul>
+                                    <form asp-action="AddCity" asp-controller="Admin" method="post">
+                                        <input type="hidden" value="@state.StateId" name="StateId" />
+                                        <input type="text" class="form-control" placeholder="Region" aria-label="City" name="Name" />
+                                        <button class="btn btn-primary" type="submit">Add Region</button>
+                                    </form>
+                                </div>
+                            </div>
+                            <form asp-action="DeleteState" asp-controller="Admin" method="post">
+                                <input type="hidden" value="@state.StateId" name="StateId" />
+                                <button class="btn btn-danger" type="submit">Delete City</button>
+                            </form>
+                        </li>
+                    }
+                }
+                else
+                {
+                    <li class="list-group-item">No cities found. Add a new city.</li>
+                }
+            </ul>
+        </div>
+    </div>
+</div>

@@ -1,15 +1,11 @@
-﻿using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using RentWise.DataAccess.Repository;
 using RentWise.DataAccess.Repository.IRepository;
 using RentWise.Models;
 using RentWise.Models.Identity;
 using RentWise.Utility;
 using Microsoft.AspNetCore.SignalR;
-using Microsoft.AspNetCore.Authorization;
 
 namespace RentWise.Controllers
 {
@@ -35,6 +31,66 @@ namespace RentWise.Controllers
             return View(usersDetails);
         }
 
+        public IActionResult LocationManager()
+        {
+            IEnumerable<State> states = _unitOfWork.State.GetAll(u=>u.StateId != null,"Cities");
+            ViewBag.States = states.Count() > 0 ? states : null;
+            return View();
+        }
+
+        public async Task<IActionResult> AddState(State state)
+        {
+            if(ModelState.IsValid)
+            {
+                state.Name = state.Name.Trim();
+                state.Name = state.Name.ToLower();
+                _unitOfWork.State.Add(state);
+                _unitOfWork.Save();
+                return RedirectToAction(nameof(LocationManager),  new {message = "States added successfully"});
+            }
+            return RedirectToAction(nameof(LocationManager), new {error = "State name is compulsory"});
+        }
+
+        public async Task<IActionResult> AddCity(City city)
+        {
+            if (!String.IsNullOrEmpty(city.Name) && city.StateId != null) { 
+                city.Name = city.Name.Trim();
+                city.Name = city.Name.ToLower();
+                _unitOfWork.City.Add(city);
+            _unitOfWork.Save();
+            return RedirectToAction(nameof(LocationManager), new {message = "City added sccuessfully"});
+        }
+            return RedirectToAction(nameof(LocationManager), new { error = "City name is compulsory" });
+      
+        }
+
+        public async Task<IActionResult> DeleteCity(City city)
+        {
+            if (city.CityId != null)
+            {
+               city = _unitOfWork.City.Get(u => u.CityId == city.CityId);
+                _unitOfWork.City.Remove(city);
+                _unitOfWork.Save();
+                return RedirectToAction(nameof(LocationManager), new {message="City Removed successfully"});
+            }
+            return RedirectToAction(nameof(LocationManager), new {error = "Something went wrong"});
+        }
+        public async Task<IActionResult> DeleteState(State state)
+        {
+            if (state.StateId != null)
+            {
+               state = _unitOfWork.State.Get(u => u.StateId == state.StateId);
+            City city = _unitOfWork.City.Get(u => u.StateId == state.StateId);
+                if(city != null)
+                {
+                    _unitOfWork.City.Remove(city);
+                }
+                _unitOfWork.State.Remove(state);
+                _unitOfWork.Save();
+                return RedirectToAction(nameof(LocationManager), new {message = "State and all cities under it deleted"});
+            }
+            return RedirectToAction(nameof(LocationManager),new {error= "Something went wrong"});
+        }
         public async Task<IActionResult> DeactivateAll(string Id)
         {
             IdentityUser user = await _userManager.FindByIdAsync(Id);
@@ -169,6 +225,7 @@ namespace RentWise.Controllers
             }
             return RedirectToAction(nameof(Contact));
         }
+
     }
 
 }

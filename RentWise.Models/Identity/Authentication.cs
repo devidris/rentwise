@@ -86,8 +86,11 @@ namespace RentWise.Models.Identity
         public string? Latitude { get; set; }
         public string? Longitude { get; set; }
 
-        public string? Country { get; set; }
+        public string? Country { get; set; } = "Ghana";
         public string? State { get; set; }
+
+        public string? City { get; set; } = "Ghana";
+        public string? Region { get; set; } = String.Empty;
         [ValidateNever]
         [NotMapped]
         public string Logo { get; set; }

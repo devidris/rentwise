@@ -2,6 +2,9 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Newtonsoft.Json;
+using RentWise.DataAccess.Repository;
+using RentWise.DataAccess.Repository.IRepository;
 using RentWise.Models;
 using RentWise.Models.Identity;
 using RentWise.Utility;
@@ -16,12 +19,14 @@ namespace RentWise.Agent.Controllers
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly ILogger<HomeController> _logger;
         private readonly UserManager<IdentityUser> _userManager;
+        public readonly IUnitOfWork _unitOfWork;
 
-        public HomeController(ILogger<HomeController> logger, SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager)
+        public HomeController(ILogger<HomeController> logger, SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager,IUnitOfWork unitOfWork)
         {
             _logger = logger;
             _signInManager = signInManager;
             _userManager = userManager;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<IActionResult> Index(string? onesignalId)
@@ -34,10 +39,10 @@ namespace RentWise.Agent.Controllers
             {
                 if(onesignalId != null && onesignalId != "null")
                 {
-                    return RedirectToAction("Index", "Store", new { onesignalId = onesignalId });
+                    return RedirectToAction("Index", "Store", new { onesignalId = onesignalId, message = "Login Successful" });
                 } else
                 {
-                return RedirectToAction("Index", "Store");
+                return RedirectToAction("Index", "Store", new { message = "Login Successful" });
                 }
             }
             ViewBag.UserId = user.Id;
@@ -57,6 +62,13 @@ namespace RentWise.Agent.Controllers
                     ModelState.AddModelError("", errorMessage); // Add errors back to ModelState
                 }
             }
+            IEnumerable<State> states = _unitOfWork.State.GetAll(u => u.StateId != null, "Cities");
+            JsonSerializerSettings settings = new JsonSerializerSettings
+            {
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            };
+            ViewBag.States = states;
+            ViewBag.JSONStates = JsonConvert.SerializeObject(states, settings);
             ViewBag.Categories = Lookup.Categories;
             return View(model);
         }

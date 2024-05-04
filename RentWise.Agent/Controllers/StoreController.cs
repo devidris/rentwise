@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using RentWise.DataAccess.Repository.IRepository;
 using RentWise.Models;
 using RentWise.Models.Identity;
@@ -54,10 +55,19 @@ namespace RentWise.Agent.Controllers
 
         public IActionResult Upsert(string? id)
         {
-            ProductModel product = new ProductModel(){};
+
+            ProductModel product = new(){};
             if(id != null) {
                 product = _unitOfWork.Product.Get(u => u.ProductId == id,"Agent,ProductImages");
             }
+            IEnumerable<State> states = _unitOfWork.State.GetAll(u => u.StateId != null, "Cities");
+            JsonSerializerSettings settings = new JsonSerializerSettings
+            {
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            };
+            ViewBag.States = states;
+            ViewBag.JSONStates = JsonConvert.SerializeObject(states, settings);
+            ViewBag.Categories = Lookup.Categories;
             return View(product);
         }
         [HttpPost]
@@ -119,8 +129,16 @@ namespace RentWise.Agent.Controllers
                 }
                 _unitOfWork.Save();
 
-                return RedirectToAction("Preview", "Store", new { id = model.ProductId });
+                return RedirectToAction("Preview", "Store", new { id = model.ProductId, message = "Created successfully" });
             }
+            IEnumerable<State> states = _unitOfWork.State.GetAll(u => u.StateId != null, "Cities");
+            JsonSerializerSettings settings = new JsonSerializerSettings
+            {
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            };
+            ViewBag.States = states;
+            ViewBag.JSONStates = JsonConvert.SerializeObject(states, settings);
+            ViewBag.Categories = Lookup.Categories;
             return View(model);
         }
 
