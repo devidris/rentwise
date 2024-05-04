@@ -46,20 +46,20 @@
     <div class="form-floating mb-3">
      
             <div class="form-floating mb-3">
-                <select asp-for="@Model.City" id="stateDropdown" class="form-control">
-                    <option value="">Select a City</option>
+                <select asp-for="@Model.Region" id="stateDropdown" class="form-control">
+                    <option value="">Select a Region</option>
                     @foreach (State state in ViewBag.States)
                     {
                         <option value="@state.Name">@state.Name</option>
                     }
                 </select>
-                <label asp-for="@Model.Region">City</label>
+                <label asp-for="@Model.City">Region</label>
             </div> 
         <div class="form-floating mb-3">
-            <select  asp-for="@Model.Region" id="cityDropdown" class="form-control" disabled>
-                <option value="">Select a Region</option>
+            <select  asp-for="@Model.City" id="cityDropdown" class="form-control" disabled>
+                <option value="">Select a City</option>
             </select>
-            <label for="cityDropdown" asp-for="@Model.Region">Region</label>
+            <label for="cityDropdown" asp-for="@Model.City">City</label>
         </div>
         
         <input asp-for="@Model.StoreAddress" class="store-address" hidden />

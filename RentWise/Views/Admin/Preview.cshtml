@@ -50,16 +50,16 @@
             <span asp-validation-for="@Model.Agent.StoreAddress" class="text-danger"></span>
         </div>
         <div class="form-floating mb-3">
+            <input asp-for="@Model.Agent.Region" class="form-control" readonly />
+            <label asp-for="@Model.Agent.Region" class="form-label"></label>
+            <span asp-validation-for="@Model.Agent.Region" class="text-danger"></span>
+        </div>
+        <div class="form-floating mb-3">
             <input asp-for="@Model.Agent.City" class="form-control" readonly />
             <label asp-for="@Model.Agent.City" class="form-label"></label>
             <span asp-validation-for="@Model.Agent.City" class="text-danger"></span>
         </div>
 
-        <div class="form-floating mb-3">
-            <input asp-for="@Model.Agent.Region" class="form-control" readonly />
-            <label asp-for="@Model.Agent.Region" class="form-label"></label>
-            <span asp-validation-for="@Model.Agent.Region" class="text-danger"></span>
-        </div>
 
 
         <div class="d-flex flex-wrap justify-content-evenly">
