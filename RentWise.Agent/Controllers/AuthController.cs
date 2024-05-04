@@ -369,7 +369,7 @@ namespace RentWise.Controllers
             TempData["ErrorMessages"] = errorMessages; // Store the error messages in TempData
             if (isCreate)
             {
-               return RedirectToAction("Login", "Auth", new { message = "Owner Regitration Successful, login again to activate account" });
+                return RedirectToAction("Index", "Home");
             }
             if (!ModelState.IsValid)
             {

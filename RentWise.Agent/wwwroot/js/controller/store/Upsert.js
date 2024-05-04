@@ -73,7 +73,7 @@ function displayImages(file) {
                 });
 
                 // Update the input files
-                // $('#allimages')[0].files = fileList.files;
+                 //$('#allimages')[0].files = fileList.files;
             });
         }
 
@@ -145,10 +145,10 @@ function declareLocation() {
 }
 let OldImageCount = $('.product-image-count').val()
 function saveChanges() {
-    if (fileList.files.length + OldImageCount < 4) {
-        toastr.error('Minimum of 4 images')
-        return
-    }
+    //if (fileList.files.length + OldImageCount < 4) {
+    //    toastr.error('Minimum of 4 images')
+    //    return
+    //}
     let concatenatedInputIncludes = ''
     $('.include-input').each(function () {
         if (!$(this).val() || $(this).val() == '') return
@@ -188,58 +188,6 @@ $('#main-image-input').on('change', function () {
     }
 });
 
-// Initialize the Places Autocomplete
-const autocomplete = new google.maps.places.Autocomplete(document.getElementById('autocomplete-input'));
-
-// Set the types to restrict the search to addresses only
-autocomplete.setTypes(['address']);
-
-// Listen for the event when a place is selected
-autocomplete.addListener('place_changed', getLocationDetails);
-
-function getLocationDetails() {
-    const place = autocomplete.getPlace();
-    console.log('place',place)
-    $('.store-address').val(place.formatted_address)
-    if (place.geometry && place.geometry.location) {
-        const latitude = place.geometry.location.lat();
-        const longitude = place.geometry.location.lng();
-        $('.latitude').val(latitude)
-        $('.longitude').val(longitude)
-
-        // Construct the request URL for reverse geocoding
-        const geocodingApiUrl = 'https://maps.googleapis.com/maps/api/geocode/json?latlng=' + latitude + ',' + longitude + '&key=AIzaSyD0I7pkRONmnFo2S4cZsbCwIPrlRc4WUdw';
-
-        // Make a request to the Geocoding API
-        fetch(geocodingApiUrl)
-            .then(response => response.json())
-            .then(data => {
-                // Check if the response contains results
-                if (data.results && data.results.length > 0) {
-                    // Extract country and state from the first result
-                    const components = data.results[0].address_components;
-                    components.forEach(function (component) {
-                        if (component.types.includes('country')) {
-                            const country = component.long_name;
-                            $('.country').val(country)
-                        }
-                        if (component.types.includes('administrative_area_level_1')) {
-                            const state = component.long_name;
-                            $('.state').val(state)
-                        }
-
-                    });
-                } else {
-                    console.log("No results found for reverse geocoding");
-                }
-            })
-            .catch(error => {
-                console.error("Error during reverse geocoding request:", error);
-            });
-
-    }
-}
-
 function deleteImage(id) {
     Swal.fire({
         title: 'Are you sure?',
@@ -271,3 +219,25 @@ function deleteImage(id) {
 declareIncludes()
 declareRules()
 declareLocation()
+
+$(document).ready(function () {
+    const JSONstates = JSON.parse($('.jsonstate').text());
+    $(".jsonstate").remove();
+
+    // Set up a change listener for the state dropdown to populate cities
+    $('#stateDropdown').change(function () {
+        var stateName = $(this).val();
+        var selectedState = JSONstates.find(state => state.Name === stateName);
+        $('#cityDropdown').empty().append(new Option('Select a City', ''));
+
+        if (selectedState && selectedState.Cities.length > 0) {
+            selectedState.Cities.forEach(function (city) {
+                $('#cityDropdown').append(new Option(city.Name, city.Name));
+            });
+            $('#cityDropdown').prop('disabled', false);
+        } else {
+            $('#cityDropdown').prop('disabled', true);
+        }
+    });
+
+});

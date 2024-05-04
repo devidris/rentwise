@@ -40,13 +40,19 @@ namespace RentWise.Models
         public int MaxRentalDays { get; set; } = 0;
 
         [Display(Name = "Address")]
-        [Required(ErrorMessage = "Address is required")]
-        public string Address { get; set; }
+        public string ?Address { get; set; }
         public string? Latitude { get; set; }
         public string? Longitude { get; set; }
 
-        public string? Country { get; set; }
+        public string? Country { get; set; } = "Ghana";
         public string? State { get; set; }
+
+        [Display(Name = "City")]
+        [Required(ErrorMessage = "City is required")]
+        public string City { get; set; } = "Ghana";
+        [Display(Name = "Region")]
+        [Required(ErrorMessage = "Region is required")]
+        public string Region { get; set; } = String.Empty;
         [ValidateNever]
         public List<ProductImageModel> ProductImages { get; set; }
     }

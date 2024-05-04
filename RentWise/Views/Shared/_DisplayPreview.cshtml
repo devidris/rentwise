@@ -37,13 +37,13 @@
         <h5>@SharedFunctions.CapitalizeAllWords(Model.Name)</h5>
         <p><b>₵@Model.PriceDay</b>/Day</p>
         <p class="d-flex gap-1"><i class="bi bi-star-fill text-primary fs-4"></i><span class="fs-5">@Model.Rating</span></p>
-        @if (!String.IsNullOrEmpty(Model.State))
+        @if (!String.IsNullOrEmpty(Model.Region))
         {
-            <p>@Model.State , @Model.Country </p>
+            <p>@Model.Region , @Model.City </p>
 
         } else
         {
-            <p></p>
+            <p> @Model.City </p>
         }
 
 

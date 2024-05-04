@@ -3,6 +3,7 @@
 <div>
     <partial name="_Nav2" />
     <form class="p-5" method="post"  enctype="multipart/form-data">
+        <div class="d-none jsonstate">@ViewBag.JSONStates</div>
        @* <input value="@Model.ProductId" class="product-id" hidden /> *@
         <input  value="@Model.Includes" class="includes" hidden/>
         <input  value="@Model.Rules" class="rules" hidden/>
@@ -229,7 +230,7 @@
                 <div class="w-100 d-flex flex-wrap gap-3 p-4" id="imageContainer">
                     <div class="fs-1 p-5 cursor-pointer">
                         <input class="form-control d-none" aria-required="true" type="file" accept="image/*" hidden name="images" id="images" multiple="multiple" />
-                        <input class="form-control d-none" aria-required="true" type="file" accept="image/*" hidden name="otherImages" id="allimages" multiple="multiple"/>
+                        <input class="form-control " aria-required="true" type="file" accept="image/*" hidden name="otherImages" id="allimages" multiple="multiple"/>
                         <label class="form-label" for="images">
                             <i class="bi bi-plus-circle-fill  cursor-pointer"></i>
                         </label>
@@ -266,13 +267,29 @@
                     <span class="text-danger" asp-validation-for="@Model.Description"></span>
                 </div>
                 <div class="form-floating mb-3">
-                    <input class="form-control" id="autocomplete-input" />
-                    <label asp-for="@Model.Address" class="form-label">Location</label>
-                    <input asp-for="@Model.Address" class="store-address" hidden />
-                    <input asp-for="@Model.Latitude" class="latitude" hidden />
-                    <input asp-for="@Model.Longitude" class="longitude" hidden />
-                    <input asp-for="@Model.State" class="state" hidden />
+                    <div class="form-floating mb-3">
+                        <select asp-for="@Model.City" id="stateDropdown" class="form-control">
+                            <option value="">Select a City</option>
+                            @foreach (State state in ViewBag.States)
+                            {
+                                <option value="@state.Name">@state.Name</option>
+                            }
+                        </select>
+                        <label asp-for="@Model.City">City</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <select asp-for="@Model.Region" id="cityDropdown" class="form-control" disabled>
+                            <option value="">Select a Region</option>
+                        </select>
+                        <label for="cityDropdown" asp-for="@Model.Region">Region</label>
+                    </div>
+
+                    <input asp-for="@Model.Address" class="store-address"  hidden />
+                    <input asp-for="@Model.Latitude" class="latitude"  hidden />
+                    <input asp-for="@Model.Longitude" class="longitude"  hidden />
                     <input asp-for="@Model.Country" class="country" hidden />
+                    <input asp-for="@Model.State" class="state" hidden />
+
                     <span asp-validation-for="@Model.Address" class="text-danger"></span>
                 </div>
                 <h5 class="mb-4">Rules</h5>
