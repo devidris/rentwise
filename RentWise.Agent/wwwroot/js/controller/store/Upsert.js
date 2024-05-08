@@ -20,7 +20,9 @@ const categories = [
     "Shot Stay Rooms",
     "Motel",
     "Boat/Yacht",
-    "Games"
+    "Games",
+    "Hotels",
+    "Guest House",
 ];
 
 
