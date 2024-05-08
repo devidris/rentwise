@@ -19,7 +19,9 @@ namespace RentWise.Utility
             {7,"Shot Stay Rooms" },
             {8,"Motel" },
             {9,"Boat/Yacht" },
-            {10,"Games" }
+            {10,"Games" },
+            {11,"Hotels" },
+            {12,"Guest Houses" }
         };
 
         public static Dictionary<int, string> Roles = new Dictionary<int, string>

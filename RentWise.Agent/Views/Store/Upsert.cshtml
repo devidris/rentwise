@@ -166,6 +166,35 @@
                         <button class="btn btn-primary text-white px-3" type="button" onclick="setCategory(10)">Proceed</button>
                     </div>
                 </div>
+                <div class="card p-3 m-3">
+                    <div class="mb-4">
+                        <i class="bi bi-building fs-3 text-primary"></i>
+                        <h6>
+                            Hotels
+                        </h6>
+                    </div>
+                    <div class="">
+                        <p>
+                            Discover top-tier accommodation services with unmatched excellence
+                        </p>
+                        <button class="btn btn-primary text-white px-3" type="button" onclick="setCategory(11)">Book Now</button>
+                    </div>
+                </div>
+                <div class="card p-3 m-3">
+                    <div class="mb-4">
+                        <i class="bi bi-house-door-fill fs-3 text-primary"></i>
+                        <h6>
+                            Guest Houses
+                        </h6>
+                    </div>
+                    <div class="">
+                        <p>
+                            Experience the comfort of premium guest houses with superior service quality
+                        </p>
+                        <button class="btn btn-primary text-white px-3" type="button" onclick="setCategory(12)">Explore</button>
+                    </div>
+                </div>
+
             </div>
         </div>
         <div class="content content-2 @(Model.Agent == null ? "d-none" : "")">
@@ -309,7 +338,7 @@
 </div>
 @section Scripts{
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCSk8XumgpnSn3AcgoPqQm_zZwrq8Ll6UY&libraries=places"></script>
-    <script src="~/js/controller/store/Upsert.js"></script>
+    <script src="~/js/controller/store/Upsert.js?v=1.1"></script>
 }
 
 
