@@ -237,6 +237,7 @@ $(document).ready(function () {
                 $('#cityDropdown').append(new Option(city.Name, city.Name));
             });
             $('#cityDropdown').prop('disabled', false);
+            $('#cityDropdown').addClass('text-capitalize');
         } else {
             $('#cityDropdown').prop('disabled', true);
         }
