@@ -301,7 +301,7 @@
                             <option value="">Select a Region</option>
                             @foreach (State state in ViewBag.States)
                             {
-                                <option value="@state.Name">@state.Name</option>
+                                <option value="@state.Name" class="text-capitalize">@state.Name</option>
                             }
                         </select>
                         <label asp-for="@Model.Region">Region</label>
