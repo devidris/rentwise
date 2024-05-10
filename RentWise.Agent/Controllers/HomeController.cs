@@ -32,17 +32,18 @@ namespace RentWise.Agent.Controllers
         public async Task<IActionResult> Index(string? onesignalId)
         {
             IdentityUser user = await _userManager.GetUserAsync(User);
+            
             bool isUserAdminOrAgent = await _userManager.IsInRoleAsync(user, Lookup.Roles[1]) ||
                            await _userManager.IsInRoleAsync(user, Lookup.Roles[2]);
-
-            if (isUserAdminOrAgent)
+            AgentRegistrationModel agentDetails = _unitOfWork.AgentRegistration.Get(u => u.Id == user.Id);
+            if (isUserAdminOrAgent && agentDetails != null)
             {
                 if(onesignalId != null && onesignalId != "null")
                 {
-                    return RedirectToAction("Index", "Store", new { onesignalId = onesignalId, message = "Login Successful" });
+                    return RedirectToAction("Index", "Dashboard", new { onesignalId = onesignalId, message = "Login Successful" });
                 } else
                 {
-                return RedirectToAction("Index", "Store", new { message = "Login Successful" });
+                return RedirectToAction("Index", "Dashboard", new { message = "Login Successful" });
                 }
             }
             ViewBag.UserId = user.Id;
@@ -63,6 +64,10 @@ namespace RentWise.Agent.Controllers
                 }
             }
             IEnumerable<State> states = _unitOfWork.State.GetAll(u => u.StateId != null, "Cities");
+            foreach (var state in states)
+            {
+                state.Name = SharedFunctions.Capitalize(state.Name);
+            }
             JsonSerializerSettings settings = new JsonSerializerSettings
             {
                 ReferenceLoopHandling = ReferenceLoopHandling.Ignore

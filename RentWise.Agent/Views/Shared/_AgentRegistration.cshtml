@@ -50,7 +50,7 @@
                     <option value="">Select a Region</option>
                     @foreach (State state in ViewBag.States)
                     {
-                        <option value="@state.Name">@state.Name</option>
+                        <option value="@state.Name" class="text-capitalize">@state.Name</option>
                     }
                 </select>
                 <label asp-for="@Model.Region">Region</label>
@@ -147,10 +147,13 @@
                 $('#cityDropdown').append(new Option(city.Name, city.Name));
             });
             $('#cityDropdown').prop('disabled', false);
+            $('#cityDropdown').addClass('text-capitalize');
         } else {
             $('#cityDropdown').prop('disabled', true);
+                $('#cityDropdown').addClass('text-capitalize');
         }
     });
 
 });
+
     </script>
