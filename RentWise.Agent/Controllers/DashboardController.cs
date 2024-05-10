@@ -154,6 +154,17 @@ namespace RentWise.Agent.Controllers
 
 
             List<ChatModel> FullMessage = new List<ChatModel>();
+            IEnumerable<State> states = _unitOfWork.State.GetAll(u => u.StateId != null, "Cities");
+            foreach (var state in states)
+            {
+                state.Name = SharedFunctions.Capitalize(state.Name);
+            }
+            JsonSerializerSettings settings = new JsonSerializerSettings
+            {
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            };
+            ViewBag.States = states;
+            ViewBag.JSONStates = JsonConvert.SerializeObject(states, settings);
             if (String.IsNullOrEmpty(Id))
             {
                 ViewBag.OpenChat = false;
@@ -169,7 +180,6 @@ namespace RentWise.Agent.Controllers
             }
             ViewBag.FullMessage = JsonConvert.SerializeObject(FullMessage);
             ViewBag.ChatSummaries = JsonConvert.SerializeObject(chatSummaries);
-
 
             return View();
         }

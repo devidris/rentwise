@@ -35,11 +35,13 @@
         <p class="m-0"><span class="fs-3 font-weight-bold">₵@Model.PriceDay/</span><span>day</span></p>
 
     </div>
-    <div class="d-flex align-items-center px-5 justify-content-between mb-3">
+    <div class="d-flex align-items-center px-lg-5 px-1 justify-content-between mb-3">
         @if (!String.IsNullOrEmpty(Model.Agent.Region) && !String.IsNullOrEmpty(Model.Agent.City))
         {
-            <p>@Model.Agent.City</p><br />
-            <p>@Model.Agent.Region</p>
+           <div>
+                <p class="m-0 text-capitalize"><b>City:</b>@Model.Agent.City</p>
+                <p class="m-0 text-capitalize"><b>Region:</b>@Model.Agent.Region</p>
+            </div>
         }
         <div class="d-flex align-items-center gap-3">
             @if (ViewBag.IsLike)

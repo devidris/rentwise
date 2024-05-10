@@ -61,6 +61,10 @@ namespace RentWise.Agent.Controllers
                 product = _unitOfWork.Product.Get(u => u.ProductId == id,"Agent,ProductImages");
             }
             IEnumerable<State> states = _unitOfWork.State.GetAll(u => u.StateId != null, "Cities");
+            foreach (var state in states)
+            {
+                state.Name = SharedFunctions.Capitalize(state.Name);
+            }
             JsonSerializerSettings settings = new JsonSerializerSettings
             {
                 ReferenceLoopHandling = ReferenceLoopHandling.Ignore
