@@ -1,5 +1,5 @@
-﻿.navbar-nav .nav-link {
-    color: #ffffff; /* Set the color to white */
+﻿.navbar-nav .nav-link:hover {
+    color: #ffffff;
 }
 .icon{
     font-size:30px;
@@ -8,4 +8,22 @@
 
 .navbar-nav li{
     margin-right:2.5rem;
+}
+
+.active-nav {
+    color: #ffffff;
+}
+
+.not-active-nav {
+    color: #cccccc;
+}
+
+.navbar-custom-width {
+    width: 75%; 
+}
+
+@media (max-width: 1400px) {
+    .navbar-custom-width {
+        width: 100%; 
+    }
 }

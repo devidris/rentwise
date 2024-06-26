@@ -1,1 +1,6 @@
-﻿
+﻿.rent-now{
+    transition:all .3s;
+}
+.rent-now:hover {
+    color: #008080;
+}

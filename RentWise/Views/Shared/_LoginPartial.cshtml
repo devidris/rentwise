@@ -61,30 +61,15 @@
     {
           
 
-        <li class="nav-item m-0">
-            <button type="button" class="btn btn-outline-secondary m-0" data-toggle="modal" data-target="#register">
-                Register
-            </button>
-            <!-- Modal -->
-            @Html.Partial("_Register", authentication)
-
-        </li>
-        <li class="nav-item m-0">
-            <button type="button" class="btn btn-secondary m-0" data-toggle="modal" data-target="#login">
-                Login
-            </button>
-            <!-- Modal -->
-            @Html.Partial("_Login", authenticationLogin)
-
-        </li>
+    <li class="nav-item m-0">
+       <a class="btn btn-outline-light m-0 rent-now" data-toggle="modal" asp-controller="Auth" asp-action="Register">
+          Rent Now
+       </a>
+    </li>
       
-                <li class="nav-item m">
-            <a href="@agentRegistrationLink" class="btn btn-secondary m-0">Switch to Owner</a>
-                </li>
+    <li class="nav-item m-0">
+       <a href="@agentRegistrationLink" class="btn btn-light text-primary m-0">Post A Rental</a>
+    </li> 
     }
 </ul>
 
-<!-- Bootstrap JavaScript (and jQuery) -->
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
