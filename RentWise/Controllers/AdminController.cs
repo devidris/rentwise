@@ -6,6 +6,9 @@ using RentWise.Models;
 using RentWise.Models.Identity;
 using RentWise.Utility;
 using Microsoft.AspNetCore.SignalR;
+using System.Web;
+using Microsoft.CodeAnalysis;
+using System.Drawing;
 
 namespace RentWise.Controllers
 {
@@ -199,8 +202,8 @@ namespace RentWise.Controllers
 
         public async Task<ActionResult> SendNotificationToAll(string message)
         {
-            _hubContext.Clients.All.SendAsync("ReceiveMessage", "all", message);
-            SharedFunctions.SendPushNotification("All", "Message from rentwise", message);
+            _ = _hubContext.Clients.All.SendAsync("ReceiveMessage", "all", message);
+            _ = SharedFunctions.SendPushNotification("All", "Message from rentwise", message);
             return RedirectToAction(nameof(Contact));
         }
         public async Task<IActionResult> ReplyEmail(string name, string email, string header, string body,int Id)
@@ -225,6 +228,162 @@ namespace RentWise.Controllers
             }
             return RedirectToAction(nameof(Contact));
         }
+
+        public IActionResult Display()
+        {
+
+            string[] imagePaths = Directory.GetFiles("wwwroot/images/hero");
+            List<ImageModel> images = imagePaths.Select(path => new ImageModel
+            {
+                FileName = Path.GetFileName(path),
+                FilePath = $"~/images/hero/{Path.GetFileName(path)}",
+            }).ToList();
+
+            ViewBag.Images = images;
+            return View();
+        }
+
+        public ActionResult UploadImage(IFormFile? file)
+        {
+            if (file == null || file.Length == 0)
+            {
+                TempData["ErrorMessage"] = "No file provided.";
+                return RedirectToAction("Display", "Admin");
+            }
+
+            const int requiredWidth = 1920; // Required width in pixels
+            const int requiredHeight = 1080; // Required height in pixels
+
+            using (var memoryStream = new MemoryStream())
+            {
+                file.CopyTo(memoryStream);
+                memoryStream.Seek(0, SeekOrigin.Begin); // Reset the position of MemoryStream to the beginning after copying
+
+                using (Image img = Image.FromStream(memoryStream))
+                {
+                    if (img.Width != requiredWidth || img.Height != requiredHeight)
+                    {
+                        TempData["ErrorMessage"] = $"Image dimensions are incorrect. Required dimensions: {requiredWidth}x{requiredHeight} pixels.";
+                        return RedirectToAction("Display", "Admin");
+                    }
+                }
+            }
+
+            // Continue processing if dimensions are correct
+            string wwwRootPath = _webHostEnvironment.WebRootPath;
+            string filePath = @"images\hero\";
+            string finalPath = Path.Combine(wwwRootPath, filePath);
+            string fileExtension = Path.GetExtension(file.FileName);
+            string fileName = Guid.NewGuid().ToString() + fileExtension;
+            string fullPath = Path.Combine(finalPath, fileName);
+
+            using (FileStream fileStream = new FileStream(fullPath, FileMode.Create))
+            {
+                file.CopyTo(fileStream);
+            }
+
+            return RedirectToAction("Display", "Admin");
+        }
+
+        public ActionResult DeleteImage(string fileName)
+        {
+            string directoryPath = Path.Combine(_webHostEnvironment.WebRootPath, "images", "hero");
+            string[] imagePaths = Directory.GetFiles(directoryPath);
+
+            if (imagePaths.Length <= 1) // If only one or no files exist, redirect to admin display
+            {
+                return RedirectToAction("Display", "Admin");
+            }
+
+            string targetFilePath = Path.Combine(directoryPath, fileName);
+
+            if (System.IO.File.Exists(targetFilePath))
+            {
+                System.IO.File.Delete(targetFilePath);
+
+                // After deletion, check if the deleted file was the 'hero'
+                if (fileName.ToLower() == "hero")
+                {
+                    // Select a new hero image from the remaining files
+                    foreach (var filePath in imagePaths)
+                    {
+                        if (filePath != targetFilePath) // Ensure the file is not the one just deleted
+                        {
+                            string newHeroFilePath = Path.Combine(directoryPath, "hero" + Path.GetExtension(filePath));
+                            System.IO.File.Move(filePath, newHeroFilePath); // Rename the first available file to 'hero'
+                            break; // Exit after setting new hero file
+                        }
+                    }
+                }
+            }
+
+            return RedirectToAction("Display", "Admin");
+        }
+
+
+        public ActionResult SetActive(string fileName)
+        {
+            string directoryPath = Path.Combine(_webHostEnvironment.WebRootPath, "images", "hero");
+            string[] imagePaths = Directory.GetFiles(directoryPath);
+
+            if (imagePaths.Length <= 1)
+            {
+                return RedirectToAction("Display", "Admin");
+            }
+
+            string targetFilePath = Path.Combine(directoryPath, fileName);
+            string heroFilePath = null;
+
+            // Find any existing file that has 'hero' in its name
+            foreach (var path in imagePaths)
+            {
+                if (Path.GetFileName(path).Contains("hero"))
+                {
+                    heroFilePath = path;
+                    break;
+                }
+            }
+
+            // Check if 'hero' file exists and rename it to a random name with its original extension
+            if (heroFilePath != null)
+            {
+                string oldHeroExtension = Path.GetExtension(heroFilePath); // Get the file extension of the old hero
+                string newHeroName;
+                do
+                {
+                    newHeroName = Path.Combine(directoryPath, GetRandomFileName() + oldHeroExtension); // Append the original extension
+                }
+                while (System.IO.File.Exists(newHeroName));
+
+                System.IO.File.Move(heroFilePath, newHeroName); // Rename old 'hero' to a random name with extension
+            }
+
+            // Rename the target file to 'hero', now that the old 'hero' is renamed
+            if (System.IO.File.Exists(targetFilePath))
+            {
+                string targetFileExtension = Path.GetExtension(targetFilePath); // Get the file extension of the target file
+                string newHeroFilePath = Path.Combine(directoryPath, "hero" + ".png"); // Append the extension to 'hero'
+
+                // Ensure 'newHeroFilePath' does not already exist
+                if (System.IO.File.Exists(newHeroFilePath))
+                {
+                    // Handle if 'newHeroFilePath' already exists (possibly delete it or handle as needed)
+                    System.IO.File.Delete(newHeroFilePath);
+                }
+
+                System.IO.File.Move(targetFilePath, newHeroFilePath); // Rename target file to 'hero' with extension
+            }
+
+            return RedirectToAction("Display", "Admin");
+        }
+
+
+
+        private string GetRandomFileName()
+        {
+            return Path.GetRandomFileName().Replace(".", "");  // Generates a random string suitable for a file name
+        }
+
 
     }
 

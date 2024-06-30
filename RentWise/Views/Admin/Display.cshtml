@@ -1,0 +1,62 @@
+﻿<div class="display">
+    <div class="display_hero">
+        <h1 class="text-center w-100 bg-primary my-3 text-white">Hero Images</h1>
+        <div class="text-center my-3">
+            @using (Html.BeginForm("UploadImage", "Admin", FormMethod.Post, new { enctype = "multipart/form-data", @class = "form-inline justify-content-center" }))
+            {
+                <div class="form-group mx-sm-3 mb-2">
+                    <input type="file" class="form-control" name="file" id="fileInput" required>
+                </div>
+                <button type="submit" class="btn btn-success mb-2" disabled id="uploadButton">Upload</button>
+            }
+        </div>
+        <div class="row">
+            @foreach (ImageModel image in ViewBag.Images) // Changed from ViewBag.ImageNames to Model for better practice
+            {
+                <div class="col-md-4 mb-4">
+                    <div class="card position-relative">
+                        <img src="@Url.Content(image.FilePath)" class="card-img-top" alt="Image" style="height: 200px; width: 100%; object-fit: cover;">
+                        <div class="card-img-overlay d-flex justify-content-center align-items-center">
+                            @if (ViewBag.Images.Count == 1 || image.FileName.Split('.')[0] == "hero")
+                            {
+                                <button class="btn btn-danger mx-1 disabled">
+                                    <i class="bi bi-trash"></i> Delete
+                                </button>
+                            }
+                            else
+                            {
+                                    <a href="@Url.Action("DeleteImage", "Admin", new { fileName = image.FileName })" class="btn btn-danger mx-1">
+                                        <i class="bi bi-trash"></i> Delete
+                                    </a>
+                        }
+
+                            @if (image.FileName.Split('.')[0] != "hero")
+                            {
+                                <a href="@Url.Action("SetActive", "Admin", new { fileName = image.FileName })" class="btn btn-primary mx-1">
+                                    <i class="bi bi-check-circle"></i> Set Active
+                                </a>
+                            }
+                            else
+                            {
+                                <button class="btn btn-success mx-1 disabled">
+                                    <i class="bi bi-star-fill"></i> Active
+                                </button>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script>
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <text>
+                toastr.error('@Html.Raw(TempData["ErrorMessage"])');
+            </text>
+        }
+    </script>
+<script src="~/js/controller/admin/Display.js"></script>
+}
