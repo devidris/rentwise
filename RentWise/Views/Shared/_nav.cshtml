@@ -23,18 +23,34 @@
                 <li class="nav-item m-0">
                     <a class="nav-link not-active-nav text-center" asp-controller="Page" asp-action="Contact">Contact us</a>
                 </li>
-                <li class="nav-item m-0">
-                        <a class="nav-link not-active-nav text-center" asp-controller="Page" asp-action="Contact">Categories</a>
+                <li class="nav-item dropdown m-0">
+                        <a class="nav-link dropdown-toggle not-active-nav text-center" href="#" id="navbarCategoriesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Categories
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarCategoriesDropdown">
+                            <li><a class="dropdown-item" href="#">Category 1</a></li>
+                            <li><a class="dropdown-item" href="#">Category 2</a></li>
+                            <li><a class="dropdown-item" href="#">Category 3</a></li>
+                            <li><a class="dropdown-item" href="#">Category 4</a></li>
+                        </ul>
                 </li>
-           </ul>
+                    @if (!User.IsInRole("Admin"))
+                    {
+                        <li class="nav-item dropdown m-0">
+                            <a class="nav-link dropdown-toggle not-active-nav text-center" href="#" id="navbarCategoriesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Admin
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarCategoriesDropdown">
+                                <li><a class="dropdown-item" asp-controller="Admin" asp-action="Index">User Details</a></li>
+                                <li><a class="dropdown-item" asp-controller="Admin" asp-action="Contact">Contact</a></li>
+                                <li><a class="dropdown-item" asp-controller="Admin" asp-action="LocationManager">Location Manager</a></li>
+                                <li><a class="dropdown-item" asp-controller="Admin" asp-action="Display">Display</a></li>
+                            </ul>
+                        </li>
+                    }
+            </ul>
                 <ul class="navbar-nav my-3">
                 <partial name="_LoginPartial" />
-                @if (User.IsInRole("Admin"))
-                {
-                    <li class="nav-item">
-                        <a class="nav-link" asp-controller="Admin" asp-action="Index">Admin</a>
-                    </li>
-                }
             </ul>
             </div>
         </div>
