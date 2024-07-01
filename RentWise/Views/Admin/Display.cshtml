@@ -47,6 +47,44 @@
                 </div>
             }
         </div>
+        <h1 class="text-center w-100 bg-primary my-3 text-white">Services Images</h1>
+        <div class="text-center my-3">
+            @using (Html.BeginForm("UploadServiceImage", "Admin", FormMethod.Post, new { enctype = "multipart/form-data", @class = "form-inline justify-content-center" }))
+            {
+                <div class="form-group mx-sm-3 mb-2">
+                    <input type="file" class="form-control" name="file" id="fileServiceInput" required>
+                </div>
+                <button type="submit" class="btn btn-success mb-2" disabled id="uploadServiceButton">Upload</button>
+            }
+        </div>
+        <div class="row">
+            @foreach (ImageModel image in ViewBag.ServiceImages)
+            {
+                <div class="col-md-4 mb-4">
+                    <div class="card position-relative">
+                        <img src="@Url.Content(image.FilePath)" class="card-img-top" alt="Service Image" style="height: 200px; width: 100%; object-fit: cover;">
+                        <div class="card-img-overlay d-flex flex-column justify-content-center align-items-center">
+                            <div class="text-center">
+                                @if (image.FileName.Split('.')[0] == "1" || image.FileName.Split('.')[0] == "2" || image.FileName.Split('.')[0] == "3")
+                                {
+                                    <p>Order: @image.FileName.Split('.')[0]</p>
+                                }
+                                else
+                                {
+                                    <select class="form-control image-order mb-2 cursor-pointer" onchange="location = this.value;">
+                                        <option value="#">Select Order</option>
+                                        <option value="@Url.Action("SetOrder", "Admin", new { fileName = image.FileName, order = 1 })">First</option>
+                                        <option value="@Url.Action("SetOrder", "Admin", new { fileName = image.FileName, order = 2 })">Second</option>
+                                        <option value="@Url.Action("SetOrder", "Admin", new { fileName = image.FileName, order = 3 })">Third</option>
+                                    </select>
+                                    <a href="@Url.Action("DeleteServiceImage", "Admin", new { fileName = image.FileName })" class="btn btn-danger">Delete</a>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
     </div>
 </div>
 @section Scripts {
