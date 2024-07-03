@@ -10,84 +10,43 @@
 
 <div class="home p-0">
 <partial name="_Hero"/>
-    <partial name="_OurServices" />
-<input  class="id" hidden/>
-    <div class="row justify-content-center">
-        <div class="wrapper col-lg-11 col-md-12 col-sm-12">
+<partial name="_OurServices" />
+    <section class="p-5 gray">
+        <h1 class="section-header text-primary" data-shadow-text="Construction Equipments">Construction Equipments</h1>
+        <p class="text-black-50 text-center mt-3">Rent High-quality Construction equipment available for short term and long term projects</p>
+        <div class="d-flex flex-wrap gap-3 justify-content-center mt-5">
+            @foreach (DisplayPreview construction in ViewBag.Constructions)
+            {
+                <partial name="_CategoryPreview" for="@construction" />
+            }
+        </div>
+            <button class="btn btn-outline-primary rounded w-fit m-auto d-block mt-3">View More</button>
+    </section>
+
+    <section class="p-5 gray">
+        <h1 class="section-header text-primary" data-shadow-text="Car Rentals">Car Rentals</h1>
+        <p class="text-black-50 text-center mt-3">Rent fleet of well-maintained vehicles suitable for daily commutes, vacation, and special occasions</p>
+        <div class="d-flex flex-wrap gap-3 justify-content-center mt-5">
+            @foreach (DisplayPreview car in ViewBag.CarRentals)
+            {
+                <partial name="_CategoryPreview" for="@car" />
+            }
+        </div>
+        <button class="btn btn-outline-primary rounded w-fit m-auto d-block mt-3">View More</button>
+    </section>
+
+    <div class="py-5 px-3">
+        <h3 class="font-weight-bold">Popular Search</h3>
+        <div class="wrapper">
             <div class="jcarousel-wrapper">
                 <div class="jcarousel">
                     <ul>
-                        <li>
-                            <div class="d-flex flex-column align-items-center category" onclick="selectCategory(2)">
-                                <i class="bi bi-car-front-fill"></i>
-                                <span>Car</span>
-                                <hr class="2 hr" />
-                            </div>
-                        </li>
-                        <li>
-                            <div class="d-flex flex-column align-items-center category" onclick="selectCategory(1)">
-                                <i class="bi bi-building-fill-gear"></i>
-                                <span>Contruction</span>
-                                <hr class="1 hr" />
-                            </div>
-                        </li>
-                        <li>
-                            <div class="d-flex flex-column align-items-center  category" onclick="selectCategory(3)">
-                                <i class="bi bi-display-fill"></i>
-                                <span>Office</span>
-                                <hr class="3 hr" />
-                            </div>
-                        </li>
-                        <li>
-                            <div class="d-flex flex-column align-items-center  category" onclick="selectCategory(4)">
-                                <i class="bi bi-people-fill"></i>
-                                <span>Events</span>
-                                <hr class="4 hr" />
-                            </div>
-                        </li>
-                        <li>
-                            <div class="d-flex flex-column align-items-center  category" onclick="selectCategory(5)">
-                                <i class="bi bi-people-fill"></i>
-                                <span>Guest House</span>
-                                <hr class="5 hr" />
-                            </div>
-                        </li>
-                        <li>
-                            <div class="d-flex flex-column align-items-center category" onclick="selectCategory(6)">
-                                <i class="bi bi-badge-ad-fill"></i>
-                                <span>Bill Board</span>
-                                <hr class="6 hr" />
-                            </div>
-                        </li>
-                        <li>
-                            <div class="d-flex flex-column align-items-center category" onclick="selectCategory(7)">
-                                <i class="bi bi-building-fill"></i>
-                                <span>Short Stay</span>
-                                <hr class="7 hr" />
-                            </div>
-                        </li>
-                        <li>
-                            <div class="d-flex flex-column align-items-center category" onclick="selectCategory(8)">
-                                <i class="bi bi-bank2"></i>
-                                <span>Motel</span>
-                                <hr class="8 hr" />
-                            </div>
-                        </li>
-                        <li>
-                            <div class="d-flex flex-column align-items-center category" onclick="selectCategory(9)">
-                                <i class="bi bi-water"></i>
-                                <span>Boat/Yatch</span>
-                                <hr class="9 hr" />
-                            </div>
-                        </li>
-                        <li>
-                            <div class="d-flex flex-column align-items-center category" onclick="selectCategory(10)">
-                                <i class="bi bi-dpad-fill"></i>
-                                <span>Games</span>
-                                <hr class="10 hr" />
-                            </div>
-                        </li>
-
+                        @foreach (DisplayPreview product in ViewBag.AllProduct)
+                        {
+                            <li>
+                                <partial name="_CategoryPreview" for="@product" />
+                            </li>
+                        }
                     </ul>
                 </div>
 
@@ -97,69 +56,49 @@
                 <p class="jcarousel-pagination"></p>
             </div>
         </div>
-        <div class="col-lg-1 col-md-12 col-sm-12 mt-md-5 mt-sm-5">
-            <div class="d-flex flex-column align-items-center category" onclick="openModal('filter')">
-                <i class="bi bi-funnel-fill"></i>
-                <span>Filter</span>
-            </div>
+    </div>
+
+    <section class="p-5 gray">
+        <h1 class="section-header text-primary" data-shadow-text="Office/Personal Items">Office/Personal Items</h1>
+        <p class="text-black-50 text-center mt-3">Rent a variety of personal items, from electronics to outdoor gear, including office items</p>
+        <div class="d-flex flex-wrap gap-3 justify-content-center mt-5">
+            @foreach (DisplayPreview product in ViewBag.OfficeItems)
+            {
+                <partial name="_CategoryPreview" for="@product" />
+            }
         </div>
-    </div>
+        <button class="btn btn-outline-primary rounded w-fit m-auto d-block mt-3">View More</button>
+    </section>
 
-
-    @* Filter Modal *@
-    <div class="modal fade" id="filter" tabindex="-1" role="dialog" aria-labelledby="filterLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="filterLabel">Filter</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="closeModal('filter')">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="price">
-                        <div class="row">
-                            <div class="col-6">
-                                <label class="form-label">Weekly Rental Price</label>
-                                <div class="input-group mb-3">
-                                    <input class="form-control min" type="number" placeholder="Enter Minimum Amount" min="1" value="@ViewBag.Min">
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <label class="form-label">Weekly Rental Price</label>
-                                <div class="input-group mb-3">
-                                    <input class="form-control max" type="number" placeholder="Enter Maximum Amount" min="1" value="@ViewBag.Max">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <label class="form-label">Location</label>
-                    <input class="form-control" id="autocomplete-input" placeholder="Enter location" />
-                    <button class="btn btn-primary" onclick="chooseCurrentLocation()">Choose current location</button>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="closeModal('filter')">Close</button>
-                    <button type="button" class="btn btn-primary" onclick="filter()">Filter</button>
-                </div>
-            </div>
+    <section class="p-5 gray">
+        <h1 class="section-header text-primary" data-shadow-text="Events/Equipments Rentals">Events/Equipments Rentals</h1>
+        <p class="text-black-50 text-center mt-3">Rent Event equipment's, sounds, chairs, decorations, Lightening, stage and many more.</p>
+        <div class="d-flex flex-wrap gap-3 justify-content-center mt-5">
+            @foreach (DisplayPreview product in ViewBag.OfficeItems)
+            {
+                <partial name="_CategoryPreview" for="@product" />
+            }
         </div>
-    </div>
-
-    <div class="my-5">
-        @if (ViewBag.NoOfProducts > 0)
-        {
-            <div class="d-flex flex-wrap px-md-5 px-sm-0 gap-md-5 gap-sm-0 justify-content-center justify-content-md-start">
-                @foreach (ProductModel product in Model)
-                {
-                    <partial name="_DisplayPreview" for="@product" />
-                }
-            </div>
-        }
-        else
-        {
-            <h1 class="text-center">No product in this category</h1>
-        }
-    </div>
+        <button class="btn btn-outline-primary rounded w-fit m-auto d-block mt-3">View More</button>
+    </section>
+    <section class="home_banner">
+       <div>
+            <h3 class="text-light">Not Sure What You Are Looking For?</h3>
+            <button class="btn btn-outline-light w-fit d-block m-auto">Use Or Guide</button>
+       </div>
+    </section>
+    <section class="p-5 gray">
+        <h1 class="section-header text-primary" data-shadow-text="Motels">Motels</h1>
+        <p class="text-black-50 text-center mt-3">Easily own high quality trackers with outstanding proficiency.</p>
+        <div class="d-flex flex-wrap gap-3 justify-content-center mt-5">
+            @foreach (DisplayPreview product in ViewBag.Motels)
+            {
+                <partial name="_CategoryPreview" for="@product" />
+            }
+        </div>
+        <button class="btn btn-outline-primary rounded w-fit m-auto d-block mt-3">View More</button>
+    </section>
+    <input  class="id" hidden/>
 </div>
 @section Scripts {
     <script src="~/js/jCarousel.js" asp-append-version="true"></script>

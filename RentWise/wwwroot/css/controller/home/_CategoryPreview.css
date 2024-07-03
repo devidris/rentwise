@@ -1,0 +1,10 @@
+﻿.category-preview {
+    background: #fff;
+    width:25rem;
+}
+
+    .category-preview img {
+        width: 100%;
+        height: 15rem !important;
+        object-fit: cover;
+    }

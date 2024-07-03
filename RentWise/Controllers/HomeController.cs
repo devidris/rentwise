@@ -6,6 +6,7 @@ using RentWise.DataAccess.Repository.IRepository;
 using RentWise.Models;
 using RentWise.Models.Identity;
 using RentWise.Utility;
+using System;
 using System.Configuration;
 using System.Diagnostics;
 
@@ -27,37 +28,42 @@ namespace RentWise.Controllers
             _userManager = userManager;
         }
 
-        public async Task<IActionResult> Index(int Category = 0,int Min = 0,int Max = 0,double Lng = 0, double Lat = 0)
+        public async Task<IActionResult> Index()
         {
             try {
-                ViewBag.Category = Category;
-                ViewBag.Min = Min;
-                ViewBag.Max = Max;
-                ViewBag.Lng = Lng;
-                ViewBag.Lat = Lat;
                 ViewBag.Link = _config.Value.AgentWebsiteLink;
-                List<ProductModel> products;
-                if (Category == 0)
+                var random = new Random();
+                var categories = new List<(int id, string viewBagKey)>
+        {
+            (1, "Constructions"),
+            (2, "CarRentals"),
+            (3, "OfficeItems"),
+            (4, "Events"),
+            (5, "AllProduct"),
+            (8, "Motels")
+        };
+
+                foreach (var (id, viewBagKey) in categories)
                 {
-                    products = _unitOfWork.Product.GetAll(u => u.Enabled == true, "Agent,ProductImages").ToList();
+                    List<ProductModel> catProducts = new List<ProductModel>();
+                    if(id != 5)
+                    {
+                        catProducts = _unitOfWork.Product.GetAll(u => u.Enabled == true && u.LkpCategory == id, "Agent,ProductImages").OrderBy(x => random.Next()).Take(8).ToList();
+                    } else
+                    {
+                        catProducts = _unitOfWork.Product.GetAll(u => u.Enabled == true, "Agent,ProductImages").OrderBy(x => random.Next()).Take(10).ToList();
+                    }
+                    var displayPreviews = catProducts.Select(product => new DisplayPreview
+                    {
+                        Image = product.ProductImages.FirstOrDefault()?.Name != null ? _config.Value.AgentWebsiteLink + "/images/products/" + product.AgentId + "/" + product.ProductId + "/" + product.ProductImages.FirstOrDefault()?.Name : Url.Content("~/img/default-product.jpg"),
+                        Name = product.Name,
+                        Price = product.PriceDay,
+                        Rating = product.Rating,
+                        Location = product.Agent?.City ?? "Unknown"
+                    }).ToList();
+                    ViewData[viewBagKey] = displayPreviews;
                 }
-                else
-                {
-                    products = _unitOfWork.Product.GetAll(u => u.LkpCategory == Category && u.Enabled == true, "Agent,ProductImages").ToList();
-                }
-                if (Min > 0)
-                {
-                    products = products.FindAll(product => product.PriceDay >= Min).ToList();
-                }
-                if (Max > 0)
-                {
-                    products = products.FindAll(product => product.PriceDay <= Max).ToList();
-                }
-                if (Lat != 0 && Lng != 0)
-                {
-                    products = products.OrderBy(product => SharedFunctions.CalculateHaversineDistance(Lat, Lng, SharedFunctions.GetDoubleValue(product.Latitude), SharedFunctions.GetDoubleValue(product.Longitude))).ToList();
-                }
-                ViewBag.NoOfProducts = products.Count();
+
                 var user = await _userManager.GetUserAsync(User);
                 if (user != null)
                 {
@@ -73,13 +79,9 @@ namespace RentWise.Controllers
                         _unitOfWork.Save();
                     }
                 }
-                if (products.Count() > 1)
-                {
-                    products = SharedFunctions.ShuffleList(products);
-                }
-                string logInfo = $"Product search successful, Category: {(Category != 0 ? Lookup.Categories[Category] : "All")}";
+                string logInfo = $"Home page loaded";
                 _logger.LogInformation(logInfo);
-                return View(products);
+                return View();
             }
             catch (Exception ex) {
                 _logger.LogError(ex.ToString());
