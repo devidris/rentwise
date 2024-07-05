@@ -28,10 +28,11 @@
                             Categories
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarCategoriesDropdown">
-                            <li><a class="dropdown-item" href="#">Category 1</a></li>
-                            <li><a class="dropdown-item" href="#">Category 2</a></li>
-                            <li><a class="dropdown-item" href="#">Category 3</a></li>
-                            <li><a class="dropdown-item" href="#">Category 4</a></li>
+                            <li><a class="dropdown-item" asp-controller="Store" asp-action="Category" asp-route-Category="1">Construction Eqipments</a></li>
+                            <li><a class="dropdown-item" asp-controller="Store" asp-action="Category" asp-route-Category="2">Car Rentals</a></li>
+                            <li><a class="dropdown-item" asp-controller="Store" asp-action="Category" asp-route-Category="3">Office/ Personal Item</a></li>
+                            <li><a class="dropdown-item" asp-controller="Store" asp-action="Category" asp-route-Category="4">Events/Equipments Rentals</a></li>
+                            <li><a class="dropdown-item" asp-controller="Store" asp-action="Category" asp-route-Category="8">Motels</a></li>
                         </ul>
                 </li>
                     @if (!User.IsInRole("Admin"))

@@ -2,9 +2,6 @@
     // Get the current path from the window location and normalize it
     const path = window.location.pathname.toLowerCase();
 
-    // Log the path for debugging purposes
-    console.log('Current path:', path);
-
     // Select all elements with the class 'nav-link'
     const navLinks = document.querySelectorAll('.nav-link');
 
@@ -18,7 +15,7 @@
             const normalizedHref = href.toLowerCase();
 
             // Check if the normalized href matches the path or is part of it
-            if (normalizedHref === path || path.includes(normalizedHref)) {
+            if (normalizedHref === path) {
                 // Add 'active-nav' class and remove 'not-active-nav' class if they match
                 link.classList.add('active-nav');
                 link.classList.remove('not-active-nav');

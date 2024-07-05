@@ -224,3 +224,29 @@ function hideLoading() {
     const loadingOverlay = document.querySelector('.loading');
     loadingOverlay.classList.add('hidden');
 }
+
+function addToQueryString(params, pathname = window.location.pathname, loadPage = true) {
+    console.log(pathname)
+    const queryString = Object.keys(params)
+        .map(key => `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`)
+        .join('&');
+
+    if (loadPage) {
+        const newUrl = `${window.location.origin}${pathname}?${queryString}`;
+        window.location.href = newUrl;
+    } else {
+        return queryString;
+    }
+}
+function removeParamsFromUrl(paramsToRemove, url = window.location.href) {
+    // Parse the URL
+    const urlObj = new URL(url);
+    const searchParams = urlObj.searchParams;
+
+    // Remove specified parameters
+    paramsToRemove.forEach(param => searchParams.delete(param));
+
+    // Update the URL with the new query string
+    urlObj.search = searchParams.toString();
+    return urlObj.toString();
+}

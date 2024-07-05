@@ -72,3 +72,70 @@ function getAddress(lat, lng) {
         }
     });
 }
+
+function searchName() {
+    const name = $('.name-search').val()
+    if (name && name.length > 0) {
+        addToQueryString({name},"/store/category")
+    } else {
+        toastr.error("Please enter a name to search");
+    }
+}
+
+// Function to update dropdown toggle text and data-value attribute
+function updateDropdownToggle(element) {
+    var newText = $(element).text().trim(); // Get the text content of clicked item
+    var newValue = $(element).data('value'); // Get the data-value attribute of clicked item
+    var dropdownToggle = $(element).closest('.dropdown').find('.dropdown-toggle span');
+
+    dropdownToggle.text(newText); // Update dropdown toggle text with new content
+    dropdownToggle.attr('data-value', newValue); // Update data-value attribute with new value
+}
+
+// Function to handle search button click
+// Function to handle search button click
+function handleSearch() {
+    var categoryValue = $('.dropdown-category .dropdown-toggle span').attr('data-value');
+    var cityValue = $('.dropdown-city .dropdown-toggle span').attr('data-value');
+    var priceRangeValue = $('.dropdown-price .dropdown-toggle span').attr('data-value');
+    var daysValue = $('.dropdown-days .dropdown-toggle span').attr('data-value');
+
+    var selectedValues = {};
+
+    // Add category if defined
+    if (categoryValue) {
+        selectedValues.Category = categoryValue;
+    }
+
+    // Add city if defined
+    if (cityValue) {
+        selectedValues.City = cityValue;
+    }
+
+    // Add price range if defined
+    if (priceRangeValue) {
+        var priceRange = priceRangeValue.split('-');
+        selectedValues.MinPrice = priceRange[0];
+        selectedValues.MaxPrice = priceRange[1] ?? 0;
+    }
+
+    // Add days range if defined
+    if (daysValue) {
+        var daysRange = daysValue.split('-');
+        selectedValues.MinDays = parseInt(daysRange[0]);
+        selectedValues.MaxDays = parseInt(daysRange[1]) ? parseInt(daysRange[1]) :  0;
+    }
+   addToQueryString(selectedValues, "/store/category")
+}
+function navigate(id) {
+    const loadingOverlay = document.querySelector('.loading');
+    loadingOverlay.classList.remove('hidden');
+    let link = `https://${location.host}/Store/View/${id}`
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('onesignalId') && urlParams.get('onesignalId') != "") {
+
+        link += '?onesignalId=' + urlParams.get('onesignalId');
+    }
+    location.href = link
+}
+

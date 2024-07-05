@@ -32,6 +32,7 @@ namespace RentWise.Controllers
         {
             try {
                 ViewBag.Link = _config.Value.AgentWebsiteLink;
+                
                 var random = new Random();
                 var categories = new List<(int id, string viewBagKey)>
         {
@@ -59,7 +60,8 @@ namespace RentWise.Controllers
                         Name = product.Name,
                         Price = product.PriceDay,
                         Rating = product.Rating,
-                        Location = product.Agent?.City ?? "Unknown"
+                        Location = product.Agent?.City ?? "Unknown",
+                        ProductId = product.ProductId ?? "123"
                     }).ToList();
                     ViewData[viewBagKey] = displayPreviews;
                 }
@@ -81,6 +83,8 @@ namespace RentWise.Controllers
                 }
                 string logInfo = $"Home page loaded";
                 _logger.LogInformation(logInfo);
+                IEnumerable<City> cities = _unitOfWork.City.GetAll();
+                ViewBag.Cities = cities;
                 return View();
             }
             catch (Exception ex) {

@@ -1,77 +1,74 @@
 ﻿<link rel="stylesheet" href="~/css/controller/home/_Hero.css" asp-append-version="true" />
 <header class="hero row justify-content-center align-items-center text-center text-white">
-    <div class="col-md-6 col-sm-12">
+    <div class="col-md-6 col-sm-12 hero_content">
         <h1 class="display-3">Now it's <em>easier</em> than </h1>
         <h1 class="mb-5">ever to <span class="text-primary">Rent</span> a product</h1>
 
         <div class="search_input mb-2">
             <i class="bi bi-search text-muted"></i>
-            <input type="search" value="" placeholder="Search" />
-            <button class="btn rouded-pill btn-primary text-white"> <i class="bi bi-search text-muted text-white"></i>Search</button>
+            <input type="search" value="" class="name-search" placeholder="Search" />
+            <button class="btn rouded-pill btn-primary text-white" onclick="searchName()"> <i class="bi bi-search text-muted text-white"></i>Search</button>
         </div>
         <span class="text-primary">Need a car now? Check out our Quick Delivery or View Communities Near you  </span>
-        <ul class="search-lists pl-0 mt-5">
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="bi bi-funnel-fill"></i>
-                    Category
-                </a>
-                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <li><a class="dropdown-item" href="#">Action</a></li>
-                    <li><a class="dropdown-item" href="#">Another action</a></li>
-                    <li><hr class="dropdown-divider"></li>
-                    <li><a class="dropdown-item" href="#">Something else here</a></li>
-                </ul>
-            </li>
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="bi bi-houses-fill"></i>
-                    City
-                </a>
-                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <li><a class="dropdown-item" href="#">Action</a></li>
-                    <li><a class="dropdown-item" href="#">Another action</a></li>
-                    <li><hr class="dropdown-divider"></li>
-                    <li><a class="dropdown-item" href="#">Something else here</a></li>
-                </ul>
-            </li>
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="bi bi-tags-fill"></i>
-                    Price Range
-                </a>
-                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <li><a class="dropdown-item" href="#">Action</a></li>
-                    <li><a class="dropdown-item" href="#">Another action</a></li>
-                    <li><hr class="dropdown-divider"></li>
-                    <li><a class="dropdown-item" href="#">Something else here</a></li>
-                </ul>
-            </li>
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="bi bi-calendar3"></i>
-                    Days
-                </a>
-                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <li><a class="dropdown-item" href="#">Action</a></li>
-                    <li><a class="dropdown-item" href="#">Another action</a></li>
-                    <li><hr class="dropdown-divider"></li>
-                    <li><a class="dropdown-item" href="#">Something else here</a></li>
-                </ul>
-            </li>
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="bi bi-people-fill"></i>
-                    Avail
-                </a>
-                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <li><a class="dropdown-item" href="#">Action</a></li>
-                    <li><a class="dropdown-item" href="#">Another action</a></li>
-                    <li><hr class="dropdown-divider"></li>
-                    <li><a class="dropdown-item" href="#">Something else here</a></li>
-                </ul>
-            </li>
-            <button class="btn btn-primary text-white px-3"><i class="bi bi-search"></i></button>
-        </ul>
+        <div class="d-flex gap-5 align-items-center mt-5">
+            <ul class="search-lists pl-0 m-0">
+                <li class="nav-item dropdown dropdown-category">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-funnel-fill"></i>
+                        <span>Category</span>
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item" href="#" onclick="updateDropdownToggle(this)" data-value="1">Construction Equipments</a></li>
+                        <li><a class="dropdown-item" href="#" onclick="updateDropdownToggle(this)" data-value="2">Car Rentals</a></li>
+                        <li><a class="dropdown-item" href="#" onclick="updateDropdownToggle(this)" data-value="3">Office/ Personal Item</a></li>
+                        <li><a class="dropdown-item" href="#" onclick="updateDropdownToggle(this)" data-value="4">Events/Equipments Rentals</a></li>
+                        <li><a class="dropdown-item" href="#" onclick="updateDropdownToggle(this)" data-value="8">Motels</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown dropdown-city">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-houses-fill"></i>
+                        <span>City</span>
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <!-- Populate cities dynamically from ViewBag.Cities -->
+                        @foreach (City city in ViewBag.Cities)
+                        {
+                            <li><a class="dropdown-item" href="#" onclick="updateDropdownToggle(this)" data-value="@city.Name">@city.Name</a></li>
+                        }
+                    </ul>
+                </li>
+                <li class="nav-item dropdown dropdown-price">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-tags-fill"></i>
+                        <span>Price Range</span>
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item" href="#" onclick="updateDropdownToggle(this)" data-value="0-50">₵0 - ₵50</a></li>
+                        <li><a class="dropdown-item" href="#" onclick="updateDropdownToggle(this)" data-value="50-100">₵50 - ₵100</a></li>
+                        <li><a class="dropdown-item" href="#" onclick="updateDropdownToggle(this)" data-value="100-200">₵100 - ₵200</a></li>
+                        <li><a class="dropdown-item" href="#" onclick="updateDropdownToggle(this)" data-value="200-500">₵200 - ₵500</a></li>
+                        <li><a class="dropdown-item" href="#" onclick="updateDropdownToggle(this)" data-value="500-1000">₵500 - ₵1000</a></li>
+                        <li><a class="dropdown-item" href="#" onclick="updateDropdownToggle(this)" data-value="1000+">Above ₵1000</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown dropdown-days">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-calendar3"></i>
+                        <span>Days</span>
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item" href="#" onclick="updateDropdownToggle(this)" data-value="1-3">1 - 3 days</a></li>
+                        <li><a class="dropdown-item" href="#" onclick="updateDropdownToggle(this)" data-value="4-7">4 - 7 days</a></li>
+                        <li><a class="dropdown-item" href="#" onclick="updateDropdownToggle(this)" data-value="8-14">8 - 14 days</a></li>
+                        <li><a class="dropdown-item" href="#" onclick="updateDropdownToggle(this)" data-value="15-30">15 - 30 days</a></li>
+                        <li><a class="dropdown-item" href="#" onclick="updateDropdownToggle(this)" data-value="31-60">31 - 60 days</a></li>
+                        <li><a class="dropdown-item" href="#" onclick="updateDropdownToggle(this)" data-value="61-90">61 - 90 days</a></li>
+                        <li><a class="dropdown-item" href="#" onclick="updateDropdownToggle(this)" data-value="90+">More than 90 days</a></li>
+                    </ul>
+                </li>
+            </ul>
+
+            <button class="btn btn-primary advanced-search" onclick="handleSearch()"><i class="bi bi-search"></i></button>
     </div>
 </header>

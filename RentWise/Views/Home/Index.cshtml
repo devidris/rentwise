@@ -20,7 +20,7 @@
                 <partial name="_CategoryPreview" for="@construction" />
             }
         </div>
-            <button class="btn btn-outline-primary rounded w-fit m-auto d-block mt-3">View More</button>
+            <a class="btn btn-outline-primary rounded w-fit m-auto d-block mt-3" asp-controller="Store" asp-action="Category" asp-route-Category="1">View More</a>
     </section>
 
     <section class="p-5 gray">
@@ -32,7 +32,7 @@
                 <partial name="_CategoryPreview" for="@car" />
             }
         </div>
-        <button class="btn btn-outline-primary rounded w-fit m-auto d-block mt-3">View More</button>
+        <a class="btn btn-outline-primary rounded w-fit m-auto d-block mt-3" asp-controller="Store" asp-action="Category" asp-route-Category="2">View More</a>
     </section>
 
     <div class="py-5 px-3">
@@ -67,7 +67,7 @@
                 <partial name="_CategoryPreview" for="@product" />
             }
         </div>
-        <button class="btn btn-outline-primary rounded w-fit m-auto d-block mt-3">View More</button>
+        <a class="btn btn-outline-primary rounded w-fit m-auto d-block mt-3" asp-controller="Store" asp-action="Category" asp-route-Category="3">View More</a>
     </section>
 
     <section class="p-5 gray">
@@ -79,12 +79,12 @@
                 <partial name="_CategoryPreview" for="@product" />
             }
         </div>
-        <button class="btn btn-outline-primary rounded w-fit m-auto d-block mt-3">View More</button>
+        <a class="btn btn-outline-primary rounded w-fit m-auto d-block mt-3" asp-controller="Store" asp-action="Category" asp-route-Category="4">View More</a>
     </section>
     <section class="home_banner">
        <div>
             <h3 class="text-light">Not Sure What You Are Looking For?</h3>
-            <button class="btn btn-outline-light w-fit d-block m-auto">Use Or Guide</button>
+            <a class="btn btn-outline-light w-fit d-block m-auto" asp-controller="Page" asp-action="How">Use Or Guide</a>
        </div>
     </section>
     <section class="p-5 gray">
@@ -96,12 +96,11 @@
                 <partial name="_CategoryPreview" for="@product" />
             }
         </div>
-        <button class="btn btn-outline-primary rounded w-fit m-auto d-block mt-3">View More</button>
+        <a class="btn btn-outline-primary rounded w-fit m-auto d-block mt-3" asp-controller="Store" asp-action="Category" asp-route-Category="8">View More</a>
     </section>
     <input  class="id" hidden/>
 </div>
 @section Scripts {
     <script src="~/js/jCarousel.js" asp-append-version="true"></script>
-    <script src="~/js/AutocompleteAddress.js" asp-append-version="true"></script>
     <script src="~/js/controller/home/Index.js" asp-append-version="true" defer></script>
 }

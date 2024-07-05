@@ -1,4 +1,5 @@
 ﻿using Azure;
+using Humanizer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -532,6 +533,62 @@ namespace RentWise.Controllers
                 Data = Lookup.ResponseMessages[5],
                 Success = true
             });
+        }
+
+        public IActionResult Category(string Name,string City,int Category = 0,int MinPrice = 0,int MaxPrice = 0,int MinDays = 0,int MaxDays = 0)
+        {
+            List<ProductModel> products;
+            if (Category > 0)
+            {
+                products = _unitOfWork.Product.GetAll(u => u.LkpCategory == Category && u.Enabled == true, "Agent,ProductImages").ToList();
+            }
+            else
+            {
+                products = _unitOfWork.Product.GetAll(u => u.Enabled == true, "Agent,ProductImages").ToList();
+            }
+            if (MinPrice > 0)
+            {
+                products = products.FindAll(product => product.PriceDay >= MinPrice).ToList();
+            }
+            if (MaxPrice > 0)
+            {
+                products = products.FindAll(product => product.PriceDay <= MaxPrice).ToList();
+            }
+            if (MinDays > 0)
+            {
+                products = products.FindAll(product => product.MaxRentalDays >= MinDays).ToList();
+            }
+            if (MaxDays > 0)
+            {
+                products = products.FindAll(product => product.MaxRentalDays <= MaxDays).ToList();
+            }
+            if (!string.IsNullOrEmpty(City))
+            {
+                products = products.FindAll(product => product.City == City).ToList();
+            }
+
+            if (!string.IsNullOrEmpty(City))
+            {
+                products = products.FindAll(product => product.City.ToLower() == City.ToLower()).ToList();
+            }
+            if(!string.IsNullOrEmpty(Name))
+            {
+                products = products.FindAll(product => product.Name.ToLower().Contains(Name.ToLower())).ToList();
+            }
+            List<DisplayPreview> displayPreviews = new List<DisplayPreview>();
+            if(products != null && products.Count > 0)
+            {
+                displayPreviews = products.Select(product => new DisplayPreview
+                {
+                    Image = product.ProductImages.FirstOrDefault()?.Name != null ? _config.Value.AgentWebsiteLink + "/images/products/" + product.AgentId + "/" + product.ProductId + "/" + product.ProductImages.FirstOrDefault()?.Name : Url.Content("~/img/default-product.jpg"),
+                    Name = product?.Name ?? "Unknown",
+                    Price = product?.PriceDay ?? 0,
+                    Rating = product?.Rating ?? 0,
+                    Location = product?.Agent?.City ?? "Unknown"
+                }).ToList();
+            }
+            ViewBag.CategoryName = Category > 0 ? Lookup.Categories[Category] : "Any";
+            return View(displayPreviews);
         }
     }
 
