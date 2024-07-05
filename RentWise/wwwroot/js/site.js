@@ -250,3 +250,8 @@ function removeParamsFromUrl(paramsToRemove, url = window.location.href) {
     urlObj.search = searchParams.toString();
     return urlObj.toString();
 }
+
+function sortDropdownToggle(element) {
+    const value = $(element).data('value');
+    window.location.href = buildQueryParams("sort", value).href
+}

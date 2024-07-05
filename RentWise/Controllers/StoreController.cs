@@ -535,7 +535,7 @@ namespace RentWise.Controllers
             });
         }
 
-        public IActionResult Category(string Name,string City,int Category = 0,int MinPrice = 0,int MaxPrice = 0,int MinDays = 0,int MaxDays = 0)
+        public IActionResult Category(string Name,string City,int Category = 0,int MinPrice = 0,int MaxPrice = 0,int MinDays = 0,int MaxDays = 0,int Sort = 0)
         {
             List<ProductModel> products;
             if (Category > 0)
@@ -564,16 +564,23 @@ namespace RentWise.Controllers
             }
             if (!string.IsNullOrEmpty(City))
             {
-                products = products.FindAll(product => product.City == City).ToList();
-            }
-
-            if (!string.IsNullOrEmpty(City))
-            {
                 products = products.FindAll(product => product.City.ToLower() == City.ToLower()).ToList();
             }
             if(!string.IsNullOrEmpty(Name))
             {
                 products = products.FindAll(product => product.Name.ToLower().Contains(Name.ToLower())).ToList();
+            }
+            if (Sort == 2)
+            {
+                products = products.OrderBy(product => product.PriceDay).ToList();
+            }
+            else if (Sort == 3)
+            {
+                products = products.OrderByDescending(product => product.PriceDay).ToList();
+            }
+            else if (Sort == 1)
+            {
+                products = products.OrderByDescending(product => product.Rating).ToList();
             }
             List<DisplayPreview> displayPreviews = new List<DisplayPreview>();
             if(products != null && products.Count > 0)
