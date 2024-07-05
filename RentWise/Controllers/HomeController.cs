@@ -61,7 +61,7 @@ namespace RentWise.Controllers
                         Price = product.PriceDay,
                         Rating = product.Rating,
                         Location = product.Agent?.City ?? "Unknown",
-                        ProductId = product.ProductId ?? "123"
+                        ProductId = product.ProductId ?? ""
                     }).ToList();
                     ViewData[viewBagKey] = displayPreviews;
                 }

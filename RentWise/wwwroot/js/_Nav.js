@@ -26,4 +26,22 @@
             }
         }
     });
+
+    // Check if the path includes '/store/' and add 'active-nav' to '.category'
+    if (path.includes('/store')) {
+        const categoryElement = document.querySelector('.category');
+        if (categoryElement) {
+            categoryElement.classList.add('active-nav');
+            categoryElement.classList.remove('not-active-nav');
+        }
+    }
+
+    // Check if the path includes '/admin/' and add 'active-nav' to '.admin'
+    if (path.includes('/admin')) {
+        const adminElement = document.querySelector('.admin');
+        if (adminElement) {
+            adminElement.classList.add('active-nav');
+            adminElement.classList.remove('not-active-nav');
+        }
+    }
 });

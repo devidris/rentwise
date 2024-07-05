@@ -591,7 +591,8 @@ namespace RentWise.Controllers
                     Name = product?.Name ?? "Unknown",
                     Price = product?.PriceDay ?? 0,
                     Rating = product?.Rating ?? 0,
-                    Location = product?.Agent?.City ?? "Unknown"
+                    Location = product?.Agent?.City ?? "Unknown",
+                    ProductId = product?.ProductId ?? ""
                 }).ToList();
             }
             ViewBag.CategoryName = Category > 0 ? Lookup.Categories[Category] : "Any";
