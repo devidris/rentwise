@@ -267,3 +267,38 @@ function navigate(id) {
     }
     location.href = link
 }
+function showWarningModal(title, description, url) {
+    Swal.fire({
+        title: title,
+        text: description,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Yes, proceed!',
+        cancelButtonText: 'Cancel'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            showLoading()
+            // Redirect or perform action based on the URL
+            window.location.href = url;
+        }
+    });
+}
+
+function submitFormInfo(title, description, formId) {
+    Swal.fire({
+        title: title,
+        text: description,
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, update it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            showLoading()
+            document.getElementById(formId).submit();
+        }
+    });
+}

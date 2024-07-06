@@ -187,10 +187,12 @@ function addToCart() {
                     if (result.statusCode == 401) {
                         toastr.error("Please login to place an order");
                         location.href = '/Auth/Login'
-                    } else if (result.statusCode == 200) {
+                    } else if (result.statusCode == 201) {
                         Swal.fire('Success', 'Your reservation has been added to cart.', 'success');
                         const oldCartCount = $('.cart-count').text()
                         $('.cart-count').text(oldCartCount * 1 + 1)
+                    } else if (result.statusCode == 200) {
+                        Swal.fire('Success', 'Your reservation has been added to cart.', 'success');
                     } else {
                         Swal.fire('Error', 'Something went wrong', 'error');
                     }

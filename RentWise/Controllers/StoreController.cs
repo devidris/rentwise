@@ -20,7 +20,7 @@ using static Org.BouncyCastle.Crypto.Engines.SM2Engine;
 
 namespace RentWise.Controllers
 {
-    public class StoreController : Controller 
+    public class StoreController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IOptions<RentWiseConfig> _config;
@@ -97,15 +97,15 @@ namespace RentWise.Controllers
             if (user != null)
             {
                 if (_unitOfWork.UsersDetails.Get(u => u.Id == user.Id) == null)
-                { 
-                    UsersDetailsModel usersDetailsModel = new UsersDetailsModel
                 {
-                    Username = user.UserName.Split('@')[0],
-                    Id = user.Id,
-                };
-                _unitOfWork.UsersDetails.Add(usersDetailsModel);
-                _unitOfWork.Save();
-                
+                    UsersDetailsModel usersDetailsModel = new UsersDetailsModel
+                    {
+                        Username = user.UserName.Split('@')[0],
+                        Id = user.Id,
+                    };
+                    _unitOfWork.UsersDetails.Add(usersDetailsModel);
+                    _unitOfWork.Save();
+
                 }
             }
             return View(products);
@@ -119,7 +119,7 @@ namespace RentWise.Controllers
             ViewBag.IsLike = like != null;
             if (userId != null)
             {
-                IEnumerable<ReviewModel> Reviews = _unitOfWork.Review.GetAll(u => u.ProductId == model.ProductId,"UserDetails");
+                IEnumerable<ReviewModel> Reviews = _unitOfWork.Review.GetAll(u => u.ProductId == model.ProductId, "UserDetails");
                 ViewBag.Reviews = Reviews;
                 ViewBag.HasAddRating = Reviews.FirstOrDefault(u => u.UserId == userId) != null;
                 ViewBag.NoOfRating = Reviews.Count();
@@ -250,9 +250,9 @@ namespace RentWise.Controllers
                 }
                 _unitOfWork.Chat.Add(chat);
                 _unitOfWork.Save();
-                string redirectUrl = "https://rentwisegh.com/Page/Chat/"+userId;
+                string redirectUrl = "https://rentwisegh.com/Page/Chat/" + userId;
                 UsersDetailsModel ToUsersDetails = _unitOfWork.UsersDetails.Get(u => u.Id == Receipient);
-                SharedFunctions.SendPushNotification(ToUsersDetails.OneSignalId, "You have a new message from "+ SharedFunctions.CapitalizeAllWords(usersDetailsModel2.Username), Message, redirectUrl);
+                SharedFunctions.SendPushNotification(ToUsersDetails.OneSignalId, "You have a new message from " + SharedFunctions.CapitalizeAllWords(usersDetailsModel2.Username), Message, redirectUrl);
                 await _hubContext.Clients.All.SendAsync("ReceiveMessage", ToUsersDetails.Id, Message);
                 return Json(new
                 {
@@ -320,9 +320,9 @@ namespace RentWise.Controllers
             _unitOfWork.Order.Add(model);
             _unitOfWork.Chat.Add(chat);
             _unitOfWork.Save();
-            ProductModel product = _unitOfWork.Product.Get(u=>u.ProductId == ProductId);
-            AgentRegistrationModel agent = _unitOfWork.AgentRegistration.Get(u=>u.Id == product.AgentId,"User");
-            string emailContentClient = SharedFunctions.EmailContent(usersDetailsModel.Username, 1, product.Name,model.ProductQuantity, TotalPrice);
+            ProductModel product = _unitOfWork.Product.Get(u => u.ProductId == ProductId);
+            AgentRegistrationModel agent = _unitOfWork.AgentRegistration.Get(u => u.Id == product.AgentId, "User");
+            string emailContentClient = SharedFunctions.EmailContent(usersDetailsModel.Username, 1, product.Name, model.ProductQuantity, TotalPrice);
             string emailContentAgent = SharedFunctions.EmailContent(agent.FirstName, 2, product.Name, model.ProductQuantity, model.TotalAmount);
             SharedFunctions.SendEmail(user.UserName, "Reservation has been made", emailContentClient);
             SharedFunctions.SendEmail(agent.User.UserName, "Reservation has been made", emailContentAgent);
@@ -355,6 +355,23 @@ namespace RentWise.Controllers
                 });
             }
             IdentityUser user = await _userManager.FindByIdAsync(userId);
+            ProductModel product = _unitOfWork.Product.Get(u => u.ProductId == ProductId);
+            OrdersModel oldOrder = _unitOfWork.Order.Get(u => u.ProductId == ProductId && u.UserId == userId && u.LkpStatus == 8);
+            if (oldOrder != null)
+            {
+                oldOrder.ProductQuantity += ProductQuantity;
+                oldOrder.TotalAmount += ProductQuantity * product.PriceDay;
+                oldOrder.UpdatedAt = DateTime.Now;
+                _unitOfWork.Order.Update(oldOrder);
+                _unitOfWork.Save();
+                return Json(new
+                {
+                    StatusCode = (int)HttpStatusCode.OK,
+                    Message = "Order Added to Card Successfully",
+                    Data = Lookup.ResponseMessages[5],
+                    Success = true
+                });
+            }
             OrdersModel model = new()
             {
                 ProductId = ProductId,
@@ -363,7 +380,7 @@ namespace RentWise.Controllers
                 ProductQuantity = ProductQuantity,
                 StartDate = StartDate,
                 EndDate = EndDate,
-                TotalAmount = TotalPrice,
+                TotalAmount = ProductQuantity * product.PriceDay,
                 LkpStatus = 8
             };
             UsersDetailsModel usersDetailsModel = _unitOfWork.UsersDetails.Get(u => u.Id == userId);
@@ -375,13 +392,11 @@ namespace RentWise.Controllers
             }
             _unitOfWork.Order.Add(model);
             _unitOfWork.Save();
-            ProductModel product = _unitOfWork.Product.Get(u => u.ProductId == ProductId);
-            AgentRegistrationModel agent = _unitOfWork.AgentRegistration.Get(u => u.Id == product.AgentId, "User");
-            UsersDetailsModel ToUsersDetails = _unitOfWork.UsersDetails.Get(u => u.Id == AgentId);
+
             return Json(new
             {
-                StatusCode = (int)HttpStatusCode.OK,
-                Message = "Order Placed Successfully",
+                StatusCode = (int)HttpStatusCode.Created,
+                Message = "Order Added to Card Successfully",
                 Data = Lookup.ResponseMessages[5],
                 Success = true
             });
@@ -402,17 +417,17 @@ namespace RentWise.Controllers
             }
             return View(orders);
         }
-        public IActionResult Success(string orderId = "",string checokutId = "")
+        public IActionResult Success(string orderId = "", string checokutId = "")
         {
             OrdersModel order = _unitOfWork.Order.Get(u => u.OrderId == int.Parse(orderId), "Product");
             order.Paid = true;
             order.LkpStatus = 4;
             string UserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            AgentRegistrationModel agent = _unitOfWork.AgentRegistration.Get(u => u.Id == order.AgentId,"User");
+            AgentRegistrationModel agent = _unitOfWork.AgentRegistration.Get(u => u.Id == order.AgentId, "User");
             string agentPhoneNumber = agent.PhoneNumber;
             if (order != null)
             {
-                string Message = "Payment received by Owner, contact Owner on "+  agentPhoneNumber;
+                string Message = "Payment received by Owner, contact Owner on " + agentPhoneNumber;
                 ChatModel chat = new()
                 {
                     FromUserId = order.AgentId,
@@ -421,18 +436,18 @@ namespace RentWise.Controllers
                     IsOrder = true,
                 };
                 _unitOfWork.Chat.Add(chat);
-            order.UpdatedAt = DateTime.Now;
-            _unitOfWork.Order.Update(order);
-            agent.PayWithCard += order.TotalAmount;
-            agent.UpdatedAt = DateTime.Now;
+                order.UpdatedAt = DateTime.Now;
+                _unitOfWork.Order.Update(order);
+                agent.PayWithCard += order.TotalAmount;
+                agent.UpdatedAt = DateTime.Now;
                 _unitOfWork.AgentRegistration.Update(agent);
-            string emailContentAgent = SharedFunctions.EmailContent(agent.FirstName, 5, order.Product.Name, order.ProductQuantity, order.TotalAmount);
+                string emailContentAgent = SharedFunctions.EmailContent(agent.FirstName, 5, order.Product.Name, order.ProductQuantity, order.TotalAmount);
                 UsersDetailsModel ToUsersDetails = _unitOfWork.UsersDetails.Get(u => u.Id == agent.Id);
                 SharedFunctions.SendEmail(agent.User.UserName, "Payment has  been made for Reservation", emailContentAgent);
-            SharedFunctions.SendPushNotification(ToUsersDetails.OneSignalId, "Reservation payment status", "Client has paid for a reservation and will soon contact you soon");
+                SharedFunctions.SendPushNotification(ToUsersDetails.OneSignalId, "Reservation payment status", "Client has paid for a reservation and will soon contact you soon");
             }
             _unitOfWork.Save();
-            TempData["Success"] = "Payment for order no"+ orderId + "was successful";
+            TempData["Success"] = "Payment for order no" + orderId + "was successful";
             return RedirectToAction(nameof(Orders));
         }
 
@@ -454,7 +469,7 @@ namespace RentWise.Controllers
             }
             OrdersModel order = _unitOfWork.Order.Get(u => u.OrderId == orderId, "Product");
             ProductModel product = _unitOfWork.Product.Get(u => u.ProductId == order.ProductId, "Agent");
-            AgentRegistrationModel agent = _unitOfWork.AgentRegistration.Get(u => u.Id == product.AgentId,"User");
+            AgentRegistrationModel agent = _unitOfWork.AgentRegistration.Get(u => u.Id == product.AgentId, "User");
             Random random = new Random();
             int randomNumber = random.Next(1, 101);
             string reference = order.OrderId.ToString() + "-RENTWISE-" + randomNumber;
@@ -489,7 +504,7 @@ namespace RentWise.Controllers
                 double totalAmount = order.Product.PriceDay * order.ProductQuantity;
                 string description = order.Product.Description; // Adjust this based on your actual structure
                 string clientReference = reference;
-                string link = _config.Value.ClientWebsiteLink+ "/Store/Success?orderId="+order.OrderId;
+                string link = _config.Value.ClientWebsiteLink + "/Store/Success?orderId=" + order.OrderId;
                 // Create the JSON string using variables
                 string jsonBody = $"{{\"totalAmount\":{totalAmount},\"description\":\"{description}\",\"callbackUrl\":\"{pageLink}?orderId={order.OrderId}\",\"returnUrl\":\"{link}\",\"cancellationUrl\":\"{pageLink}\",\"merchantAccountNumber\":\"2018934\",\"clientReference\":\"{clientReference}\"}}";
 
@@ -505,12 +520,12 @@ namespace RentWise.Controllers
                 {
                     var response = await client.PostAsync(request);
                     return Json(new
-                {
-                    StatusCode = (int)HttpStatusCode.OK,
-                    Message = "Order Placed Successfully",
-                    Data = JsonConvert.SerializeObject(response),
-                    Success = true
-                });
+                    {
+                        StatusCode = (int)HttpStatusCode.OK,
+                        Message = "Order Placed Successfully",
+                        Data = JsonConvert.SerializeObject(response),
+                        Success = true
+                    });
                 }
                 catch (Exception err)
                 {
@@ -536,13 +551,13 @@ namespace RentWise.Controllers
         {
             ProductModel product = _unitOfWork.Product.Get(u => u.ProductId == Id);
             AgentRegistrationModel agent = _unitOfWork.AgentRegistration.Get(u => u.Id == product.AgentId, "User");
-            string emailContent = SharedFunctions.EmailContent(agent.User.UserName,type);
-                UsersDetailsModel ToUsersDetails = _unitOfWork.UsersDetails.Get(u => u.Id == product.AgentId);
+            string emailContent = SharedFunctions.EmailContent(agent.User.UserName, type);
+            UsersDetailsModel ToUsersDetails = _unitOfWork.UsersDetails.Get(u => u.Id == product.AgentId);
             if (type == "ENABLE")
             {
                 product.Enabled = true;
                 _unitOfWork.Product.Update(product);
-                SharedFunctions.SendPushNotification(ToUsersDetails.OneSignalId,"Reservation has been enabled by admin", product.Name + "reservation has been enabled by admin");
+                SharedFunctions.SendPushNotification(ToUsersDetails.OneSignalId, "Reservation has been enabled by admin", product.Name + "reservation has been enabled by admin");
                 SharedFunctions.SendEmail(agent.User.UserName, "Your list has been disabled by admin", emailContent);
             }
             if (type == "DISABLE")
@@ -562,7 +577,7 @@ namespace RentWise.Controllers
         public async Task<IActionResult> setOnesignalId(string? id)
         {
             string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if(id == null || userId == null)
+            if (id == null || userId == null)
             {
                 return Json(new
                 {
@@ -572,8 +587,8 @@ namespace RentWise.Controllers
                     Success = false
                 });
             }
-           UsersDetailsModel userDetails = _unitOfWork.UsersDetails.Get(u=>u.Id == userId);
-           userDetails.OneSignalId = id;
+            UsersDetailsModel userDetails = _unitOfWork.UsersDetails.Get(u => u.Id == userId);
+            userDetails.OneSignalId = id;
             _unitOfWork.UsersDetails.Update(userDetails);
             _unitOfWork.Save();
 
@@ -586,7 +601,7 @@ namespace RentWise.Controllers
             });
         }
 
-        public IActionResult Category(string Name,string City,int Category = 0,int MinPrice = 0,int MaxPrice = 0,int MinDays = 0,int MaxDays = 0,int Sort = 0)
+        public IActionResult Category(string Name, string City, int Category = 0, int MinPrice = 0, int MaxPrice = 0, int MinDays = 0, int MaxDays = 0, int Sort = 0)
         {
             List<ProductModel> products;
             if (Category > 0)
@@ -617,7 +632,7 @@ namespace RentWise.Controllers
             {
                 products = products.FindAll(product => product.City.ToLower() == City.ToLower()).ToList();
             }
-            if(!string.IsNullOrEmpty(Name))
+            if (!string.IsNullOrEmpty(Name))
             {
                 products = products.FindAll(product => product.Name.ToLower().Contains(Name.ToLower())).ToList();
             }
@@ -634,7 +649,7 @@ namespace RentWise.Controllers
                 products = products.OrderByDescending(product => product.Rating).ToList();
             }
             List<DisplayPreview> displayPreviews = new List<DisplayPreview>();
-            if(products != null && products.Count > 0)
+            if (products != null && products.Count > 0)
             {
                 displayPreviews = products.Select(product => new DisplayPreview
                 {
@@ -649,6 +664,47 @@ namespace RentWise.Controllers
             ViewBag.CategoryName = Category > 0 ? Lookup.Categories[Category] : "Any";
             return View(displayPreviews);
         }
-    }
 
+        public IActionResult Cart()
+        {
+            string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            IEnumerable<OrdersModel> orders = _unitOfWork.Order.GetAll(u => u.UserId == userId && u.LkpStatus == 8);
+            foreach (var order in orders)
+            {
+                order.Product = _unitOfWork.Product.Get(u => u.ProductId == order.ProductId, "ProductImages");
+            }
+            ViewBag.Link = _config.Value.AgentWebsiteLink;
+            return View(orders);
+        }
+        public IActionResult RemoveFromCart(int orderId)
+        {
+            string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            UsersDetailsModel usersDetailsModel = _unitOfWork.UsersDetails.Get(u => u.Id == userId);
+            if (usersDetailsModel != null)
+            {
+                usersDetailsModel.Carts -= 1;
+                usersDetailsModel.UpdatedAt = DateTime.Now;
+                _unitOfWork.UsersDetails.Update(usersDetailsModel);
+            }
+            OrdersModel order = _unitOfWork.Order.Get(u => u.OrderId == orderId);
+
+            _unitOfWork.Order.Remove(order);
+            _unitOfWork.Save();
+            TempData["Success"] = "Item removed from cart";
+            return RedirectToAction(nameof(Cart));
+        }
+
+        [HttpPost]
+        public IActionResult UpdateCart(int orderId, int quantity)
+        {
+            OrdersModel order = _unitOfWork.Order.Get(u => u.OrderId == orderId,"Product");
+            order.ProductQuantity = quantity;
+            order.TotalAmount = order.Product.PriceDay * quantity;
+            order.UpdatedAt = DateTime.Now;
+            _unitOfWork.Order.Update(order);
+            _unitOfWork.Save();
+            TempData["Success"] = "Cart updated successfully";
+            return RedirectToAction(nameof(Cart));
+        }
+    }
 }
