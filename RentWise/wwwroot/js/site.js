@@ -302,3 +302,20 @@ function submitFormInfo(title, description, formId) {
         }
     });
 }
+
+function showInfoModal(title, description, url) {
+    Swal.fire({
+        title: title,
+        text: description,
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, update it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            showLoading()
+            window.location.href = url;
+        }
+    });
+}

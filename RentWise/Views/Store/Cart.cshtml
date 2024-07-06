@@ -73,8 +73,9 @@ else
         </div>
         <div class="row">
             <div class="col-md-12">
-                <a asp-controller="Store" asp-action="Checkout" class="btn btn-primary">Checkout</a>
+                <a onclick="showInfoModal('Confirmation', 'Proceed to checkout?', '@Url.Action("Checkout", "Store")')" class="btn btn-primary">Checkout</a>
             </div>
+
         </div>
     </div>
 }

@@ -706,5 +706,57 @@ namespace RentWise.Controllers
             TempData["Success"] = "Cart updated successfully";
             return RedirectToAction(nameof(Cart));
         }
+
+
+        public async Task<ActionResult> Checkout()
+        {
+            string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            IdentityUser user = await _userManager.FindByIdAsync(userId);
+            List<OrdersModel> orders = _unitOfWork.Order.GetAll(u => u.UserId == userId && u.LkpStatus == 8,"Product").ToList();
+            foreach (OrdersModel order in orders)
+            {
+                order.LkpStatus = 1;
+                order.UpdatedAt = DateTime.Now;
+                _unitOfWork.Order.Update(order);
+            string Message = "Pleaced a reservation for " + order.ProductQuantity + " " + order.Product.Name + " product(s)  " + "at ₵" + order.TotalAmount + " from " + order.StartDate + " to " + order.EndDate + "."
+;
+                ChatModel chat = new()
+            {
+                FromUserId = userId,
+                ToUserId = order.Product.AgentId,
+                Message = Message,
+                IsOrder = true
+            };
+
+            UsersDetailsModel usersDetailsModel = _unitOfWork.UsersDetails.Get(u => u.Id == order.Product.AgentId);
+
+            if (usersDetailsModel != null)
+            {
+                usersDetailsModel.Orders += 1;
+                usersDetailsModel.Messages += 1;
+                usersDetailsModel.UpdatedAt = DateTime.Now;
+                _unitOfWork.UsersDetails.Update(usersDetailsModel);
+            }
+            _unitOfWork.Chat.Add(chat);
+            AgentRegistrationModel agent = _unitOfWork.AgentRegistration.Get(u => u.Id == order.Product.AgentId, "User");
+            string emailContentClient = SharedFunctions.EmailContent(usersDetailsModel.Username, 1, order.Product.Name, order.ProductQuantity, order.TotalAmount);
+            string emailContentAgent = SharedFunctions.EmailContent(agent.FirstName, 2, order.Product.Name, order.ProductQuantity, order.TotalAmount);
+            SharedFunctions.SendEmail(user.UserName, "Reservation has been made", emailContentClient);
+            SharedFunctions.SendEmail(agent.User.UserName, "Reservation has been made", emailContentAgent);
+            UsersDetailsModel ToUsersDetails = _unitOfWork.UsersDetails.Get(u => u.Id == order.ProductId);
+            SharedFunctions.SendPushNotification(ToUsersDetails?.OneSignalId ?? "", "Reservation has been made", Message);
+            }
+            UsersDetailsModel currUsersDetailsModel = _unitOfWork.UsersDetails.Get(u => u.Id == userId);
+            if (currUsersDetailsModel != null)
+            {
+                currUsersDetailsModel.Carts = 0;
+                currUsersDetailsModel.UpdatedAt = DateTime.Now;
+                _unitOfWork.UsersDetails.Update(currUsersDetailsModel);
+            }
+            _unitOfWork.Save();
+            TempData["Success"] = "Order placed successfully";
+
+            return RedirectToAction(nameof(Cart));
+        }
     }
 }
