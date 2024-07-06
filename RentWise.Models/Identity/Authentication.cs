@@ -138,6 +138,7 @@ namespace RentWise.Models.Identity
         [Key]
         public string Id { get; set; }
         public int Orders { get; set; } = 0;
+        public int Carts { get; set; } = 0;
         public int Messages { get; set; } = 0;
         public string Username { get; set; }
 

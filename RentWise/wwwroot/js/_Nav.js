@@ -29,7 +29,7 @@
 
     // Check if the path includes '/store/' and add 'active-nav' to '.category'
     if (path.includes('/store')) {
-        const categoryElement = document.querySelector('.category');
+        const categoryElement = document.querySelector('.category-list');
         if (categoryElement) {
             categoryElement.classList.add('active-nav');
             categoryElement.classList.remove('not-active-nav');

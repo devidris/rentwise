@@ -19,42 +19,11 @@
 <ul class="navbar-nav align-items-center gap-2">
     @if (SignInManager.IsSignedIn(User))
     {
-        <li class="nav-item">
-            <div class="dropdown">
-                <a class="dropdown-toggle link-white" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <i class="bi bi-person-fill text-white fs-3"></i>
-                    @{
-                        int totalNotification = usersDetailsModel != null ? usersDetailsModel.Orders + usersDetailsModel.Messages : 0;
-                    }
-                    @if (totalNotification > 0)
-                    {
-                        <sup class="link-light text-decoration-none">@totalNotification</sup>
-                    }
-                </a>
-                <div class="dropdown-menu dropdown-menu-end text-white profile-dropdown" aria-labelledby="dropdownMenuLink">
-                    <a class="dropdown-item" asp-controller="Auth" asp-action="Profile">Profile</a>
-
-                    <a class="dropdown-item" asp-controller="Page" asp-action="Chat">
-                        Message
-                        @if (usersDetailsModel != null && usersDetailsModel.Messages > 0)
-                        {
-                            <sup>@usersDetailsModel.Messages</sup>
-                        }
-                    </a>
-
-                    <a class="dropdown-item" asp-controller="Store" asp-action="Orders">
-                        Reservations
-                        @if (usersDetailsModel != null && usersDetailsModel.Orders > 0)
-                        {
-                            <sup>@usersDetailsModel.Orders</sup>
-                        }
-                    </a>
-
-                    <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-                        <a id="logout" href="#" class="dropdown-item" onclick="document.getElementById('logoutForm').submit();">Logout</a>
-                    </form>
-                </div>
-            </div>
+        <li type="button" class="btn btn-primary position-relative">
+            <i class="bi bi-cart-check-fill fs-4 text-white"></i>
+            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill badge-danger bg-light text-primary rounded-circle cart-count">
+                @usersDetailsModel.Carts
+            </span>
         </li>
     }
     else

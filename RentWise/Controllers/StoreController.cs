@@ -20,12 +20,13 @@ using static Org.BouncyCastle.Crypto.Engines.SM2Engine;
 
 namespace RentWise.Controllers
 {
-    public class StoreController : Controller
+    public class StoreController : Controller 
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IOptions<RentWiseConfig> _config;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly Microsoft.AspNetCore.SignalR.IHubContext<SignalRHub> _hubContext;
+
         public StoreController(IUnitOfWork unitOfWork, IOptions<RentWiseConfig> config, UserManager<IdentityUser> userManager, Microsoft.AspNetCore.SignalR.IHubContext<SignalRHub> hubContext)
         {
             _unitOfWork = unitOfWork;
@@ -327,6 +328,56 @@ namespace RentWise.Controllers
             SharedFunctions.SendEmail(agent.User.UserName, "Reservation has been made", emailContentAgent);
             UsersDetailsModel ToUsersDetails = _unitOfWork.UsersDetails.Get(u => u.Id == AgentId);
             SharedFunctions.SendPushNotification(ToUsersDetails.OneSignalId, "Reservation has been made", Message);
+            return Json(new
+            {
+                StatusCode = (int)HttpStatusCode.OK,
+                Message = "Order Placed Successfully",
+                Data = Lookup.ResponseMessages[5],
+                Success = true
+            });
+        }
+
+        [HttpPost]
+        [Authorize]
+        [AllowAnonymous]
+        public async Task<ActionResult> AddToCart(string ProductId, int ProductQuantity, DateTime StartDate, DateTime EndDate, int TotalPrice, string AgentId, string Message)
+        {
+            string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (userId == null)
+            {
+                TempData["ToastMessage"] = "Please login to place an order";
+                return Json(new
+                {
+                    StatusCode = (int)HttpStatusCode.Unauthorized,
+                    Message = Lookup.ResponseMessages[4],
+                    Data = "Unauthorized",
+                    Success = false
+                });
+            }
+            IdentityUser user = await _userManager.FindByIdAsync(userId);
+            OrdersModel model = new()
+            {
+                ProductId = ProductId,
+                UserId = userId,
+                AgentId = AgentId,
+                ProductQuantity = ProductQuantity,
+                StartDate = StartDate,
+                EndDate = EndDate,
+                TotalAmount = TotalPrice,
+                LkpStatus = 8
+            };
+            UsersDetailsModel usersDetailsModel = _unitOfWork.UsersDetails.Get(u => u.Id == userId);
+            if (usersDetailsModel != null)
+            {
+                usersDetailsModel.Carts += 1;
+                usersDetailsModel.UpdatedAt = DateTime.Now;
+                _unitOfWork.UsersDetails.Update(usersDetailsModel);
+            }
+            _unitOfWork.Order.Add(model);
+            _unitOfWork.Save();
+            ProductModel product = _unitOfWork.Product.Get(u => u.ProductId == ProductId);
+            AgentRegistrationModel agent = _unitOfWork.AgentRegistration.Get(u => u.Id == product.AgentId, "User");
+            UsersDetailsModel ToUsersDetails = _unitOfWork.UsersDetails.Get(u => u.Id == AgentId);
             return Json(new
             {
                 StatusCode = (int)HttpStatusCode.OK,

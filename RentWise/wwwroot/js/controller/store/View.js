@@ -147,31 +147,31 @@ function like() {
         }
     })
 }
-function bookNow() {
+function addToCart() {
     if (days == 0 || totalPrice == 0) {
         Swal.fire('Error', 'Please select a date', 'error');
         return
     }
 
-    if (days > 0 && days > $('.maxRentalDay').val()) {
+        if (days > 0 && days > $('.maxRentalDay').val() && $('.maxRentalDay').val() > 0) {
         Swal.fire('Maximum rental days exceded',$('.maxRentalDay').val() + " day(s) is the maximum allowed rental date",'error')
         return
     }
     const orderMessage = "Pleaced a reservation for " + noOfProduct + " " + $('.product-name').val() + " product(s) for " + days + " day(s) at ₵" + totalPrice + " from " + $('.start-date').text() + " to " + $('.end-date').text() + "."
-    const alertMessage = "You are about to place an order for " + noOfProduct + " " + $('.product-name').val() + " product(s) for " + days + " day(s) at ₵" + totalPrice + " from " + $('.start-date').text() + " to " + $('.end-date').text() + "."
+    const alertMessage = "You are about to add an order for " + noOfProduct + " " + $('.product-name').val() + " product(s) for " + days + " day(s) at ₵" + totalPrice + " from " + $('.start-date').text() + " to " + $('.end-date').text() + "."
     // Show SweetAlert confirmation
     Swal.fire({
         title: 'Confirm Reservation',
         text: alertMessage,
         icon: 'info',
         showCancelButton: true,
-        confirmButtonText: 'Yes, place reservation',
+        confirmButtonText: 'Yes, add to cart',
         cancelButtonText: 'No, cancel',
     }).then((result) => {
         if (result.isConfirmed) {
             showLoading()
         $.ajax({
-                url: '/Store/Book',
+                url: '/Store/AddToCart',
                 method: 'POST',
                 data: {
                     productId: $('.product-id').val(),
@@ -188,7 +188,9 @@ function bookNow() {
                         toastr.error("Please login to place an order");
                         location.href = '/Auth/Login'
                     } else if (result.statusCode == 200) {
-                        Swal.fire('Success', 'Your reservation has been placed successfully.', 'success');
+                        Swal.fire('Success', 'Your reservation has been added to cart.', 'success');
+                        const oldCartCount = $('.cart-count').text()
+                        $('.cart-count').text(oldCartCount * 1 + 1)
                     } else {
                         Swal.fire('Error', 'Something went wrong', 'error');
                     }
