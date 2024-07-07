@@ -1,104 +1,44 @@
 ﻿@model List<OrdersModel>
 
 <div class="content content-1">
-    <div class="bg-primary bg-opacity-25 p-3">
+    <div class="bg-primary bg-opacity-25 p-3 mb-5">
         <p class="m-0  text">Congratulations!!!  Your account is Active</p>
     </div>
-    <div class="mt-5 border border-1 p-3">
-        <div class="progress">
-            <div class="progress-bar bg-tertiary" role="progressbar" style="width: 75%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
-        </div>
-        <div class="bg-tertiary-subtle bg-opacity-25 p-3 mt-3">
-            <p class="m-0  text">Account Setup Progress</p>
+    <div class="container my-5">
+        <div class="row align-items-center">
+            <div class="col">
+                <h3 class="font-weight-bold text-primary">Category</h3>
+            </div>
+            <div class="col-auto">
+                <input type="date" class="date-input border border-primary" id="dateInput" value="" />
+            </div>
         </div>
     </div>
-    <div class="row">
-        <div class="col-lg-6 col-md-12">
-            <ul class="list-unstyled border border-1 text-center">
-                <li>
-                    <p><b>Total Reservations Pending</b></p>
-                    <p><b>₵@ViewBag.totalPendingAmount</b></p>
-                    <hr />
-                </li>
-                <li>
-                    <p><b>Earning</b></p>
-                    <p><b>₵@ViewBag.totalAmount</b></p>
-                    <hr />
-                </li>
-                <li>
-                    <p><b>Average Earning</b></p>
-                    <p><b>₵@ViewBag.averageTotalAmount</b></p>
-                    <hr />
-                </li>
-                <li>
-                    <p><b>Reservations</b></p>
-                    <p><b>@Model.Count</b></p>
-                </li>
-            </ul>
-            <ul class="list-unstyled border border-1 d-flex flex-column gap-4 dashboard-list py-4">
-                <li>
-                    <p><i class="bi bi-cart-check-fill"></i><b>Sales</b></p>
-                    <hr />
-                </li>
-                <li>
-                    <span>Total</span>
-                    <span>@Model.Count</span>
-                </li>
-                <li class="text-success">
-                    <span>Completed</span>
-                    <span>@Model.Where(order => order.LkpStatus == 4).Count()</span>
-                </li>
-                <li class="text-dark">
-                    <span>Pending</span>
-                    <span>@Model.Where(order => order.LkpStatus == 1).Count()</span>
-                </li>
-                <li class="text-info">
-                    <span>Processed</span>
-                    <span>@Model.Where(order => order.LkpStatus == 2).Count()</span>
-                </li>
-                <li class="text-danger">
-                    <span>Cancelled</span>
-                    <span>@Model.Where(order => order.LkpStatus == 3).Count()</span>
-                </li>
-                <li class="text-secondary">
-                    <span>On Hold</span>
-                    <span>@Model.Where(order => order.LkpStatus == 7).Count()</span>
-                </li>
-            </ul>
-            <ul class="list-unstyled border border-1 d-flex flex-column gap-4 dashboard-list py-4">
-                <li>
-                    <p><i class="bi bi-chat-dots-fill"></i><b>Reviews</b></p>
-                    <hr />
-                </li>
-                <li>
-                    <span>Total Review</span>
-                    <span>@ViewBag.totalReview</span>
-                </li>
-                <li>
-                    <span>Average Rating</span>
-                    <span>@ViewBag.avergeRating</span>
-                </li>
-                <li>
-                    <span>Total Likes</span>
-                    <span>@ViewBag.totalLikes</span>
-                </li>
-            </ul>
+    <div class="row justify-content-around">
+        <div class="overview-details border border-primary w-fit col-md-4 col-12">
+            <i class="bi bi-cart-fill text-primary"></i>
+            <p class="text-black-50">Total Order</p>
+            <h2 class="text-primary">@ViewBag.NoOfOrders</h2>
         </div>
-        <div class="col-lg-6 col-md-12">
-            <div>
-                <canvas id="myChart" width="470" height="250"></canvas>
-            </div>
-            <ul class="list-unstyled border border-1 d-flex flex-column gap-4 dashboard-list py-4">
-                <li>
-                    <p><i class="bi bi-megaphone-fill"></i><b>Latest Community Announcement</b></p>
-                    <hr />
-                   <div class="d-flex flex-column align-items-center text-primary">
-                        <i class="bi bi-bell-fill fs-1"></i>
-                        <p>No annocement</p>
-                   </div>
-                </li>
-
-            </ul>
+        <div class="overview-details border border-primary w-fit col-md-4 col-12">
+            <i class="bi bi-cash text-primary"></i>
+            <p class="text-black-50">Total Earning</p>
+            <h2 class="text-primary">₵@ViewBag.totalAmount</h2>
+        </div>
+        <div class="overview-details border border-primary w-fit col-md-4 col-12">    
+            <i class="bi bi-hourglass-split text-primary"></i>
+            <p class="text-black-50">Pending Order</p>
+            <h2 class="text-primary">@ViewBag.NoOfPendingOrders</h2>
+        </div>
+    </div>
+    <div class="row justify-content-around mt-md-5 mt-1 align-items-start mb-5">
+        <div class="overview-details border border-primary w-fit col-md-6 col-12">
+            <i class="bi bi-cart-fill text-primary"></i>
+            <p class="text-black-50">Cancelled Order</p>
+            <h2 class="text-primary">@ViewBag.NoOfCancelledOrders</h2>
+        </div>
+        <div class="overview-details border border-primary col-md-6 col-12">
+            <canvas id="myChart" width="470" height="250"></canvas>
         </div>
     </div>
 </div>
