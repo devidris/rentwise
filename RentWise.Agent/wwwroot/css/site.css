@@ -270,3 +270,18 @@ div.loading {
         width: 100px;
     }
 }
+
+@media screen and (max-width: 32em) {
+    .hide-mobile {
+        display: none;
+    }
+}
+
+.hide-desktop {
+    display: none;
+}
+@media screen and (max-width: 32em) {
+    .hide-desktop {
+        display: block;
+    }
+}

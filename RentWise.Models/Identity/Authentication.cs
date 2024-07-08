@@ -107,6 +107,9 @@ namespace RentWise.Models.Identity
         [NotMapped]
         [ValidateNever]
         public string? ReturnAction { get; set; } = "Index";
+        [NotMapped]
+        [ValidateNever]
+        public bool ShowFooter { get; set; } = false;
 
         public double PayWithCard { get; set; } = 0;
         public double PayWithCash { get; set; } = 0;

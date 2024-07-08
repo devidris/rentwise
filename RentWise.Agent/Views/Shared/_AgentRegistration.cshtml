@@ -1,6 +1,11 @@
 ﻿@using Microsoft.Extensions.Options;
 @model AgentRegistrationModel
-<form class="p-5" method="post" asp-action="RegisterAgent" asp-controller="Auth" enctype="multipart/form-data">
+<form class="p-md-5 p-1" method="post" asp-action="RegisterAgent" asp-controller="Auth" enctype="multipart/form-data" class="authform" id="registerAgentForm">
+    <div class="hide-desktop">
+        <img src="~/img/logo.png" alt="Rentwise Logo" class="d-block m-auto" id="auth-logo" />
+        <h2 class="text-primary text-center">Register as an Agent on Rentwise</h2>
+        <p class="text-center text-black-50">We're excited to have you! Please provide your information to begin 🤩.</p>
+    </div>
     <div class="d-none jsonstate">@ViewBag.JSONStates</div>
     <div asp-validation-summary="All" class="text-danger" role="alert"></div>
     <input  asp-for="@Model.Id" hidden/>
@@ -94,23 +99,68 @@
         string tosLink = _config.Value.ClientWebsiteLink + "/Page/TOS";
     }
     <div class="checkbox mb-3">
-        <label asp-for="@Model.Privacy" class="form-label">
+        <label asp-for="@Model.Privacy" class="form-label d-flex gap-2">
             <input class="form-check-input" asp-for="@Model.Privacy" />
             <p class="d-inline-block">
-                I have read and agree to the <a href="@tosLink" target="_blank">Terms and Conditions</a> and <a href="@privacyLink" target="_blank">Privacy Policy</a>
+                I have read and agree to the <a href="@tosLink" target="_blank" class="link-primary text-decoration-none">Terms and Conditions</a> and <a href="@privacyLink" target="_blank" class="link-primary text-decoration-none">Privacy Policy</a>
             </p>
         </label>
         <span asp-validation-for="@Model.Privacy" class="text-danger"></span>
     </div>
    @if(Model.Id != null)
     {
-        <button type="submit" class="btn btn-primary">Update</button>
+        <button type="submit" class="btn btn-primary rounded-pill px-4 py-3 m-auto d-block">Update</button>
     }
     else
     {
-        <button type="submit" class="btn btn-primary">Submit for verification</button>
+        <button type="submit" class="btn btn-primary rounded-pill px-4 py-3 m-auto d-block">Submit for verification</button>
     }
 </form>
+@if(Model.ShowFooter)
+{
+<footer class="bg-primary p-md-5 py-4 text-white text-center hide-mobile">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-4 col-sm-12 mt-sm-4">
+
+                <p class="mb-3">
+                    <a href="https://www.instagram.com/rentwise_app?igsh=MXJxenJqb3AyemF5bw%3D%3D&utm_source=qr" class="text-decoration-none mb-3 link-light fs-4" target="_blank">
+                        <b>Follow us at</b> <i class="bi bi-instagram"></i>
+                    </a>
+                </p>
+                <ul class="list-unstyled mt-4">
+                    <li><a href="@_config.Value.ClientWebsiteLink/Page/About" target="_blank" class="link-light text-decoration-none fs-5">About Us</a></li>
+                    <li><a href="@_config.Value.ClientWebsiteLink/Page/LegalAndPolicy" target="_blank" class="link-light text-decoration-none fs-5">Legal Terms & Privacy Policy</a></li>
+                    <li><a href="@_config.Value.ClientWebsiteLink/Page/TOS" target="_blank" class="link-light text-decoration-none fs-5">Terms Of Service</a></li>
+                    <li><a href="@_config.Value.ClientWebsiteLink/Page/AvoidScam" target="_blank" class="link-light text-decoration-none fs-5">Avoid Scams and Fraud</a></li>
+                </ul>
+                <div>
+                    <h2>Get our app</h2>
+                    <div class="d-flex gap-3 flex-wrap align-items-center justify-content-center">
+                        <a href="https://apps.apple.com/ng/app/rentwise-gh/id6475678851">
+                            <img src="/img/appstore.png" alt="Get app on app store" class="cursor-pointer" width="200px" />
+                        </a>
+                        <a href="https://play.google.com/store/apps/details?id=com.rentwisegh.rentwise&pcampaignid=web_share">
+                            <img src="/img/googleplay.png" alt="Get app on google store" class="cursor-pointer" width="200px" />
+                        </a>
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-12  mt-sm-4">
+                <ul class="d-flex flex-column gap-2 list-unstyled">
+                    <li><a href="@_config.Value.ClientWebsiteLink/Auth/Register" target="_blank" class="text-decoration-none fs-5 btn btn-outline-secondary">Register as Renter</a></li>
+                    <li><a asp-controller="Home" asp-action="Index" class="link-secondary text-decoration-none fs-5 btn btn-outline-secondary">Switch to Owner</a></li>
+                    <li><a href="@_config.Value.ClientWebsiteLink/Auth/Login" target="_blank" class="text-decoration-none fs-5 btn btn-outline-secondary">Login</a></li>
+                </ul>
+            </div>
+            <div class="col-md-4 col-sm-12  mt-sm-4">
+                <partial name="_Contact" />
+            </div>
+        </div>
+    </div>
+</footer> 
+}
 @section Scripts {
 
     <partial name="_ValidationScriptsPartial" />
