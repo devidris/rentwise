@@ -1,29 +1,13 @@
-﻿@using Microsoft.Extensions.Options;
-@inject IOptions<RentWiseConfig> _config;
-<link rel="stylesheet" href="~/css/shared/_Nav.css" asp-append-version="true" />
-<nav class="navbar navbar-expand-lg navbar-light bg-primary py-3 px-2">
-    <div class="container-fluid">
-        <a class="nav-link" asp-controller="Home" asp-action="Index">
-            <img src="~/img/logo.png" alt="Rentwise Logo" width="100px" />
-        </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-center">
-                <partial name="_LoginPartial" />
-                <li class="nav-item">
-                    <a class="nav-link" href="@_config.Value.ClientWebsiteLink/Page/About" target="_blank">About Us</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="@_config.Value.ClientWebsiteLink/Page/How" target="_blank">How it works</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="@_config.Value.ClientWebsiteLink/Page/Contact" target="_blank">Contact us</a>
-                </li>
+﻿
+<link rel="stylesheet" href="~/css/shared/_Nav2.css" asp-append-version="true" />
+<nav class="d-flex p-3 justify-content-between " id="nav2-bar">
+    <a asp-controller="Dashboard" asp-action="Index" class="btn btn-primary rounded-pill text-decoration-none px-4 py-1">
+        <i class="bi bi-arrow-left"></i> Back
+    </a>
 
-            </ul>
-        </div>
+    <div class="d-flex gap-3 align-items-center">
+        <a asp-controller="Auth" asp-action="Register" class="link-primary text-decoration-none"><b>Don't have an account?</b></a>
+        <a asp-controller="Auth" asp-action="Login" class="btn btn-primary rounded-pill text-decoration-none px-5 py-1">Sign Up</a>
     </div>
 </nav>
 

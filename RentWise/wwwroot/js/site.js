@@ -224,3 +224,98 @@ function hideLoading() {
     const loadingOverlay = document.querySelector('.loading');
     loadingOverlay.classList.add('hidden');
 }
+
+function addToQueryString(params, pathname = window.location.pathname, loadPage = true) {
+    console.log(pathname)
+    const queryString = Object.keys(params)
+        .map(key => `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`)
+        .join('&');
+
+    if (loadPage) {
+        const newUrl = `${window.location.origin}${pathname}?${queryString}`;
+        window.location.href = newUrl;
+    } else {
+        return queryString;
+    }
+}
+function removeParamsFromUrl(paramsToRemove, url = window.location.href) {
+    // Parse the URL
+    const urlObj = new URL(url);
+    const searchParams = urlObj.searchParams;
+
+    // Remove specified parameters
+    paramsToRemove.forEach(param => searchParams.delete(param));
+
+    // Update the URL with the new query string
+    urlObj.search = searchParams.toString();
+    return urlObj.toString();
+}
+
+function sortDropdownToggle(element) {
+    const value = $(element).data('value');
+    window.location.href = buildQueryParams("sort", value).href
+}
+
+function navigate(id) {
+    const loadingOverlay = document.querySelector('.loading');
+    loadingOverlay.classList.remove('hidden');
+    let link = `https://${location.host}/Store/View/${id}`
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('onesignalId') && urlParams.get('onesignalId') != "") {
+
+        link += '?onesignalId=' + urlParams.get('onesignalId');
+    }
+    location.href = link
+}
+function showWarningModal(title, description, url) {
+    Swal.fire({
+        title: title,
+        text: description,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Yes, proceed!',
+        cancelButtonText: 'Cancel'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            showLoading()
+            // Redirect or perform action based on the URL
+            window.location.href = url;
+        }
+    });
+}
+
+function submitFormInfo(title, description, formId) {
+    Swal.fire({
+        title: title,
+        text: description,
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, update it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            showLoading()
+            document.getElementById(formId).submit();
+        }
+    });
+}
+
+function showInfoModal(title, description, url) {
+    Swal.fire({
+        title: title,
+        text: description,
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, update it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            showLoading()
+            window.location.href = url;
+        }
+    });
+}

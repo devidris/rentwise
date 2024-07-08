@@ -133,11 +133,36 @@ namespace RentWise.Models.Identity
 
     }
 
+    public class ResetPasswordModel
+    {
+        [Required]
+        [EmailAddress]
+        [Display(Name = "Email")]
+        public string Email { get; set; }
+
+        [Required]
+        [Display(Name = "Token")]
+        public string Token { get; set; }
+
+        [Required]
+        [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
+        [DataType(DataType.Password)]
+        [Display(Name = "Password")]
+        public string Password { get; set; }
+
+        [DataType(DataType.Password)]
+        [Display(Name = "Confirm password")]
+        [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+        public string ConfirmPassword { get; set; }
+    }
+
+
     public class UsersDetailsModel:DefaultModel
     {
         [Key]
         public string Id { get; set; }
         public int Orders { get; set; } = 0;
+        public int Carts { get; set; } = 0;
         public int Messages { get; set; } = 0;
         public string Username { get; set; }
 

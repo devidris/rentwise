@@ -26,3 +26,11 @@
 .pac-container {
     z-index: 10000 !important;
 }
+
+
+.home_banner {
+    background-image: url("../../../img/rent.png");
+    height:15rem;
+    display:grid;
+    place-items:center;
+}

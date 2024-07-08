@@ -78,6 +78,59 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.15.7/dist/sweetalert2.all.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
         <script>
+            const exemptions = [{
+            link: "/auth/login",
+            footer:true,
+            centerElement: {
+               value:true,
+               elementId: "loginForm"
+             }
+            }]
+        exemptions.forEach(exemption => {
+            const link = exemption.link;
+            const currentPageLink = window.location.pathname;
+            if (currentPageLink.toLowerCase().includes(link.toLowerCase())) {
+                if (exemption.footer) {
+                    $("footer").hide();
+                }
+                if (exemption.centerElement.value) {
+                    centerAnyElementVertically(exemption.centerElement.elementId);
+                    window.addEventListener('resize', () => centerAnyElementVertically(exemption.centerElement.elementId));
+                }
+            }
+        });
+
+        function centerElementVerticallyAndHorizontally(element) {
+            const viewportHeight = window.innerHeight;
+            const viewportWidth = window.innerWidth;
+            const elementHeight = element.offsetHeight;
+            let elementWidth = element.offsetWidth;
+
+            // Check if the element's width is greater than 90% of the viewport width
+            if (elementWidth > viewportWidth * 0.9) {
+                elementWidth = viewportWidth * 0.9;
+                element.style.width = `${elementWidth}px`;
+            } else {
+                element.style.width = `600px`;
+            }
+
+            const topOffset = (viewportHeight - elementHeight) / 2;
+            const leftOffset = (viewportWidth - elementWidth) / 2;
+
+            element.style.position = 'absolute';
+            element.style.top = `${topOffset}px`;
+            element.style.left = `${leftOffset}px`;
+        }
+
+        function centerAnyElementVertically(elementId) {
+            console.log(elementId)
+            const elementToCenter = document.getElementById(elementId);
+            if (elementToCenter) {
+                centerElementVerticallyAndHorizontally(elementToCenter);
+            } else {
+                console.error(`Element with ID ${elementId} not found.`);
+            }
+        }
         let urlParams = new URLSearchParams(window.location.search);
         const returnUrl = decodeURIComponent(urlParams.get('ReturnUrl'));
         const returnUrlParams = new URLSearchParams(returnUrl.split('?')[1]);
@@ -134,7 +187,6 @@
             showLoading()
         });
     </script>
-
      @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

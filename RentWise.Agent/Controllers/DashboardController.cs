@@ -29,7 +29,7 @@ namespace RentWise.Agent.Controllers
             _webHostEnvironment = webHostEnvironment;
             _config = config;
         }
-        public async Task<IActionResult> Index(string Id = "")
+        public async Task<IActionResult> Index(string Id = "", int status = 0, DateTime? filterDate = null)
         {
             if (TempData["Action"] != null)
             {
@@ -38,6 +38,7 @@ namespace RentWise.Agent.Controllers
             {
                 ViewBag.Action = 1;
             }
+            ViewBag.Status = status;
             ViewBag.Banks = Lookup.Banks;
             var errorMessages = TempData["ErrorMessages"];
             if (errorMessages != null)
@@ -64,7 +65,16 @@ namespace RentWise.Agent.Controllers
             }
             ViewBag.Agent = agent;
             IEnumerable<OrdersModel> orders = _unitOfWork.Order.GetAll(u=>u.AgentId == userId,"Product");
-            ViewBag.Orders = orders;
+            if(status != 0)
+            {
+                orders = orders.Where(u => u.LkpStatus == status);
+            }
+            orders = orders.OrderByDescending(u => u.CreatedAt);
+            ViewBag.Orders = orders.ToList();
+            if(filterDate != null)
+            {
+                orders = orders.Where(u => u.CreatedAt.Date == filterDate.Value.Date);
+            }
             ViewBag.NoOfOrders = orders.Count();  
             ViewBag.JSONOrders = JsonConvert.SerializeObject(orders);
             IEnumerable<ReviewModel> reviews = _unitOfWork.Review.GetAll(u => u.AgentId == userId,"UserDetails,Product");
@@ -73,10 +83,24 @@ namespace RentWise.Agent.Controllers
             ViewBag.Likes = likes;
 
             IEnumerable<OrdersModel> filteredOrders = orders.Where(order => order.LkpStatus == 4);
+            if(filterDate != null)
+            {
+                filteredOrders = filteredOrders.Where(u => u.CreatedAt.Date == filterDate.Value.Date);
+            }
             ViewBag.NoOfFilteredOrders = filteredOrders.Count();
+            IEnumerable<OrdersModel> cancelledOrders = orders.Where(order => order.LkpStatus == 3);
+            if(filterDate != null)
+            {
+                cancelledOrders = cancelledOrders.Where(u => u.CreatedAt.Date == filterDate.Value.Date);
+            }
+            ViewBag.NoOfCancelledOrders = cancelledOrders.Count();
             IEnumerable<OrdersModel> pendingOrders = orders.Where(order => order.LkpStatus == 1 || order.LkpStatus == 2 || order.LkpStatus == 7);
+            if(filterDate != null)
+            {
+                pendingOrders = pendingOrders.Where(u => u.CreatedAt.Date == filterDate.Value.Date);
+            }
             ViewBag.NoOfPendingOrders = pendingOrders.Count();
-             ViewBag.totalAmount = Math.Round(filteredOrders.Any() ? filteredOrders.Sum(order => order.TotalAmount) : 0, 2);
+            ViewBag.totalAmount = Math.Round(filteredOrders.Any() ? filteredOrders.Sum(order => order.TotalAmount) : 0, 2);
             ViewBag.averageTotalAmount =Math.Round(filteredOrders.Any() ? filteredOrders.Average(order => order.TotalAmount) : 0,2);
             ViewBag.totalPendingAmount = Math.Round(pendingOrders.Any() ? pendingOrders.Sum(order => order.TotalAmount) : 0,2);
 

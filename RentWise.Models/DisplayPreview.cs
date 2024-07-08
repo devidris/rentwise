@@ -19,5 +19,7 @@ namespace RentWise.Models
 
         public string AgentName { get; set; } = "Lois";
 
+        public string ProductId { get; set; } = string.Empty;
+
     }
 }

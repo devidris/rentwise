@@ -64,7 +64,8 @@ namespace RentWise.Utility
             {4,"Paid" },
             {5,"Cancelled" },
             {6,"Expired"},
-            {7, "Waiting to pay with cash" }
+            {7, "Waiting to pay with cash" },
+            {8, "Cart" }
         };
 
         public static Dictionary<int, string> PaymentMethod = new Dictionary<int, string>
@@ -112,5 +113,6 @@ namespace RentWise.Utility
     {24, "Zenith Bank Ghana Limited"}
 };
     }
+
 
 }

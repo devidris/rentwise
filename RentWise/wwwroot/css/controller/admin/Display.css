@@ -1,0 +1,13 @@
+﻿.card-img-overlay {
+    background-color: rgba(0, 0, 0, 0.5); /* Dark overlay for better visibility of text and controls */
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.image-order {
+    background: transparent;
+    border: 1px solid white;
+    color: white;
+}

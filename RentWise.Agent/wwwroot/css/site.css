@@ -33,7 +33,7 @@ body {
     transform:translateY(50%)
 }
 .bg-tertiary {
-    background: #4B0082 !important;
+    background: #f8f9fa !important;
 }
 .bg-tertiary-subtle {
     background: rgba(75, 0, 130, 0.20) !important;
@@ -226,3 +226,48 @@ div.loading {
         box-shadow: 0 6px 0 0 #ffffff;
         animation: uil-ring-anim 1s linear infinite;
     }
+
+.section-header {
+    position: relative;
+    font-family: 'Brush Script MT', cursive;
+    font-size: 4rem;
+    text-align: center;
+    display: block;
+    z-index: 2;
+    margin: 0 auto;
+    padding-top: 3rem;
+}
+
+    .section-header::before {
+        content: attr(data-shadow-text);
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: -0%;
+        /*color: #cccccc;*/
+        font-size: 150%;
+        z-index: 1;
+        opacity: 0.7;
+        text-align: center;
+        width: 100%;
+        opacity: 0.2;
+    }
+
+.authform{
+    margin: 0 auto;
+    width: 100%;
+    max-width: 600px;
+    padding: 1rem;
+    border-radius: 10px;
+    background: #fff;
+}
+
+#auth-logo{
+    width:300px;
+}
+
+@media screen and (max-width: 32em) {
+    #auth-logo {
+        width: 100px;
+    }
+}

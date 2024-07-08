@@ -10,16 +10,51 @@
       width: 50%;
     }
   }
+
+    .overview-details {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-auto-rows: 1fr 1fr;
+        align-items: center;
+        justify-items: center;
+        padding:2rem;
+        gap:1rem;
+        border-radius: 1rem;
+    }
+
+        .overview-details i {
+            grid-column: 1/2;
+            grid-row: 1/3;
+            font-size:3rem;
+        }
+
+        .overview-details p {
+            grid-column: 2/3;
+            grid-row: 1/2;
+            margin:0;
+        }
+
+        .overview-details h2 {
+            grid-column: 2/3;
+            grid-row: 2/3;
+            margin: 0;
+        }
+
+    .date-input {
+        border-radius: 5px;
+        padding: 5px 10px;
+        font-size: 14px;
+    }
 </style>
 <div>
     <link rel="stylesheet" href="~/css/shared/_Nav.css" asp-append-version="true" />
     <partial name="_Nav2" />
 
 
-    <div class="row mt-5 bg-light px-lg-5 px-sm-1 justify-content-center">
+    <div class="row bg-light justify-content-center">
         <div class="col-md-2 col-sm-12 pl-md-5 ">
             <input value="@ViewBag.Action" class="action" hidden/>
-            <ul class="d-flex text-light list-unstyled w-100 justify-content-evenly  lead text-center  bg-dark py-3 rounded sidebar flex-md-column flex-sm-row flex-wrap g-sm-5">
+            <ul class="d-flex text-primary list-unstyled w-100 justify-content-evenly  lead text-center bg-light py-3 rounded sidebar flex-md-column flex-sm-row flex-wrap g-sm-5">
                 <li onclick="onToggle(1)" class="sidebar sidebar-1">
                     <i class="bi bi-columns-gap p-md-0 px-sm-3"></i>
                     <span class="">Dashboard</span>
@@ -55,16 +90,14 @@
                     <span class="">Withdraw</span>
                 </li>
                 <hr />
-                <li>
-                    <a asp-controller="Store" asp-action="Index" class="link-light text-decoration-none">
+                <li onclick="onToggle(0,'/store/index')">
                         <i class="bi bi-shop-window p-md-0 px-sm-3"></i>
                         <span class="">Store</span>
-                    </a>
                 </li>
                 <hr />
                 <li>
                     <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-                        <button id="logout" type="submit" class="bg-transparent btn text-white w-100">
+                        <button id="logout" type="submit" class="bg-transparent btn text-primary w-100">
                             <i class="bi bi-box-arrow-left p-md-0 px-sm-3"></i>
                             <span class="">Logout</span>
                         </button>
@@ -93,10 +126,12 @@
     .sidebar li {
         cursor: pointer;
         padding: .6rem 0;
+        transition: all .3s;
     }
 
         .sidebar li:not(.split-li):hover, .sidebar-item:hover {
-            background: var(--bs-primary)
+            background: var(--bs-primary);
+            color: white;
         }
 
     .sidebar-item {
@@ -132,7 +167,8 @@
         }
 
     .active {
-        background: var(--bs-primary);
+        border-left:3px solid var(--bs-primary);
+        background: #00808017;
     }
 
 </style>
@@ -140,20 +176,43 @@
 
 </style>
 <script>
-    function onToggle(contentNo) {
+    function onToggle(contentNo,link = false) {
+        if(link){
+            window.location.href = link
+            return
+        }
+        // Get the current URL
+        const url = new URL(window.location.href);
+        console.log(url.searchParams.has('filterDate'),contentNo)
+        // Check if 'featuredDate' query parameter exists
+        if (url.searchParams.has('filterDate') && contentNo != 1) {
+            // Remove the 'featuredDate' query parameter
+            url.searchParams.delete('filterDate');
+            // Set the 'content' query parameter with the specified value
+            url.searchParams.set('active', contentNo);
+            // Redirect to the updated URL
+            window.location.href = url.href;
+            return; // Exit the function to prevent further execution
+        }
+
+        // Hide all content sections
         document.querySelectorAll(".content").forEach((content) => {
             content.classList.add("display-none");
-        })
+        });
+        // Display the selected content section
         document.querySelector(".content-" + contentNo).classList.remove("display-none");
 
+        // Update sidebar active class
         $(".sidebar").removeClass("active");
         $(".sidebar-" + contentNo).addClass("active");
+
     }
 
     function onToggleSidebar() {
-        const url = window.location.href;
-        const urlParams = new URLSearchParams(url.split('?')[1]);
+        const url = new URL(window.location.href);
+        const urlParams = new URLSearchParams(url.search);
         const activeValue = urlParams.get('active');
+
         if (activeValue && activeValue.length > 0) {
             onToggle(activeValue);
         } else {

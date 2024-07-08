@@ -1,74 +1,58 @@
 ﻿@using RentWise.Utility;
 @model List<OrdersModel>
 <div class="content content-4">
-    <h1 class="h2">Reservations</h1>
-    <hr />
+    <div class="container my-5">
+        <div class="row align-items-center">
+            <div class="col">
+                <h2 class="font-weight-bold h2">Reservations</h2>
+            </div>
+            <div class="col-auto">
+                <input type="date" class="date-input border border-primary" id="dateInput" value="" />
+            </div>
+        </div>
+    </div>
+    <div class="d-flex justify-content-around">
+        <a asp-route-active="4" class="@( ViewBag.Status == 0 ? "link-primary" : "link-dark") text-decoration-none">All Orders</a>
+        <a asp-route-active="4" asp-route-status="4" class=" @( ViewBag.Status == 4 ? "link-primary" : "link-dark") text-decoration-none">Completed Orders</a>
+        <a asp-route-active="4" asp-route-status="1" class="@( ViewBag.Status == 1 ? "link-primary" : "link-dark") text-decoration-none">Orders In Progress</a>
+        <a asp-route-active="4" asp-route-status="5" class="@( ViewBag.Status == 5 ? "link-primary" : "link-dark") text-decoration-none">Cancelled Orders</a>
+    </div>
     @if (Model.Count == 0)
     {
         <div class="d-flex flex-column align-items-center">
             <i class="bi bi-bell-slash-fill text-primary fs-1"></i>
             <p>No Reservations</p>
         </div>
-    }
-    else
+    } else
     {
-          <div class="table-responsive">
-            <table class="table" style="overflow-y:auto">
-                <thead class="table-primary">
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Order Id</th>
-                        <th scope="col">Qunatity</th>
-                        <th scope="col">Product Name</th>
-                        <th scope="col">Total Amount</th>
-                        <th scope="col">Start Rental Date</th>
-                        <th scope="col">End Rental Date</th>
-                        <th scope="col">Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @{
-                        int serialNumber = 1;
-                    }
-
-                    @foreach (OrdersModel item in Model)
-                    {
-                        <tr>
-                            <th scope="row">@serialNumber</th>
-                            <td>@item.OrderId</td>
-                            <td>@item.ProductQuantity</td>
-                            <td>@item.Product.Name</td>
-                            <td>@item.TotalAmount</td>
-                            <td>@item.StartDate.ToShortDateString()</td>
-                            <td>@item.EndDate.ToShortDateString()</td>
-                            @if (item.LkpStatus == 1 || item.LkpStatus == 0)
-                            {
-                                <td class="d-flex gap-2 align-items-center">
-                                    @Lookup.OrderStatus[item.LkpStatus]
-                                    <a class="btn btn-primary" asp-controller="Dashboard" asp-action="ApproveOrReject" asp-route-id="@item.OrderId" asp-route-lkpstatus="2">Accept</a>
-                                    <a class="btn btn-primary" asp-controller="Dashboard" asp-action="ApproveOrReject" asp-route-id="@item.OrderId" asp-route-lkpstatus="3">Reject</a>
-                                </td>
-                            }
-                            else if (item.LkpStatus == 7)
-                            {
-                                <td>
-                                    @Lookup.OrderStatus[item.LkpStatus]
-                                    <a class="btn btn-primary" asp-controller="Dashboard" asp-action="PaymentReceived" asp-route-id="@item.OrderId">Mark as Received</a>
-                                </td>
-                            }
-                            else
-                            {
-                                <td>@Lookup.OrderStatus[item.LkpStatus]</td>
-                            }
-                        </tr>
-
-
-                        serialNumber++;
-                    }
-                </tbody>
-            </table>
-
+        <div class="my-5 row justify-content-evenly">
+            @foreach (OrdersModel item in Model)
+            {
+                <div class="border border-primary p-5 rounded col-lg-6 col-12 mt-3" style="width:600px">
+                    <div class="d-flex justify-content-between">
+                        <p><b>Status:</b><span>  @Lookup.OrderStatus[item.LkpStatus]</span></p>
+                        <p><b>Product:</b><span> @item.Product.Name</span></p>
+                        <p><b>Quantity:</b><span> @item.ProductQuantity</span></p>
+                    </div>
+                    <div class="d-flex justify-content-between gap-3">
+                        <p><b>Start Date:</b><span> @item.StartDate.ToShortDateString()</span></p>
+                        <p><b>End Date:</b><span> @item.EndDate.ToShortDateString()</span></p>
+                        <p><b>Total Amount:</b> ₵@item.TotalAmount</p>
+                    </div>
+                    <div class="d-flex justify-content-evenly">
+                        @if (item.LkpStatus == 1 || item.LkpStatus == 0)
+                        {
+                            <a class="btn btn-primary" asp-controller="Dashboard" asp-action="ApproveOrReject" asp-route-id="@item.OrderId" asp-route-lkpstatus="2">Accept</a>
+                            <a class="btn btn-danger" asp-controller="Dashboard" asp-action="ApproveOrReject" asp-route-id="@item.OrderId" asp-route-lkpstatus="3">Reject</a>
+                        }
+                        else if (item.LkpStatus == 7)
+                        {
+                            <a class="btn btn-primary" asp-controller="Dashboard" asp-action="PaymentReceived" asp-route-id="@item.OrderId">Mark as Received</a>
+                        }
+                    </div>
+                </div>
+            }
         </div>
-           }
+    }
 
 </div>

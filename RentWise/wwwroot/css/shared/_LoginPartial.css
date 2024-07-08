@@ -1,1 +1,16 @@
-﻿
+﻿.rent-now{
+    transition:all .3s;
+}
+.rent-now:hover {
+    color: #008080;
+}
+.iconClass {
+    position: relative;
+}
+
+    .iconClass span {
+        position: absolute;
+        top: 0px;
+        right: 0px;
+        display: block;
+    }

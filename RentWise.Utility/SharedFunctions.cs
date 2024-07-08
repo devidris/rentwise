@@ -895,6 +895,19 @@ namespace RentWise.Utility
             return content;
         }
 
+        public static string FormatEmail(string email)
+        {
+            var atIndex = email.IndexOf('@');
+            if (atIndex > 3) // Ensure there are at least 3 characters before the '@'
+            {
+                var firstThreeLetters = email.Substring(0, 3); // Get the first three characters
+                var domain = email.Substring(atIndex); // Get the domain starting from '@'
+                return $"{firstThreeLetters}...{domain}";
+            }
+            return email; // Return the original email if it's too short to format
+        }
+
+
     }
 
 }

@@ -35,3 +35,10 @@ document.addEventListener('DOMContentLoaded', function () {
         options: options
     });
 });
+
+document.getElementById('dateInput').addEventListener('change', function () {
+    var selectedDate = this.value;
+    if (selectedDate) {
+        window.location.href = window.location.origin + window.location.pathname + '?filterDate=' + selectedDate;
+    }
+});
