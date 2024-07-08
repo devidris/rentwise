@@ -75,6 +75,7 @@ namespace RentWise.Agent.Controllers
             ViewBag.States = states;
             ViewBag.JSONStates = JsonConvert.SerializeObject(states, settings);
             ViewBag.Categories = Lookup.Categories;
+            model.ShowFooter = true;
             return View(model);
         }
 

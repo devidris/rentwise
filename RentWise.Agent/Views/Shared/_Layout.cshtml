@@ -26,7 +26,7 @@
         </div>
     </main>
     @inject IOptions<RentWiseConfig> _config;
-    <footer class="bg-primary p-md-5 py-4 text-white text-center">
+    <footer class="bg-primary p-md-5 py-4 text-white text-center main-footer">
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-4 col-sm-12 mt-sm-4">
@@ -97,11 +97,6 @@
         }, {
             link: "/auth/ResetPassword",
             footer: true,
-            centerElement: {
-                value: true,
-                elementId: "resetPasswordForm",
-                topOffset: 40
-            }
         }, {
           link: "/auth/Register",
             footer: true,
@@ -110,15 +105,20 @@
                 elementId: "registerForm",
                 topOffset: 0
             }
+        }, {
+            link: "/",
+            footer: true,
+
         }]
         exemptions.forEach(exemption => {
             const link = exemption.link;
             const currentPageLink = window.location.pathname;
-            if (currentPageLink.toLowerCase().includes(link.toLowerCase())) {
+            const isCurrPage = (currentPageLink.toLowerCase().includes(link.toLowerCase())) && link != "/";
+            if (isCurrPage || link == "/") {
                 if (exemption.footer) {
-                    $("footer").hide();
+                    $(".main-footer").hide();
                 }
-                if (exemption.centerElement.value) {
+                if (exemption.centerElement?.value) {
                     centerAnyElementVertically(exemption.centerElement.elementId, exemption.centerElement.topOffset);
                     window.addEventListener('resize', () => centerAnyElementVertically(exemption.centerElement.elementId, exemption.centerElement.topOffset));
                 }

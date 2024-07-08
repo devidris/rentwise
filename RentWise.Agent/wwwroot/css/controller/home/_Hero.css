@@ -4,3 +4,9 @@
     width: 100%;
     background-size: cover;
 }
+
+@media screen and (max-width: 32em) {
+    .hero {
+        display: none;
+    }
+}
