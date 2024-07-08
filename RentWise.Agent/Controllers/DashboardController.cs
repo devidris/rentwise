@@ -29,7 +29,7 @@ namespace RentWise.Agent.Controllers
             _webHostEnvironment = webHostEnvironment;
             _config = config;
         }
-        public async Task<IActionResult> Index(string Id = "", DateTime? filterDate = null)
+        public async Task<IActionResult> Index(string Id = "", int status = 0, DateTime? filterDate = null)
         {
             if (TempData["Action"] != null)
             {
@@ -38,6 +38,7 @@ namespace RentWise.Agent.Controllers
             {
                 ViewBag.Action = 1;
             }
+            ViewBag.Status = status;
             ViewBag.Banks = Lookup.Banks;
             var errorMessages = TempData["ErrorMessages"];
             if (errorMessages != null)
@@ -64,7 +65,12 @@ namespace RentWise.Agent.Controllers
             }
             ViewBag.Agent = agent;
             IEnumerable<OrdersModel> orders = _unitOfWork.Order.GetAll(u=>u.AgentId == userId,"Product");
-            ViewBag.Orders = orders;
+            if(status != 0)
+            {
+                orders = orders.Where(u => u.LkpStatus == status);
+            }
+            orders = orders.OrderByDescending(u => u.CreatedAt);
+            ViewBag.Orders = orders.ToList();
             if(filterDate != null)
             {
                 orders = orders.Where(u => u.CreatedAt.Date == filterDate.Value.Date);

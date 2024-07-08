@@ -1,34 +1,50 @@
 ﻿@using RentWise.Utility;
 @model List<WithdrawalHistoryModel>
+<link rel="stylesheet" href="~/css/controller/dashboard/_Withdrawal.css"/>
 <div class="content content-7">
     <h1 class="h2">Withdrawals</h1>
-    <hr />
-    <div class="d-flex justify-content-evenly align-items-center my-3 flex-wrap">
-        @{
-            AgentRegistrationModel agent = ViewBag.Agent;
-            double totalPaidCash = agent.PayWithCash;
-            double totalPaidOnline = agent.PayWithCard;
-            double totalPaid = totalPaidCash + totalPaidOnline;
+    @{
+        AgentRegistrationModel agent = ViewBag.Agent;
+        double totalPaidCash = agent.PayWithCash;
+        double totalPaidOnline = agent.PayWithCard;
+        double totalPaid = totalPaidCash + totalPaidOnline;
 
-            double totalOwingCash = agent.PayWithCash * 0.1;
-            double totalOwingOnline = agent.PayWithCard * 0.1;
-            double totalOwing = totalOwingCash + totalOwingOnline;
+        double totalOwingCash = agent.PayWithCash * 0.1;
+        double totalOwingOnline = agent.PayWithCard * 0.1;
+        double totalOwing = totalOwingCash + totalOwingOnline;
 
-            double totalPending = totalPaidOnline -  totalOwing;
-        }
-        <p>Balance: ₵@totalPaid (Cash: ₵@totalPaidCash , Online: ₵@totalPaidOnline)</p>
-        <p>Owing: ₵@totalOwing (Cash: ₵@totalOwingCash , Online: ₵@totalOwingOnline)</p>
-        <p>Total Pending: ₵@totalPending </p>
-        <div>
-            @if(totalPending > 0)
+        double totalPending = totalPaidOnline - totalOwing;
+    }
+    <div class="withdrawal_hero p-5">
+        <div class="withdrawal_hero__content">
+            <h1 class="text-white display-1"> ₵@totalPaid</h1>
+            <p class="text-white">Avalable balance</p>
+            @if (totalPending > 0)
             {
-                <button class="btn btn-primary" onclick="openModal('withdrawal')">Withdrawal</button>
+                <button class="btn btn-light" onclick="openModal('withdrawal')">Withdrawal</button>
             }
-            @if(totalPending < 0)
+            @if (totalPending < 0)
             {
-                <button class="btn btn-primary" onclick="payNow()">Pay</button>
-                <button class="btn btn-primary" onclick="openModal('withdrawal')">Withdrawal</button>
+                <button class="btn btn-light" onclick="payNow()">Pay</button>
+                <button class="btn btn-light" onclick="openModal('withdrawal')">Withdrawal</button>
             }
+        </div>
+    </div>
+    <div class="row justify-content-around">
+        <div class="overview-details border border-primary col-md-4 col-12">
+            <i class="bi bi-cart-fill text-primary"></i>
+            <p class="text-black-50">Total Order</p>
+            <h2 class="text-primary"> ₵@totalPaid</h2>
+        </div>
+        <div class="overview-details border border-primary  col-md-4 col-12">
+            <i class="bi bi-cash text-primary"></i>
+            <p class="text-black-50">Total Owing</p>
+            <h2 class="text-primary"> ₵@totalOwing</h2>
+        </div>
+        <div class="overview-details border border-primary  col-md-4 col-12">
+            <i class="bi bi-hourglass-split text-primary"></i>
+            <p class="text-black-50">Pending Order</p>
+            <h2 class="text-primary"> ₵@totalPending</h2>
         </div>
     </div>
 

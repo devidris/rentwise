@@ -33,7 +33,7 @@ body {
     transform:translateY(50%)
 }
 .bg-tertiary {
-    background: #4B0082 !important;
+    background: #f8f9fa !important;
 }
 .bg-tertiary-subtle {
     background: rgba(75, 0, 130, 0.20) !important;
@@ -252,6 +252,7 @@ div.loading {
         width: 100%;
         opacity: 0.2;
     }
+
 .authform{
     margin: 0 auto;
     width: 100%;
@@ -259,4 +260,14 @@ div.loading {
     padding: 1rem;
     border-radius: 10px;
     background: #fff;
+}
+
+#auth-logo{
+    width:300px;
+}
+
+@media screen and (max-width: 32em) {
+    #auth-logo {
+        width: 100px;
+    }
 }

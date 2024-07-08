@@ -7,10 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="wwwroot\css\shared\_Nav - Copy.css" />
     <Content Remove="wwwroot\css\shared\_Nav.css" />
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="wwwroot\css\shared\_Nav - Copy.css" />
     <None Include="wwwroot\css\shared\_Nav.css" />
   </ItemGroup>
 

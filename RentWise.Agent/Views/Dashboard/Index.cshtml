@@ -51,7 +51,7 @@
     <partial name="_Nav2" />
 
 
-    <div class="row mt-5 bg-light justify-content-center">
+    <div class="row bg-light justify-content-center">
         <div class="col-md-2 col-sm-12 pl-md-5 ">
             <input value="@ViewBag.Action" class="action" hidden/>
             <ul class="d-flex text-primary list-unstyled w-100 justify-content-evenly  lead text-center bg-light py-3 rounded sidebar flex-md-column flex-sm-row flex-wrap g-sm-5">
@@ -90,16 +90,14 @@
                     <span class="">Withdraw</span>
                 </li>
                 <hr />
-                <li>
-                    <a asp-controller="Store" asp-action="Index" class="link-light text-decoration-none">
+                <li onclick="onToggle(0,'/store/index')">
                         <i class="bi bi-shop-window p-md-0 px-sm-3"></i>
                         <span class="">Store</span>
-                    </a>
                 </li>
                 <hr />
                 <li>
                     <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-                        <button id="logout" type="submit" class="bg-transparent btn text-white w-100">
+                        <button id="logout" type="submit" class="bg-transparent btn text-primary w-100">
                             <i class="bi bi-box-arrow-left p-md-0 px-sm-3"></i>
                             <span class="">Logout</span>
                         </button>
@@ -178,7 +176,11 @@
 
 </style>
 <script>
-    function onToggle(contentNo) {
+    function onToggle(contentNo,link = false) {
+        if(link){
+            window.location.href = link
+            return
+        }
         // Get the current URL
         const url = new URL(window.location.href);
         console.log(url.searchParams.has('filterDate'),contentNo)

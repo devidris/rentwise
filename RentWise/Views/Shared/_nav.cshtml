@@ -35,7 +35,7 @@
                             <li><a class="dropdown-item" asp-controller="Store" asp-action="Category" asp-route-Category="8">Motels</a></li>
                         </ul>
                 </li>
-                    @if (User.IsInRole("Admin"))
+                    @if (!User.IsInRole("Admin"))
                     {
                         <li class="nav-item dropdown m-0">
                             <a class="nav-link dropdown-toggle not-active-nav text-center admin" href="#" id="navbarCategoriesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
