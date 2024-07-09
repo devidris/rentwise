@@ -39,7 +39,7 @@
                 string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             }
             <input value="@userId" class="user-id" hidden />
-            <footer class="bg-primary p-md-5 py-4 text-white text-center">
+            <footer class="bg-primary p-md-5 py-4 text-white text-center main-footer">
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col-md-4 col-sm-12 mt-sm-4">
@@ -116,7 +116,93 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.15.7/dist/sweetalert2.all.min.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
     <script>
+        const exemptions = [{
+            link: "/auth/login",
+            footer: true,
+            nav: true,
+            centerElement: {
+                value: true,
+                elementId: "loginForm",
+                topOffset: 30
+            }
+        }, {
+            link: "/auth/ForgotPassword",
+            footer: true,
+            nav: true,
+            centerElement: {
+                value: true,
+                elementId: "forgotPasswordForm",
+                topOffset: 50
+            }
+        }, {
+            link: "/auth/ResetPassword",
+            footer: true,
+nav: true,
+        }, {
+            link: "/auth/Register",
+            footer: true,
+nav: true,
+            centerElement: {
+                value: true,
+                elementId: "registerForm",
 
+                topOffset: 0
+            }
+        }, {
+            link: "/",
+            footer: true,
+
+        }]
+        exemptions.forEach(exemption => {
+            const link = exemption.link;
+            const currentPageLink = window.location.pathname;
+            const isCurrPage = (currentPageLink.toLowerCase().includes(link.toLowerCase())) && link != "/";
+            if (isCurrPage || link == "/") {
+                if (exemption.footer) {
+                    $(".main-footer").hide();
+                }
+                if (exemption.nav) {
+                    $(".main-nav").hide();
+                    $(".main-nav").remove();
+
+                }
+                if (exemption.centerElement?.value) {
+                    centerAnyElementVertically(exemption.centerElement.elementId, exemption.centerElement.topOffset);
+                    window.addEventListener('resize', () => centerAnyElementVertically(exemption.centerElement.elementId, exemption.centerElement.topOffset));
+                }
+            }
+        });
+
+        function centerElementVerticallyAndHorizontally(element, raiseUpOffset) {
+            const viewportHeight = window.innerHeight;
+            const viewportWidth = window.innerWidth;
+            const elementHeight = element.offsetHeight;
+            let elementWidth = element.offsetWidth;
+
+            // Check if the element's width is greater than 90% of the viewport width
+            if (elementWidth > viewportWidth * 0.9) {
+                elementWidth = viewportWidth * 0.9;
+                element.style.width = `${elementWidth}px`;
+            } else {
+                element.style.width = `600px`;
+            }
+
+            const topOffset = (viewportHeight - elementHeight) / 2;
+            const leftOffset = (viewportWidth - elementWidth) / 2;
+            console.log(raiseUpOffset)
+            element.style.position = 'absolute';
+            element.style.top = `${topOffset - raiseUpOffset}px`;
+            element.style.left = `${leftOffset}px`;
+        }
+
+        function centerAnyElementVertically(elementId, raiseUpOffset = 0) {
+            const elementToCenter = document.getElementById(elementId);
+            if (elementToCenter) {
+                centerElementVerticallyAndHorizontally(elementToCenter, raiseUpOffset);
+            } else {
+                console.error(`Element with ID ${elementId} not found.`);
+            }
+        }
         $(document).ready(function () {
             hideLoading()
             $('body, html').css({

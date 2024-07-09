@@ -17,6 +17,7 @@ using RestSharp;
 using System.Net;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using System.Web;
+using Microsoft.EntityFrameworkCore;
 
 namespace RentWise.Controllers
 {
@@ -242,42 +243,6 @@ namespace RentWise.Controllers
             return View();
         }
 
-        public IActionResult ForgotPassword()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        [AllowAnonymous]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ForgotPassword(ForgetPasswordModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                var user = await _userManager.FindByEmailAsync(model.Email);
-                TempData["ToastMessage"] = "Please check your email to reset your password";
-                if (user == null)
-                {
-                    // Don't reveal that the user does not exist or is not confirmed
-                    return RedirectToAction("Index", "Home");
-                }
-
-                var code = await _userManager.GeneratePasswordResetTokenAsync(user);
-                code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-                var callbackUrl = Url.Page(
-                    "/Account/ResetPassword",
-                    pageHandler: null,
-                    values: new { area = "Identity", code },
-                    protocol: Request.Scheme);
-
-                await _emailSender.SendEmailAsync(
-                    model.Email,
-                    "Reset Password",
-                    $"Please reset your password by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
-
-            }
-            return RedirectToAction("Index", "Home");
-        }
         [Authorize]
         public IActionResult Profile()
         {
@@ -468,6 +433,81 @@ namespace RentWise.Controllers
                     Success = false
                 });
             }
+        }
+        public IActionResult ForgotPassword()
+        {
+            return View();
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ForgotPassword(ForgetPasswordModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user1 = _userManager.Users.ToList();
+                var user = await _userManager.Users.FirstOrDefaultAsync(u => u.UserName == model.Email.ToLower());
+                if (user == null)
+                {
+                    ModelState.AddModelError(string.Empty, "User does not exist");
+                    // User not found, do not reveal this to the user
+                    return View();
+                }
+
+                var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+                var callbackUrl = Url.Action("ResetPassword", "Auth", new { token, email = user.UserName }, protocol: HttpContext.Request.Scheme);
+
+                bool emailSent = SharedFunctions.SendEmail(user.UserName, "Reset Password",
+                    $"Please reset your password by <a href='{callbackUrl}'>clicking here</a>.");
+
+                if (!emailSent)
+                {
+                    // Handle the case when the email is not sent
+                    ModelState.AddModelError(string.Empty, "There was an error sending the email. Please try again.");
+                    return View(model);
+                }
+                TempData["Email"] = SharedFunctions.FormatEmail(user.UserName);
+                return View();
+            }
+
+            return View(model);
+        }
+        public IActionResult ResetPassword(string token, string email)
+        {
+            if (token == null || email == null)
+            {
+                ModelState.AddModelError("", "Invalid password reset token");
+            }
+            return View(new ResetPasswordModel { Token = token, Email = email });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ResetPassword(ResetPasswordModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var user = await _userManager.Users.FirstOrDefaultAsync(u => u.UserName == model.Email.ToLower());
+            if (user == null)
+            {
+                ModelState.AddModelError("", "No user found");
+                return View();
+            }
+
+            var result = await _userManager.ResetPasswordAsync(user, model.Token, model.Password);
+            if (result.Succeeded)
+            {
+                TempData["Success"] = "Password reset successful";
+                return View();
+            }
+
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError("", error.Description);
+            }
+            return View(model);
         }
 
     }

@@ -5,37 +5,37 @@
         toastr.success('@Html.Raw( TempData["ToastMessage"])');
     </script>
 }
-<form id="loginForm" asp-route-returnUrl="/Home/Index" method="post" class="w-md-50 m-auto p-md-5 p-sm-1 loginForm" asp-action="Login" asp-controller="Auth">
-    <h2>Login to your account</h2>
-    <hr />
-    <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
-   
-
+<partial name="_Nav2" />
+<form id="loginForm" asp-route-returnUrl="/Home/Index" method="post" class="m-auto p-md-5 p-sm-1 loginForm authform">
+    <img src="~/img/logo.png" alt="Rentwise Logo" class="d-block m-auto" id="auth-logo" />
+    <h2 class="text-primary text-center">Sign into Rentwise</h2>
+    <p class="text-center text-black-50">Welcome back! Please enter your details 🤩.</p>
+    <div asp-validation-summary="All" class="text-danger" role="alert"></div>
     <div class="form-floating mb-3">
         <input asp-for="@Model.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
-        <label asp-for="@Model.Email" class="form-label">Email or Phonenumber</label>
+        <label asp-for="@Model.Email" class="form-label text-black-50">Email or Phonenumber</label>
         <span asp-validation-for="@Model.Email" class="text-danger"></span>
     </div>
     <div class="form-floating mb-3">
         <input asp-for="@Model.Password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="password" />
-        <label asp-for="@Model.Password" class="form-label">Password</label>
+        <label asp-for="@Model.Password" class="form-label text-black-50">Password</label>
         <span asp-validation-for="@Model.Password" class="text-danger"></span>
     </div>
     <div class="checkbox mb-3">
-        <label asp-for="@Model.RememberMe" class="form-label">
+        <label asp-for="@Model.RememberMe" class="form-label text-black-50">
             <input class="form-check-input" asp-for="@Model.RememberMe" />
             @Html.DisplayNameFor(model => model.RememberMe)
         </label>
     </div>
     <div>
-        <button id="login-submit" type="submit" class="w-100 btn btn-lg btn-primary">Log in</button>
+        <button id="login-submit" type="submit" class="w-100 btn btn-lg btn-primary rounded-pill">Log in</button>
     </div>
     <div class="d-flex w-100 justify-content-between mt-3">
         <p>
-            <a asp-controller="Auth" asp-action="Register">Register as a new user</a>
+            <a asp-controller="Auth" asp-action="Register" class="link-primary text-decoration-none">Register as a new user</a>
         </p>
         <p>
-            <a id="forgot-password" asp-controller="Auth" asp-action="ForgotPassword">Forgot your password?</a>
+            <a id="forgot-password" asp-controller="Auth" asp-action="ForgotPassword" class="link-primary text-decoration-none">Forgot your password?</a>
 
         </p>
     </div>
@@ -45,10 +45,6 @@
     <partial name="_ValidationScriptsPartial" />
     <script>
 
-        if (id)
-        {
-            console.log(userId, userId != "", id, id != "")
-        }   else {
             const parsedUrl = location.href.split("onesignalId=")[1]
             if (parsedUrl) {
                 $(".loginForm").attr("action", "/Auth/Login?returnUrl=Home/Index?onesignalId=" + parsedUrl);
@@ -56,7 +52,6 @@
             } else {
                 console.log("OneSignal ID not found in the URL.");
             }
-        }
 
     </script>
 }
