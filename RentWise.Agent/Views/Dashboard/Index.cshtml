@@ -1,58 +1,9 @@
 ﻿<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<style>
-    .sidebar {
-    width: 100%; /* Default width for larger screens */
-  }
-
-  @@media (max-width: 576px) {
-    /* Small screens (576px and below) */
-    .sidebar {
-      width: 50%;
-    }
-  }
-
-    .overview-details {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        grid-auto-rows: 1fr 1fr;
-        align-items: center;
-        justify-items: center;
-        padding:2rem;
-        gap:1rem;
-        border-radius: 1rem;
-    }
-
-        .overview-details i {
-            grid-column: 1/2;
-            grid-row: 1/3;
-            font-size:3rem;
-        }
-
-        .overview-details p {
-            grid-column: 2/3;
-            grid-row: 1/2;
-            margin:0;
-        }
-
-        .overview-details h2 {
-            grid-column: 2/3;
-            grid-row: 2/3;
-            margin: 0;
-        }
-
-    .date-input {
-        border-radius: 5px;
-        padding: 5px 10px;
-        font-size: 14px;
-    }
-</style>
-<div>
-    <link rel="stylesheet" href="~/css/shared/_Nav.css" asp-append-version="true" />
-    <partial name="_Nav2" />
-
-
-    <div class="row bg-light justify-content-center">
-        <div class="col-md-2 col-sm-12 pl-md-5 ">
+<link rel="stylesheet" href="~/css/controller/dashboard/Index.css"/>
+<div class="bg-light">
+    <partial name="_Nav" model="'a'"/>
+    <div class="row bg-light justify-content-center mt-2">
+        <div class="col-md-2 col-0 col-sm-12 d-none d-lg-block">
             <input value="@ViewBag.Action" class="action" hidden/>
             <ul class="d-flex text-primary list-unstyled w-100 justify-content-evenly  lead text-center bg-light py-3 rounded sidebar flex-md-column flex-sm-row flex-wrap g-sm-5">
                 <li onclick="onToggle(1)" class="sidebar sidebar-1">
@@ -106,7 +57,7 @@
                 </li>
             </ul>
         </div>
-        <div class="col-md-10 col-sm-12 pr-md-3 pr-sm-0">
+        <div class="col-lg-10 col-12">
             <input value="@ViewBag.NoOfOrders" class="order-count" hidden />
             <input value="@ViewBag.totalAmount" class="earnings" hidden />
             <partial name="_Dashboard" model="ViewBag.Orders" />
@@ -116,109 +67,11 @@
             <partial name="_Reviews" model="ViewBag.Reviews" />
             <partial name="_Profile" model="ViewBag.Agent" />
             <partial name="_Withdrawal" model="ViewBag.Withdrawals" />
-
-
         </div>
     </div>
 </div>
+@section Scripts{
+    <script src="~/js/controller/dashboard/Index.js"></script>
+}
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 
-<style>
-    .sidebar li {
-        cursor: pointer;
-        padding: .6rem 0;
-        transition: all .3s;
-    }
-
-        .sidebar li:not(.split-li):hover, .sidebar-item:hover {
-            background: var(--bs-primary);
-            color: white;
-        }
-
-    .sidebar-item {
-        padding: .6rem 3rem;
-    }
-
-    .display-none {
-        display: none
-    }
-
-    .search_input {
-        display: grid;
-        grid-template-columns: min-content 1fr min-content;
-        margin: auto;
-        align-items: center;
-    }
-
-        .search_input i {
-            grid-column: 1/1;
-            grid-row: 1/1;
-            z-index: 2;
-            justify-self: center;
-            padding: .5rem 1.5rem;
-        }
-
-        .search_input input {
-            grid-column: 1/-1;
-            grid-row: 1/1;
-            z-index: 1;
-            padding: .5rem 4rem;
-            border-radius: 2rem;
-            border: none;
-        }
-
-    .active {
-        border-left:3px solid var(--bs-primary);
-        background: #00808017;
-    }
-
-</style>
-<style>
-
-</style>
-<script>
-    function onToggle(contentNo,link = false) {
-        if(link){
-            window.location.href = link
-            return
-        }
-        // Get the current URL
-        const url = new URL(window.location.href);
-        console.log(url.searchParams.has('filterDate'),contentNo)
-        // Check if 'featuredDate' query parameter exists
-        if (url.searchParams.has('filterDate') && contentNo != 1) {
-            // Remove the 'featuredDate' query parameter
-            url.searchParams.delete('filterDate');
-            // Set the 'content' query parameter with the specified value
-            url.searchParams.set('active', contentNo);
-            // Redirect to the updated URL
-            window.location.href = url.href;
-            return; // Exit the function to prevent further execution
-        }
-
-        // Hide all content sections
-        document.querySelectorAll(".content").forEach((content) => {
-            content.classList.add("display-none");
-        });
-        // Display the selected content section
-        document.querySelector(".content-" + contentNo).classList.remove("display-none");
-
-        // Update sidebar active class
-        $(".sidebar").removeClass("active");
-        $(".sidebar-" + contentNo).addClass("active");
-
-    }
-
-    function onToggleSidebar() {
-        const url = new URL(window.location.href);
-        const urlParams = new URLSearchParams(url.search);
-        const activeValue = urlParams.get('active');
-
-        if (activeValue && activeValue.length > 0) {
-            onToggle(activeValue);
-        } else {
-            const action = $(".action").val();
-            onToggle(action);
-        }
-    }
-    onToggleSidebar()
-</script>

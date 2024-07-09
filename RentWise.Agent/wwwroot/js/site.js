@@ -191,3 +191,29 @@ function hideLoading() {
     const loadingOverlay = document.querySelector('.loading');
     loadingOverlay.classList.add('hidden');
 }
+
+try {
+    $(document).ready(function () {
+        const JSONstates = JSON.parse($('.jsonstate').text());
+        $(".jsonstate").remove();
+
+        // Set up a change listener for the state dropdown to populate cities
+        $('#stateDropdown').change(function () {
+            var stateName = $(this).val();
+            var selectedState = JSONstates.find(state => state.Name === stateName);
+            $('#cityDropdown').empty().append(new Option('Select a City', ''));
+
+            if (selectedState && selectedState.Cities.length > 0) {
+                selectedState.Cities.forEach(function (city) {
+                    $('#cityDropdown').append(new Option(city.Name, city.Name));
+                });
+                $('#cityDropdown').prop('disabled', false);
+                $('#cityDropdown').addClass('text-capitalize');
+            } else {
+                $('#cityDropdown').prop('disabled', true);
+                $('#cityDropdown').addClass('text-capitalize');
+            }
+        });
+
+    });
+} catch (err) { }
