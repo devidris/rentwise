@@ -15,7 +15,32 @@
 <ul class="navbar-nav align-items-center">
 @if (SignInManager.IsSignedIn(User))
 {
-    <li class="nav-item position-relative">
+        <li class="nav-item d-lg-none d-block py-3">
+            <a class="link-light text-decoration-none" asp-controller="Dashboard" asp-action="Index" asp-route-active="2">
+                Messages
+            </a>
+        </li>
+        <li class="nav-item d-lg-none d-block py-3">
+            <a class="link-light text-decoration-none" asp-controller="Dashboard" asp-action="Index" asp-route-active="3">
+                Report
+            </a>
+        </li>
+        <li class="nav-item d-lg-none d-block py-3">
+            <a class="link-light text-decoration-none" asp-controller="Dashboard" asp-action="Index" asp-route-active="4">
+                Reservations
+            </a>
+        </li>
+        <li class="nav-item d-lg-none d-block py-3">
+            <a class="link-light text-decoration-none" asp-controller="Dashboard" asp-action="Index" asp-route-active="5">
+                Review
+            </a>
+        </li>
+        <li class="nav-item d-lg-none d-block py-3">
+            <a class="link-light text-decoration-none" asp-controller="Dashboard" asp-action="Index" asp-route-active="7">
+                Withdraw
+            </a>
+        </li>
+    <li class="nav-item position-relative d-lg-block d-none">
             <a asp-controller="Dashboard" asp-action="Index" asp-route-active="4" class="link-light nav-icon-size">
                 <i class="bi bi-bell-fill"></i>
         </a>
@@ -23,7 +48,7 @@
                 @usersDetailsModel.Orders
             </span>
     </li>
-    <li class="nav-item">
+        <li class="nav-item d-lg-block d-none">
             <a class="link-light nav-icon-size" asp-controller="Dashboard" asp-action="Index" asp-route-active="6">
           <i class="bi bi-person-circle"></i>
        </a>
@@ -40,8 +65,6 @@ else
             <a class="btn btn-outline-secondary rounded-pill px-5" asp-controller="Auth" asp-action="Register">
                 Register
             </a>
-
-
         </li>
         <li class="nav-item">
             <a class="btn btn-secondary text-dark rounded-pill px-5" asp-controller="Auth" asp-action="Login">

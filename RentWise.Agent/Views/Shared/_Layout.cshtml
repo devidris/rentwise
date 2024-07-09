@@ -29,19 +29,19 @@
             </main>
         </div>
         <div class="page_footer">
-            <a asp-action="Index" asp-controller="Home" class="tab link-primary text-decoration-none home">
-                <i class="bi bi-house-door-fill"></i>
-                <span>Home</span>
+            <a asp-controller="Dashboard" asp-action="Index" asp-route-active="1" class="tab link-primary text-decoration-none home">
+                <i class="bi bi-speedometer"></i>
+                <span>Dashboard</span>
             </a>
-            <a asp-action="Chat" asp-controller="Page" class="tab link-dark text-decoration-none">
-                <i class="bi bi-inbox-fill"></i>
-                <span>Inbox</span>
+            <a asp-controller="Dashboard" asp-action="Index" asp-route-active="2" class="tab link-dark-50 text-decoration-none">
+                <i class="bi bi-chat-left-dots-fill"></i>
+                <span>Messages</span>
             </a>
-            <a asp-action="Orders" asp-controller="Store" class="tab link-dark text-decoration-none">
-                <i class="bi bi-newspaper"></i>
-                <span>Reservation</span>
+            <a asp-controller="Store" asp-action="Index" class="tab link-dark-50 text-decoration-none">
+                <i class="bi bi-shop"></i>
+                <span>Store</span>
             </a>
-            <a asp-action="Profile" asp-controller="Auth" class="tab link-dark text-decoration-none">
+            <a asp-controller="Dashboard" asp-action="Index" asp-route-active="6" class="tab link-dark-50  text-decoration-none">
                 <i class="bi bi-person-fill "></i>
                 <span>Profile</span>
             </a>
@@ -179,21 +179,21 @@
         }
 
         let isActiveApplied = false
-        const currentPage = window.location.pathname.toLowerCase()
+        const currentPage = (window.location.pathname + window.location.search).toLowerCase();
         $('.page_footer a').each(function () {
             const href = $(this).attr('href').toLowerCase();
             if (href === currentPage) {
                 $(this).addClass('link-primary');
-                $(this).removeClass('link-dark');
+                $(this).removeClass('link-dark-50');
                 isActiveApplied = true
             } else {
-                $(this).addClass('link-dark');
+                $(this).addClass('link-dark-50');
                 $(this).removeClass('link-primary');
             }
         });
         if (!isActiveApplied) {
             $('.home').addClass('link-primary');
-            $('.home').removeClass('link-dark');
+            $('.home').removeClass('link-dark-50');
         }
 
         let urlParams = new URLSearchParams(window.location.search);

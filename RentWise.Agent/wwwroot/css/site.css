@@ -17,9 +17,6 @@ html {
   min-height: 100%;
 }
 
-body {
-  margin-bottom: 60px;
-}
 
 .rb-lg-border {
     border-radius: 10px 10px 100px 10px
@@ -296,7 +293,6 @@ div.loading {
 }
 
 .page_content {
-    height: 100vh;
     grid-column: 1/2;
     grid-row: 1/2;
     width:100%;
@@ -337,6 +333,7 @@ div.loading {
         height: auto;
         grid-column: 1/2;
         grid-row: 1/2;
+        /*height: 100vh;*/
     }
 
     .page_footer {
@@ -356,4 +353,8 @@ div.loading {
 
 .nav-icon-size{
     font-size:1.5rem;
+}
+
+.link-dark-50 {
+    color: #343a40a6;
 }
