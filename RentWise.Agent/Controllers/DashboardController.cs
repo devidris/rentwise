@@ -190,7 +190,7 @@ namespace RentWise.Agent.Controllers
             ViewBag.States = states;
             ViewBag.JSONStates = JsonConvert.SerializeObject(states, settings);
             if (String.IsNullOrEmpty(Id))
-            {
+             {
                 ViewBag.OpenChat = false;
                 ViewBag.FullMessage = JsonConvert.SerializeObject(FullMessage);
                 ViewBag.ChatSummaries = JsonConvert.SerializeObject(chatSummaries);

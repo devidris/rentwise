@@ -48,6 +48,8 @@ document.addEventListener('DOMContentLoaded', function () {
     };
 
     var options = {
+        responsive: true,
+        maintainAspectRatio: false,
         scales: {
             y: {
                 beginAtZero: true

@@ -12,10 +12,10 @@
         </div>
     </div>
     <div class="d-flex justify-content-around">
-        <a asp-route-active="4" class="@( ViewBag.Status == 0 ? "link-primary" : "link-dark") text-decoration-none">All Orders</a>
-        <a asp-route-active="4" asp-route-status="4" class=" @( ViewBag.Status == 4 ? "link-primary" : "link-dark") text-decoration-none">Completed Orders</a>
-        <a asp-route-active="4" asp-route-status="1" class="@( ViewBag.Status == 1 ? "link-primary" : "link-dark") text-decoration-none">Orders In Progress</a>
-        <a asp-route-active="4" asp-route-status="5" class="@( ViewBag.Status == 5 ? "link-primary" : "link-dark") text-decoration-none">Cancelled Orders</a>
+        <a asp-route-active="4" class="@( ViewBag.Status == 0 ? "link-primary" : "link-dark") text-decoration-none text-center">All Orders</a>
+        <a asp-route-active="4" asp-route-status="4" class=" @( ViewBag.Status == 4 ? "link-primary" : "link-dark") text-decoration-none text-center">Completed Orders</a>
+        <a asp-route-active="4" asp-route-status="1" class="@( ViewBag.Status == 1 ? "link-primary" : "link-dark") text-decoration-none text-center">Orders In Progress</a>
+        <a asp-route-active="4" asp-route-status="5" class="@( ViewBag.Status == 5 ? "link-primary" : "link-dark") text-decoration-none text-center">Cancelled Orders</a>
     </div>
     @if (Model.Count == 0)
     {
