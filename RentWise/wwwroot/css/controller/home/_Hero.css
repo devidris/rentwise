@@ -8,6 +8,12 @@
 .hero_content {
     position: relative;
     z-index:1;
+    width:100%;
+    max-width:70rem;
+}
+.hero_content__header {
+    width: 50%;
+    margin: auto;
 }
 .hero::before {
     content: '';
@@ -41,8 +47,19 @@
     width: 100%;
     justify-content: space-between;
     gap: 2rem;
+    padding-left: 0 !important;
+}
+@media screen and (max-width: 63em) {
+    .hero_content__header {
+        width: 90%;
+    }
 }
 
+@media screen and (max-width: 50em) {
+    .search-lists {
+        flex-direction:column;
+    }
+}
     .search-lists .nav-item {
         list-style: none;
         padding: .7rem 2rem;

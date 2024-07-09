@@ -1,17 +1,18 @@
 ﻿<link rel="stylesheet" href="~/css/controller/home/_Hero.css" asp-append-version="true" />
 <header class="hero row justify-content-center align-items-center text-center text-white">
-    <div class="col-md-6 col-sm-12 hero_content">
-        <h1 class="display-3">Now it's <em>easier</em> than </h1>
-        <h1 class="mb-5">ever to <span class="text-primary">Rent</span> a product</h1>
+    <div class="hero_content">
+        <div class="hero_content__header">
+            <h1 class="display-3">Now it's <em>easier</em> than </h1>
+            <h1 class="mb-5">ever to <span class="text-primary">Rent</span> a product</h1>
 
-        <div class="search_input mb-2">
-            <i class="bi bi-search text-muted"></i>
-            <input type="search" value="" class="name-search" placeholder="Search" />
-            <button class="btn rouded-pill btn-primary text-white" onclick="searchName()"> <i class="bi bi-search text-muted text-white"></i>Search</button>
+            <div class="search_input mb-2">
+                <i class="bi bi-search text-muted"></i>
+                <input type="search" value="" class="name-search" placeholder="Search" />
+                <button class="btn rouded-pill btn-primary text-white" onclick="searchName()"> <i class="bi bi-search text-muted text-white"></i>Search</button>
+            </div>
+            <span class="text-primary">Need a car now? Check out our Quick Delivery or View Communities Near you  </span>
         </div>
-        <span class="text-primary">Need a car now? Check out our Quick Delivery or View Communities Near you  </span>
-        <div class="d-flex gap-5 align-items-center mt-5">
-            <ul class="search-lists pl-0 m-0">
+            <ul class="search-lists pl-0 m-0 align-items-center mt-5">
                 <li class="nav-item dropdown dropdown-category">
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="bi bi-funnel-fill"></i>
@@ -67,8 +68,7 @@
                         <li><a class="dropdown-item" href="#" onclick="updateDropdownToggle(this)" data-value="90+">More than 90 days</a></li>
                     </ul>
                 </li>
+            <button class="btn btn-primary advanced-searchrounded-pil" onclick="handleSearch()"><i class="bi bi-search"></i> </button>
             </ul>
-
-            <button class="btn btn-primary advanced-search" onclick="handleSearch()"><i class="bi bi-search"></i></button>
     </div>
 </header>
