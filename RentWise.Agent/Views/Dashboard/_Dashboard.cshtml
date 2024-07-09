@@ -1,5 +1,4 @@
 ﻿@model List<OrdersModel>
-
 <div class="content content-1">
     <div class="bg-primary bg-opacity-25 p-3 mb-5">
         <p class="m-0  text">Congratulations!!!  Your account is Active</p>
@@ -7,39 +6,55 @@
     <div class="container my-5">
         <div class="row align-items-center">
             <div class="col">
-                <h3 class="font-weight-bold text-primary">Category</h3>
+                <h3 class="font-weight-bold text-primary"><b>Overview</b></h3>
             </div>
             <div class="col-auto">
                 <input type="date" class="date-input border border-primary" id="dateInput" value="" />
             </div>
         </div>
     </div>
-    <div class="row justify-content-around">
-        <div class="overview-details border border-primary w-fit col-md-4 col-12">
+    <div class="row justify-content-around p-lg-2 p-3 gap-4 gap-md-0">
+        <div class="overview-details border border-primary col-lg-4 col-md-5 col-12">
             <i class="bi bi-cart-fill text-primary"></i>
             <p class="text-black-50">Total Order</p>
             <h2 class="text-primary">@ViewBag.NoOfOrders</h2>
         </div>
-        <div class="overview-details border border-primary w-fit col-md-4 col-12">
+        <div class="overview-details border border-primary col-lg-4 col-md-5 col-12 ">
             <i class="bi bi-cash text-primary"></i>
             <p class="text-black-50">Total Earning</p>
             <h2 class="text-primary">₵@ViewBag.totalAmount</h2>
         </div>
-        <div class="overview-details border border-primary w-fit col-md-4 col-12">    
+        <div class="overview-details border border-primary col-lg-4 col-12 d-none d-flex-lg">    
+            <i class="bi bi-hourglass-split text-primary"></i>
+            <p class="text-black-50">Pending Order</p>
+            <h2 class="text-primary">@ViewBag.NoOfPendingOrders</h2>
+        </div>
+    </div>
+    <div class="row justify-content-around p-lg-2 p-3 d-flex d-none-lg gap-4 gap-md-0">
+        <div class="overview-details border border-primary col-lg-4 col-md-5 col-12">
+            <i class="bi bi-cart-fill text-primary"></i>
+            <p class="text-black-50">Cancelled Order</p>
+            <h2 class="text-primary">@ViewBag.NoOfCancelledOrders</h2>
+        </div>
+        <div class="overview-details border border-primary col-lg-4 col-md-5 col-12">
             <i class="bi bi-hourglass-split text-primary"></i>
             <p class="text-black-50">Pending Order</p>
             <h2 class="text-primary">@ViewBag.NoOfPendingOrders</h2>
         </div>
     </div>
     <div class="row justify-content-around mt-md-5 mt-1 align-items-start mb-5">
-        <div class="overview-details border border-primary w-fit col-md-6 col-12">
+        <div class="overview-details border border-primary w-fit col-md-6 col-12 d-none d-lg-flex">
             <i class="bi bi-cart-fill text-primary"></i>
             <p class="text-black-50">Cancelled Order</p>
             <h2 class="text-primary">@ViewBag.NoOfCancelledOrders</h2>
         </div>
-        <div class="overview-details border border-primary col-md-6 col-12">
+        <div class="overview-details border border-primary col-md-6 col-12 d-none d-lg-flex">
             <canvas id="myChart" width="470" height="250"></canvas>
+        </div>
+        <div class="overview-details border border-primary col-md-6 col-12 w-100 d-flex d-lg-none">
+            <canvas id="myChart-mobile" class="w-100" height="250"></canvas>
         </div>
     </div>
 </div>
 <script src="~/js/controller/dashboard/_Dashboard.js"></script>
+

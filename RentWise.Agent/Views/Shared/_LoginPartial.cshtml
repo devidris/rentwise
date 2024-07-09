@@ -1,21 +1,36 @@
 ﻿@using Microsoft.AspNetCore.Identity
+@using RentWise.DataAccess.Repository.IRepository;
+@using System.Security.Claims;
 
 @inject SignInManager<IdentityUser> SignInManager
 @inject UserManager<IdentityUser> UserManager
+@inject IUnitOfWork _unitOfWork
 
 @{
     Authentication authentication = new Authentication(); // or null if you want to pass null
     AuthenticationLogin authenticationLogin = new AuthenticationLogin();
+    string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+    UsersDetailsModel usersDetailsModel = userId != null ? _unitOfWork.UsersDetails.Get(u => u.Id == userId) : new UsersDetailsModel();
 }
-<ul class="navbar-nav">
+<ul class="navbar-nav align-items-center">
 @if (SignInManager.IsSignedIn(User))
 {
+    <li class="nav-item position-relative">
+            <a asp-controller="Dashboard" asp-action="Index" asp-route-active="4" class="link-light nav-icon-size">
+                <i class="bi bi-bell-fill"></i>
+        </a>
+            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill badge-danger bg-light text-primary rounded-circle cart-count">
+                @usersDetailsModel.Orders
+            </span>
+    </li>
     <li class="nav-item">
-        <a id="manage" class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @UserManager.GetUserName(User)!</a>
+            <a class="link-light nav-icon-size" asp-controller="Dashboard" asp-action="Index" asp-route-active="6">
+          <i class="bi bi-person-circle"></i>
+       </a>
     </li>
     <li class="nav-item">
         <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-            <button id="logout" type="submit" class="nav-link btn btn-link text-dark border-0">Logout</button>
+            <button id="logout" type="submit" class="nav-link btn btn-link text-light border-0">Logout</button>
         </form>
     </li>
 }

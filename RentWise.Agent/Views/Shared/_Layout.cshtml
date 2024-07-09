@@ -18,13 +18,35 @@
             <div></div>
         </div>
     </div>
-    <main class="container-fluid">
-        <div class="row">
-            <div class="col-12">
-                @RenderBody()
-            </div>
+    <div class="page">
+        <div class="page_content">
+            <main class="container-fluid">
+                <div class="row">
+                    <div class="col-12">
+                        @RenderBody()
+                    </div>
+                </div>
+            </main>
         </div>
-    </main>
+        <div class="page_footer">
+            <a asp-action="Index" asp-controller="Home" class="tab link-primary text-decoration-none home">
+                <i class="bi bi-house-door-fill"></i>
+                <span>Home</span>
+            </a>
+            <a asp-action="Chat" asp-controller="Page" class="tab link-dark text-decoration-none">
+                <i class="bi bi-inbox-fill"></i>
+                <span>Inbox</span>
+            </a>
+            <a asp-action="Orders" asp-controller="Store" class="tab link-dark text-decoration-none">
+                <i class="bi bi-newspaper"></i>
+                <span>Reservation</span>
+            </a>
+            <a asp-action="Profile" asp-controller="Auth" class="tab link-dark text-decoration-none">
+                <i class="bi bi-person-fill "></i>
+                <span>Profile</span>
+            </a>
+        </div>
+    </div>
     @inject IOptions<RentWiseConfig> _config;
     <footer class="bg-primary p-md-5 py-4 text-white text-center main-footer">
         <div class="container-fluid">
@@ -155,6 +177,25 @@
                 console.error(`Element with ID ${elementId} not found.`);
             }
         }
+
+        let isActiveApplied = false
+        const currentPage = window.location.pathname.toLowerCase()
+        $('.page_footer a').each(function () {
+            const href = $(this).attr('href').toLowerCase();
+            if (href === currentPage) {
+                $(this).addClass('link-primary');
+                $(this).removeClass('link-dark');
+                isActiveApplied = true
+            } else {
+                $(this).addClass('link-dark');
+                $(this).removeClass('link-primary');
+            }
+        });
+        if (!isActiveApplied) {
+            $('.home').addClass('link-primary');
+            $('.home').removeClass('link-dark');
+        }
+
         let urlParams = new URLSearchParams(window.location.search);
         const returnUrl = decodeURIComponent(urlParams.get('ReturnUrl'));
         const returnUrlParams = new URLSearchParams(returnUrl.split('?')[1]);
