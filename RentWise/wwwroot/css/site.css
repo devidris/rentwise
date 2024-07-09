@@ -207,3 +207,20 @@ div.loading {
         width: 100%;
         opacity:0.2;
     }
+.authform {
+    margin: 0 auto;
+    width: 100%;
+    max-width: 600px;
+    padding: 1rem;
+    border-radius: 10px;
+}
+
+#auth-logo {
+    width: 300px;
+}
+
+@media screen and (max-width: 32em) {
+    #auth-logo {
+        width: 100px;
+    }
+}

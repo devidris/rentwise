@@ -476,7 +476,6 @@ namespace RentWise.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user1 = _userManager.Users.ToList();
                 var user =  await _userManager.Users.FirstOrDefaultAsync(u => u.UserName == model.Email.ToLower());
                 if (user == null)
                 {
@@ -521,7 +520,7 @@ namespace RentWise.Controllers
                 return View(model);
             }
 
-            var user = await _userManager.FindByEmailAsync(model.Email);
+            var user = await _userManager.Users.FirstOrDefaultAsync(u => u.UserName == model.Email.ToLower());
             if (user == null)
             {
                 ModelState.AddModelError("", "No user found");
