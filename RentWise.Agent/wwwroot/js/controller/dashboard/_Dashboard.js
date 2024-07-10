@@ -3,7 +3,6 @@ const totalEarnings = document.querySelector(".earnings").value
 
 document.addEventListener('DOMContentLoaded', function () {
     var ctx = document.getElementById('myChart').getContext('2d');
-    var ctx2 = document.getElementById('myChart-mobile').getContext('2d');
     var data = {
         labels: ['Total Sales', 'Total number of Reservations'],
         datasets: [{
@@ -35,11 +34,7 @@ document.addEventListener('DOMContentLoaded', function () {
         data: data,
         options: options
     });
-    var myChart2 = new Chart(ctx2, {
-        type: 'bar',
-        data: data,
-        options: options
-    });
+
 });
 
 document.getElementById('dateInput').addEventListener('change', function () {
