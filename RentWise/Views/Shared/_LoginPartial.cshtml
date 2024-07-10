@@ -16,7 +16,7 @@
     string agentRegistrationLink = $"{_config.Value.AgentWebsiteLink}/Home/Index";
 }
 <link rel="stylesheet" href="~/css/shared/_LoginPartial.css" asp-append-version="true" />
-<ul class="navbar-nav align-items-center gap-2">
+<ul class="navbar-nav align-items-center gap-4">
     @if (SignInManager.IsSignedIn(User))
     {
         <li  class="nav-item m-0 position-relative">
@@ -24,6 +24,15 @@
             <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill badge-danger bg-light text-primary rounded-circle cart-count">
                 @usersDetailsModel.Carts
             </span>
+        </li>
+        <li class="nav-item m-0 position-relative">
+            <a asp-controller="Page" asp-action="Chat"><i class="bi bi-shop-window fs-4 text-white"></i></a>
+            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill badge-danger bg-light text-primary rounded-circle cart-count">
+                @usersDetailsModel.Orders
+            </span>
+        </li>
+        <li class="nav-item m-0 position-relative">
+            <a asp-controller="Auth" asp-action="Profile"> <i class="bi bi-person-circle fs-4 text-white"></i></a>
         </li>
     }
     else

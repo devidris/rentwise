@@ -130,7 +130,7 @@ namespace RentWise.Controllers
                                 usersDetailsModel.OneSignalId = oneSignalValue;
                                 _unitOfWork.UsersDetails.Add(usersDetailsModel);
                                 _unitOfWork.Save();
-                                return RedirectToAction("Index", "Home", new { onesignalId = oneSignalValue });
+                                return RedirectToAction("Category", "Store", new { onesignalId = oneSignalValue });
                             }
                             else
                             {
@@ -141,7 +141,7 @@ namespace RentWise.Controllers
                         }
                         _unitOfWork.UsersDetails.Add(usersDetailsModel);
                         _unitOfWork.Save();
-                        return RedirectToAction("Index", "Home", new { message = "Regitration Successful" });
+                        return RedirectToAction("Category", "Store", new { message = "Regitration Successful" });
 
                     }
                 }
@@ -214,15 +214,15 @@ namespace RentWise.Controllers
                                 _unitOfWork.Save();
                             }
 
-                            return RedirectToAction("Index", "Home", new { onesignalId = oneSignalValue, message="Login Successful" }) ;
+                            return RedirectToAction("Category", "Store", new { onesignalId = oneSignalValue, message="Login Successful" }) ;
                         } else
                         {
-                            return RedirectToAction("Index", "Home", new { message = "Login Successful" });
+                            return RedirectToAction("Category", "Store", new { message = "Login Successful" });
                         }
 
                      
                     }
-                    return RedirectToAction("Index", "Home", new { message = "Login Successful" });
+                    return RedirectToAction("Category", "Store", new { message = "Login Successful" });
 
                 }
                 if (result.RequiresTwoFactor)
@@ -352,7 +352,7 @@ namespace RentWise.Controllers
             string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (userId != user)
             {
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Category", "Store");
             }
             // Get the user manager from your dependency injection system
             var userManager = HttpContext.RequestServices.GetService<UserManager<ApplicationUser>>();
@@ -360,7 +360,7 @@ namespace RentWise.Controllers
             // Find the user by ID
             var userToDelete = await userManager.FindByIdAsync(userId);
             var result = await userManager.DeleteAsync(userToDelete);
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Category", "Store");
         }
 
         [HttpPost]

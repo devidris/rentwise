@@ -39,7 +39,7 @@
                 string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             }
             <input value="@userId" class="user-id" hidden />
-            <footer class="bg-primary p-md-5 py-4 text-white text-center main-footer">
+            <footer class="bg-primary p-md-5 py-4 text-white text-center main-footer hide-mobile">
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col-md-4 col-sm-12 mt-sm-4">
@@ -92,15 +92,15 @@
                 <i class="bi bi-house-door-fill"></i>
                 <span>Home</span>
             </a>
-            <a asp-action="Chat" asp-controller="Page" class="tab link-dark text-decoration-none">
+            <a asp-action="Chat" asp-controller="Page" class="tab link-dark-50 text-decoration-none">
                 <i class="bi bi-inbox-fill"></i>
                 <span>Inbox</span>
             </a>
-            <a asp-action="Orders" asp-controller="Store" class="tab link-dark text-decoration-none">
+            <a asp-action="Orders" asp-controller="Store" class="tab link-dark-50 text-decoration-none">
                 <i class="bi bi-newspaper"></i>
                 <span>Reservation</span>
             </a>
-            <a asp-action="Profile" asp-controller="Auth" class="tab link-dark text-decoration-none">
+            <a asp-action="Profile" asp-controller="Auth" class="tab link-dark-50 text-decoration-none">
                 <i class="bi bi-person-fill "></i>
                 <span>Profile</span>
             </a>
@@ -148,16 +148,19 @@ nav: true,
 
                 topOffset: 0
             }
-        }, {
-            link: "/",
-            footer: true,
-
+        }, , {
+            link: "/auth/Profile",
+            centerElement: {
+                value: true,
+                elementId: "change-password-form",
+                topOffset: -1
+            }
         }]
         exemptions.forEach(exemption => {
             const link = exemption.link;
             const currentPageLink = window.location.pathname;
             const isCurrPage = (currentPageLink.toLowerCase().includes(link.toLowerCase())) && link != "/";
-            if (isCurrPage || link == "/") {
+            if (isCurrPage || link == currentPageLink) {
                 if (exemption.footer) {
                     $(".main-footer").hide();
                 }
@@ -186,7 +189,9 @@ nav: true,
             } else {
                 element.style.width = `600px`;
             }
-
+            if (raiseUpOffset == -1) {
+                return
+            }
             const topOffset = (viewportHeight - elementHeight) / 2;
             const leftOffset = (viewportWidth - elementWidth) / 2;
             console.log(raiseUpOffset)
@@ -216,16 +221,16 @@ nav: true,
                 const href = $(this).attr('href').toLowerCase();
                 if (href === currentPage) {
                     $(this).addClass('link-primary');
-                    $(this).removeClass('link-dark');
+                    $(this).removeClass('link-dark-50');
                     isActiveApplied = true
                 } else {
-                    $(this).addClass('link-dark');
+                    $(this).addClass('link-dark-50');
                     $(this).removeClass('link-primary');
                 }
             });
             if (!isActiveApplied) {
                 $('.home').addClass('link-primary');
-                $('.home').removeClass('link-dark');
+                $('.home').removeClass('link-dark-50');
             }
         });
         const userId = $('.user-id').val() ?? "rentwise";
@@ -242,8 +247,8 @@ nav: true,
         $('.id').val(id)
         if(id)
         if (id && id != "") {
-            $(".loginForm").attr("action", "/Auth/Login?returnUrl=Home/Index?onesignalId=" + id);
-            $(".registerForm").attr("action", "/Auth/Register?returnUrl=Home/Index?onesignalId=" + id);
+            $(".loginForm").attr("action", "/Auth/Login?returnUrl=Store/Category?onesignalId=" + id);
+            $(".registerForm").attr("action", "/Auth/Register?returnUrl=Store/Category?onesignalId=" + id);
         } 
 
         if (userId && userId != "" && id && id != "") {
