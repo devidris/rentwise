@@ -1,6 +1,6 @@
 ﻿@model Authentication
 <partial name="_Nav2" />
-<form id="registerForm" asp-route-returnUrl="/Home/Index" method="post" class="w-md-50 m-auto p-md-5 p-sm-1 registerForm authform">
+<form id="registerForm" asp-route-returnUrl="/Store/Category" method="post" class="w-md-50 m-auto p-md-5 p-sm-1 registerForm authform">
     <img src="~/img/logo.png" alt="Rentwise Logo" class="d-block m-auto" id="auth-logo" />
     <h2 class="text-primary text-center">Create a new account</h2>
     <p class="text-center text-black-50">Fill in your details to register now.</p>
@@ -66,7 +66,7 @@
         } else {
             const parsedUrl = location.href.split("onesignalId=")[1]
             if (parsedUrl) {
-                $(".registerForm").attr("action", "/Auth/Login?returnUrl=Home/Index?onesignalId=" + parsedUrl);
+                $(".registerForm").attr("action", "/Auth/Login?returnUrl=Store/Category?onesignalId=" + parsedUrl);
                 console.log("OneSignal ID:", parsedUrl);
             } else {
                 console.log("OneSignal ID not found in the URL.");

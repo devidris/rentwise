@@ -96,7 +96,8 @@ body, html {
     justify-content: space-around;
     align-items: center;
     border-top: 1px solid #eee;
-    display: none
+    display: none;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .tab {
@@ -223,4 +224,15 @@ div.loading {
     #auth-logo {
         width: 100px;
     }
+}
+
+
+@media screen and (max-width: 32em) {
+    .hide-mobile {
+        display: none;
+    }
+}
+
+.link-dark-50 {
+    color: #343a40a6;
 }

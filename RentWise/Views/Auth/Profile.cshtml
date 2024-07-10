@@ -1,32 +1,32 @@
 ﻿@model ChangePasswordModel;
 <div class="profile my-5">
     <input value="@ViewBag.UserId" class="userId" hidden />
-    <form id="change-password-form" method="post" class="w-75 m-auto" enctype="multipart/form-data">
+    <form id="change-password-form" method="post" class=" m-auto authform" enctype="multipart/form-data">
         <div asp-validation-summary="All" class="text-danger" role="alert"></div>
         <label for="image" class="d-block w-fit m-auto mb-3 cursor-pointer">
-            @* <img src="@Url.Content(@ViewBag.ProfilePicture)" alt="Profile Picture" width="200" class="image-display" /> *@
-            @* <i class="bi bi-box-arrow-in-down fs-1 text-primary"></i> *@
+            <img src="@Url.Content(@ViewBag.ProfilePicture)" alt="Profile Picture" width="200" height="200" class="image-display rounded-circle" />
+             <button class="btn btn-primary"> Upload</button>
         </label>
-        @* <input type="file" accept="image/*" id="image" name="image" hidden /> *@
+        <input type="file" accept="image/*" id="image" name="image" hidden />
         <div class="form-floating mb-3">
             <input asp-for="@Model.Username" class="form-control" autocomplete="current-password" aria-required="true" placeholder="Please enter your username." />
-            <label asp-for="@Model.Username" class="form-label"></label>
+            <label asp-for="@Model.Username" class="form-label text-black-50"></label>
             <span asp-validation-for="@Model.Username" class="text-danger"></span>
         </div>
         <h1 class="my-3">Update Password</h1>
         <div class="form-floating mb-3">
             <input asp-for="@Model.OldPassword" class="form-control" autocomplete="current-password" aria-required="true" placeholder="Please enter your old password." />
-            <label asp-for="@Model.OldPassword" class="form-label"></label>
+            <label asp-for="@Model.OldPassword" class="form-label text-black-50"></label>
             <span asp-validation-for="@Model.OldPassword" class="text-danger"></span>
         </div>
         <div class="form-floating mb-3">
             <input asp-for="@Model.NewPassword" class="form-control" autocomplete="new-password" aria-required="true" placeholder="Please enter your new password." />
-            <label asp-for="@Model.NewPassword" class="form-label"></label>
+            <label asp-for="@Model.NewPassword" class="form-label text-black-50"></label>
             <span asp-validation-for="@Model.NewPassword" class="text-danger"></span>
         </div>
         <div class="form-floating mb-3">
             <input asp-for="@Model.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" placeholder="Please confirm your new password." />
-            <label asp-for="@Model.ConfirmPassword" class="form-label"></label>
+            <label asp-for="@Model.ConfirmPassword" class="form-label text-black-50"></label>
             <span asp-validation-for="@Model.ConfirmPassword" class="text-danger"></span>
         </div>
         <button type="submit" class="w-100 btn btn-lg btn-primary save">Save Changes</button>
