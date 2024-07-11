@@ -48,5 +48,24 @@
                 <partial name="_CategoryPreview" for="@product" />
             }
         </div>
+        <nav class="d-flex justify-content-center mt-5">
+            <ul class="pagination">
+                @if (ViewBag.Pager.TotalPages > 1)
+                {
+                    <li class="page-item @(ViewBag.Pager.CurrentPage == 1 ? "disabled" : "")">
+                        <a class="page-link" href="?page=1&Category=@ViewBag.CategoryName">First</a>
+                    </li>
+                    @for (int i = 1; i <= ViewBag.Pager.TotalPages; i++)
+                    {
+                        <li class="page-item @(i == ViewBag.Pager.CurrentPage ? "active" : "")">
+                            <a class="page-link" href="?page=@i&Category=@ViewBag.CategoryName">@i</a>
+                        </li>
+                    }
+                    <li class="page-item @(ViewBag.Pager.CurrentPage == ViewBag.Pager.TotalPages ? "disabled" : "")">
+                        <a class="page-link" href="?page=@ViewBag.Pager.TotalPages&Category=@ViewBag.CategoryName">Last</a>
+                    </li>
+                }
+            </ul>
+        </nav>
     }
 </div>

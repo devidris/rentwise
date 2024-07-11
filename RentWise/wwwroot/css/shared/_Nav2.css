@@ -1,0 +1,5 @@
+﻿@media screen and (max-width: 32em) {
+    #nav2-bar {
+        display: none !important;
+    }
+}
