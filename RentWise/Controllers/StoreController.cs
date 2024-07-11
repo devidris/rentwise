@@ -13,6 +13,7 @@ using RentWise.Models;
 using RentWise.Models.Identity;
 using RentWise.Utility;
 using RestSharp;
+using System.Drawing.Printing;
 using System.Net;
 using System.Security.Claims;
 using System.Text;
@@ -601,7 +602,7 @@ namespace RentWise.Controllers
             });
         }
 
-        public IActionResult Category(string Name, string City, int Category = 0, int MinPrice = 0, int MaxPrice = 0, int MinDays = 0, int MaxDays = 0, int Sort = 0)
+        public IActionResult Category(string Name, string City, int Category = 0, int MinPrice = 0, int MaxPrice = 0, int MinDays = 0, int MaxDays = 0, int Sort = 0, int page = 1, int pageSize = 10)
         {
             List<ProductModel> products;
             if (Category > 0)
@@ -651,7 +652,11 @@ namespace RentWise.Controllers
             List<DisplayPreview> displayPreviews = new List<DisplayPreview>();
             if (products != null && products.Count > 0)
             {
-                displayPreviews = products.Select(product => new DisplayPreview
+                int totalProducts = products.Count;
+                var pager = new Pager(totalProducts, page, pageSize);
+                var viewModel = products.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+
+                displayPreviews = viewModel.Select(product => new DisplayPreview
                 {
                     Image = product.ProductImages.FirstOrDefault()?.Name != null ? _config.Value.AgentWebsiteLink + "/images/products/" + product.AgentId + "/" + product.ProductId + "/" + product.ProductImages.FirstOrDefault()?.Name : Url.Content("~/img/default-product.jpg"),
                     Name = product?.Name ?? "Unknown",
@@ -660,8 +665,9 @@ namespace RentWise.Controllers
                     Location = product?.Agent?.City ?? "Unknown",
                     ProductId = product?.ProductId ?? ""
                 }).ToList();
+            ViewBag.Pager = pager;
             }
-            ViewBag.CategoryName = Category > 0 ? Lookup.Categories[Category] : "Any";
+            ViewBag.CategoryName =Lookup.Categories[Category];
             return View(displayPreviews);
         }
 

@@ -10,6 +10,7 @@ namespace RentWise.Utility
     {
         public static Dictionary<int, string> Categories = new Dictionary<int, string>
         {
+            {0, "All Product" },
             {1, "Construction Equipments" },
             {2, "Car Rentals"},
             {3, "Office Items/Personal Items"},
