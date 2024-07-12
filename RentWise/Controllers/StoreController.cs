@@ -159,7 +159,7 @@ namespace RentWise.Controllers
             _unitOfWork.Save();
 
 
-            return RedirectToAction("View", "Store");
+            return RedirectToAction("View", "Store", new {id=Product.ProductId});
         }
         [HttpPost]
         [Authorize]
