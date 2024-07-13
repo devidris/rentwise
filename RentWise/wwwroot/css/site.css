@@ -224,6 +224,16 @@ div.loading {
     #auth-logo {
         width: 100px;
     }
+    .section-header {
+        position: relative;
+        font-family: 'Brush Script MT', cursive;
+        font-size: 2rem;
+        text-align: center;
+        display: block;
+        z-index: 2;
+        margin: 0 auto;
+        padding-top: 3rem;
+    }
 }
 
 
