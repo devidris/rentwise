@@ -30,19 +30,24 @@
                         <li><a class="dropdown-item" href="#" onclick="updateDropdownToggle(this)" data-value="3">Office/ Personal Item</a></li>
                     </ul>
                 </li>
-                <li class="nav-item dropdown dropdown-city">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="bi bi-houses-fill"></i>
-                        <span>City</span>
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <!-- Populate cities dynamically from ViewBag.Cities -->
-                        @foreach (City city in ViewBag.Cities)
-                        {
-                            <li><a class="dropdown-item" href="#" onclick="updateDropdownToggle(this)" data-value="@city.Name">@city.Name</a></li>
-                        }
-                    </ul>
-                </li>
+            <li class="nav-item dropdown dropdown-city">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="bi bi-houses-fill"></i>
+                    <span>City</span>
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <li>
+                        <input type="text" class="form-control" id="citySearch" placeholder="Search city...">
+                    </li>
+                    <!-- Populate cities dynamically from ViewBag.Cities -->
+                    @foreach (var city in ViewBag.Cities)
+                    {
+                        var cityName = char.ToUpper(city.Name[0]) + city.Name.Substring(1).ToLower();
+                        <li><a class="dropdown-item city-item" href="#" onclick="updateDropdownToggle(this)" data-value="@cityName" style="display: none;">@cityName</a></li>
+                    }
+                </ul>
+            </li>
+
                 <li class="nav-item dropdown dropdown-price">
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="bi bi-tags-fill"></i>
@@ -76,3 +81,4 @@
             </ul>
     </div>
 </header>
+<script src="~/js/controller/home/_Hero.js"></script>
