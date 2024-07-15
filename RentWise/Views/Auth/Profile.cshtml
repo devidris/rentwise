@@ -3,10 +3,10 @@
     <input value="@ViewBag.UserId" class="userId" hidden />
     <form id="change-password-form" method="post" class=" m-auto authform" enctype="multipart/form-data">
         <div asp-validation-summary="All" class="text-danger" role="alert"></div>
-        <label for="image" class="d-block w-fit m-auto mb-3 cursor-pointer">
+       @*  <label for="image" class="d-block w-fit m-auto mb-3 cursor-pointer">
             <img src="@Url.Content(@ViewBag.ProfilePicture)" alt="Profile Picture" width="200" height="200" class="image-display rounded-circle" />
              <button class="btn btn-primary"> Upload</button>
-        </label>
+        </label> *@
         <input type="file" accept="image/*" id="image" name="image" hidden />
         <div class="form-floating mb-3">
             <input asp-for="@Model.Username" class="form-control" autocomplete="current-password" aria-required="true" placeholder="Please enter your username." />
