@@ -103,11 +103,11 @@ body, html {
 .tab {
     display: grid;
     place-items: center;
-    font-size:.7rem;
+    font-size:1rem;
 }
 
     .tab i {
-        font-size: 1.7rem;
+        font-size: 2rem;
     }
 
 @media screen and (max-width: 767px) {
@@ -130,7 +130,7 @@ body, html {
 
     .page_footer {
         overflow: hidden;
-        height: 70px;
+        height: 80px;
         display: grid;
         justify-content: space-evenly;
         align-items: center;
