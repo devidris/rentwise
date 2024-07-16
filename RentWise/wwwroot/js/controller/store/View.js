@@ -227,3 +227,15 @@ function pauseProduct(id) {
         }
     });
 }
+
+
+const bookNowButtons = document.querySelectorAll('.book-now');
+bookNowButtons.forEach(bookNowButton => {
+    bookNowButton.addEventListener('click', function (event) {
+        const calendarSection = document.getElementById('calendar_first');
+
+        if (calendarSection) {
+            calendarSection.scrollIntoView({ behavior: 'smooth' });
+        }
+    });
+})
