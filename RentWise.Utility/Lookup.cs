@@ -113,7 +113,10 @@ namespace RentWise.Utility
     {23, "Universal Merchant Bank Limited"},
     {24, "Zenith Bank Ghana Limited"}
 };
+        public static Dictionary<int, (string Name, string Value)> Settings = new Dictionary<int, (string Name, string Value)>
+    {
+        { 1, ("Product Premium Price", "120") },
+    };
     }
-
 
 }

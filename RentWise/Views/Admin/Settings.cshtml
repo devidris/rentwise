@@ -1,0 +1,43 @@
+﻿@model IEnumerable<RentWise.Models.SettingModel>
+
+<div class="container my-4">
+    <h2 class="mb-4">Settings</h2>
+
+    <table class="table table-bordered table-striped">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Value</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var setting in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => setting.Name)
+                    </td>
+                    <td>
+                        <form asp-action="UpdateSetting" method="post" class="form-inline d-flex">
+                            <input type="number" hidden asp-for="@setting.Id" />
+                            <input type="hidden" asp-for="@setting.LookupId" />
+                            <input type="hidden" asp-for="@setting.Name" />
+                            <input type="text" asp-for="@setting.Value" class="form-control mr-2" />
+                            <button type="submit" class="btn btn-primary">Update</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    @if (TempData["Success"] != null)
+    {
+        <script>
+            toastr.success('@((string)TempData["Success"])');
+        </script>
+    }
+}

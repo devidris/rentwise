@@ -53,10 +53,12 @@ function pauseProduct(id) {
 }
 
 function boostNow(id) {
+    let pageLink = location.href
     $.ajax({
         url: '/Store/BoostNow/'+id,
         type: 'POST',
         data: {
+            pageLink
         },
         success: function (data) {
             if (data.success) {

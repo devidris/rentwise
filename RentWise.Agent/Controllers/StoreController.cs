@@ -302,20 +302,20 @@ namespace RentWise.Agent.Controllers
             });
         }
 
-        public async Task<IActionResult> BoostNow(string Id)
+        public async Task<IActionResult> BoostNow(string Id,string pageLink)
         {
-            // Populate JSON payload from the order variable
-            // Create variables for amount, description, and reference
-            double totalAmount = 100;
-            string description = "Boosting your product is an effective way to increase its visibility and reach a larger audience.";
             Random random = new Random();
-            int randomNumber = random.Next(1, 101);
-            string clientReference = Id + "-RENTWISE-" + randomNumber;
+            int randomNumber = random.Next(1, 100);
+            string currentDate = DateTime.Now.ToString("yyyy-MM-dd");
+            string reference =  $"{randomNumber}-{currentDate}";
+            // Create variables for amount, description, and reference
+            SettingModel setting = _unitOfWork.Setting.Get(u => u.LookupId == 1);
+            double totalAmount = double.TryParse(setting.Value, out var value) ? value : 0.0;
+            string description = "Boosting your product is an effective way to increase its visibility and reach a larger audience.";
+            string clientReference = reference;
             string link = _config.Value.AgentWebsiteLink + "/Store/Success?productId=" + Id;
-            string cancellationLink = _config.Value.AgentWebsiteLink + "/Store/Index";
             // Create the JSON string using variables
-            string jsonBody = $"{{\"totalAmount\":{totalAmount},\"description\":\"{description}\",\"callbackUrl\":\"{link}?orderId={Id}\",\"returnUrl\":\"{link}\",\"cancellationUrl\":\"{cancellationLink}\",\"merchantAccountNumber\":\"2018934\",\"clientReference\":\"{clientReference}\"}}";
-
+            string jsonBody = $"{{\"totalAmount\":{totalAmount},\"description\":\"{description}\",\"callbackUrl\":\"{pageLink}?orderId={Id}\",\"returnUrl\":\"{link}\",\"cancellationUrl\":\"{pageLink}\",\"merchantAccountNumber\":\"2018934\",\"clientReference\":\"{clientReference}\"}}";
 
             var options = new RestClientOptions("https://payproxyapi.hubtel.com/items/initiate");
             var client = new RestClient(options);
@@ -324,7 +324,6 @@ namespace RentWise.Agent.Controllers
             request.AddHeader("content-type", "application/json");
             request.AddHeader("authorization", "Basic UDVwdkFsdzo4OTcyYTA3MjZhMWE0NDJmYjVhMzZiZWU0ZWVjYzE3NQ==");
             request.AddJsonBody(jsonBody, false);
-
             try
             {
                 var response = await client.PostAsync(request);

@@ -38,6 +38,8 @@ public class ApplicationDbContext : IdentityDbContext<IdentityUser>
     public DbSet<State> States { get; set; }
     public DbSet<City> Cities { get; set; }
 
+    public DbSet<SettingModel> Settings { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);

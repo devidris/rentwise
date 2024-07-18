@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RentWise.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -25,6 +26,8 @@ namespace RentWise.DataAccess.Repository.IRepository
 
         IStateRepository State { get; }
         ICityRepository City { get; }
+
+        IDatabase<SettingModel> Setting { get; }
         void Save();
     }
 }

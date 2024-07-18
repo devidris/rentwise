@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RentWise.DataAccess.Repository.IRepository;
@@ -9,10 +10,12 @@ using Microsoft.AspNetCore.SignalR;
 using System.Web;
 using Microsoft.CodeAnalysis;
 using System.Drawing;
+using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.AspNetCore.Authorization;
 
 namespace RentWise.Controllers
 {
-    //[Authorize(Roles="Admin")]
+    [Authorize(Roles = "Admin")]
     public class AdminController : Controller
     {
         public readonly IUnitOfWork _unitOfWork;
@@ -528,8 +531,20 @@ namespace RentWise.Controllers
             return RedirectToAction("Display", "Admin");
         }
 
+        public IActionResult Settings() {
 
+            IEnumerable<SettingModel> settings = _unitOfWork.Setting.GetAll();
+            return View(settings);
+        }
 
+        [HttpPost]
+        public IActionResult UpdateSetting(SettingModel setting)
+        {
+            _unitOfWork.Setting.Update(setting);
+            _unitOfWork.Save();
+            TempData["Success"] = "Setting Updated Successfully.";
+            return RedirectToAction("Settings");
+        }
         private string GetRandomFileName()
         {
             return Path.GetRandomFileName().Replace(".", "");  // Generates a random string suitable for a file name
