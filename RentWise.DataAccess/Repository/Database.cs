@@ -16,20 +16,32 @@ namespace RentWise.DataAccess.Repository
         }
         public void Update(T model)
         {
-            // Check if the model exists in the context and is being tracked
-            var existingEntity = _db.Set<T>().Find(model);
-
-            if (existingEntity != null)
+            // Assuming 'Id' is the name of the primary key and it's of type int
+            var keyProperty = typeof(T).GetProperty("Id");
+            if (keyProperty != null)
             {
-                // Update the existing entity
-                _db.Entry(existingEntity).CurrentValues.SetValues(model);
+                var key = keyProperty.GetValue(model);
+                var existingEntity = _db.Set<T>().Find(key);
+
+                if (existingEntity != null)
+                {
+                    // Update the existing entity
+                    _db.Entry(existingEntity).CurrentValues.SetValues(model);
+                    _db.SaveChanges(); // Make sure to save changes
+                }
+                else
+                {
+                    // If the entity is not tracked, attach it and set its state to modified
+                    _db.Set<T>().Attach(model);
+                    _db.Entry(model).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+                    _db.SaveChanges(); // Make sure to save changes
+                }
             }
             else
             {
-                // If the entity is not tracked, attach it and set its state to modified
-                _db.Set<T>().Attach(model);
-                _db.Entry(model).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+                throw new InvalidOperationException("Could not find primary key property 'Id' on the model");
             }
         }
+
     }
 }

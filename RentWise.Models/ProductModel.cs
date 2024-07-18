@@ -55,5 +55,9 @@ namespace RentWise.Models
         public string Region { get; set; } = String.Empty;
         [ValidateNever]
         public List<ProductImageModel> ProductImages { get; set; }
+
+        public bool Premium { get; set; } = false;
+
+        public DateTime PremiumExpiry { get; set; } = DateTime.UtcNow;
     }
 }

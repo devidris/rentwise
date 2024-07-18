@@ -2,13 +2,16 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using RentWise.DataAccess.Repository.IRepository;
 using RentWise.Models;
 using RentWise.Models.Identity;
 using RentWise.Utility;
+using RestSharp;
 using System.Net;
 using System.Security.Claims;
+using static Org.BouncyCastle.Math.EC.ECCurve;
 
 namespace RentWise.Agent.Controllers
 {
@@ -18,16 +21,17 @@ namespace RentWise.Agent.Controllers
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IOptions<RentWiseConfig> _config;
 
-        public StoreController(UserManager<IdentityUser> userManager, IWebHostEnvironment webHostEnvironment, IUnitOfWork unitOfWork)
+        public StoreController(UserManager<IdentityUser> userManager, IWebHostEnvironment webHostEnvironment, IUnitOfWork unitOfWork, IOptions<RentWiseConfig> config)
         {
             _userManager = userManager;
             _webHostEnvironment = webHostEnvironment;
             _unitOfWork = unitOfWork;
-
+            _config = config;
         }
 
-        public async Task<IActionResult> Index(int id = 0,string name = "")
+        public async Task<IActionResult> Index(int id = 0, string name = "")
         {
             string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             ViewBag.Id = userId;
@@ -44,7 +48,7 @@ namespace RentWise.Agent.Controllers
             }
             if (!String.IsNullOrEmpty(name))
             {
-                userProducts = userProducts.Where(u=>u.Name.Contains(name));
+                userProducts = userProducts.Where(u => u.Name.Contains(name));
                 ViewBag.Name = name;
             }
             ViewBag.Categories = Lookup.Categories;
@@ -56,9 +60,9 @@ namespace RentWise.Agent.Controllers
         public IActionResult Upsert(string? id)
         {
 
-            ProductModel product = new(){};
-            if(id != null) {
-                product = _unitOfWork.Product.Get(u => u.ProductId == id,"Agent,ProductImages");
+            ProductModel product = new() { };
+            if (id != null) {
+                product = _unitOfWork.Product.Get(u => u.ProductId == id, "Agent,ProductImages");
             }
             IEnumerable<State> states = _unitOfWork.State.GetAll(u => u.StateId != null, "Cities");
             foreach (var state in states)
@@ -97,7 +101,7 @@ namespace RentWise.Agent.Controllers
                 model.Name = SharedFunctions.Capitalize(model.Name);
 
                 #region Saving Main Product
-               if(mainImage != null)
+                if (mainImage != null)
                 {
                     string mainImageName = String.Join("", Lookup.Upload[9].Split(" ")) + ".webp";
 
@@ -106,7 +110,7 @@ namespace RentWise.Agent.Controllers
                 #endregion
 
                 #region Saving Other Images
-               if(otherImages != null && otherImages.Any())
+                if (otherImages != null && otherImages.Any())
                 {
                     for (int i = 0; i < otherImages.Count; i++)
                     {
@@ -124,7 +128,7 @@ namespace RentWise.Agent.Controllers
                 {
                     model.Rules = ",,rw,,";
                 }
-                if(model.ProductId != null) {
+                if (model.ProductId != null) {
                     _unitOfWork.Product.Update(model);
                 } else
                 {
@@ -210,7 +214,7 @@ namespace RentWise.Agent.Controllers
         }
 
         [HttpPost]
-       public async Task<IActionResult> AddRating(int RatingValue, string RatingDescription, string ProductId, string AgentId)
+        public async Task<IActionResult> AddRating(int RatingValue, string RatingDescription, string ProductId, string AgentId)
         {
             string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             ReviewModel Review = new()
@@ -252,18 +256,18 @@ namespace RentWise.Agent.Controllers
             });
         }
 
-        public IActionResult ModifyProduct(string Id,string type)
+        public IActionResult ModifyProduct(string Id, string type)
         {
             ProductModel product = _unitOfWork.Product.Get(u => u.ProductId == Id);
-            if(type == "DELETE") { 
-            _unitOfWork.Product.Remove(product);
-            } 
-            if(type == "ENABLE")
+            if (type == "DELETE") {
+                _unitOfWork.Product.Remove(product);
+            }
+            if (type == "ENABLE")
             {
                 product.Enabled = true;
-             _unitOfWork.Product.Update(product);
+                _unitOfWork.Product.Update(product);
             }
-            if(type == "DISABLE")
+            if (type == "DISABLE")
             {
                 product.Enabled = false;
                 _unitOfWork.Product.Update(product);
@@ -296,6 +300,62 @@ namespace RentWise.Agent.Controllers
                 Data = Lookup.ResponseMessages[5],
                 Success = true
             });
+        }
+
+        public async Task<IActionResult> BoostNow(string Id,string pageLink)
+        {
+            Random random = new Random();
+            int randomNumber = random.Next(1, 100);
+            string currentDate = DateTime.Now.ToString("yyyy-MM-dd");
+            string reference =  $"{randomNumber}-{currentDate}";
+            // Create variables for amount, description, and reference
+            SettingModel setting = _unitOfWork.Setting.Get(u => u.LookupId == 1);
+            double totalAmount = double.TryParse(setting.Value, out var value) ? value : 0.0;
+            string description = "Boosting your product is an effective way to increase its visibility and reach a larger audience.";
+            string clientReference = reference;
+            string link = _config.Value.AgentWebsiteLink + "/Store/Success?productId=" + Id;
+            // Create the JSON string using variables
+            string jsonBody = $"{{\"totalAmount\":{totalAmount},\"description\":\"{description}\",\"callbackUrl\":\"{pageLink}?orderId={Id}\",\"returnUrl\":\"{link}\",\"cancellationUrl\":\"{pageLink}\",\"merchantAccountNumber\":\"2018934\",\"clientReference\":\"{clientReference}\"}}";
+
+            var options = new RestClientOptions("https://payproxyapi.hubtel.com/items/initiate");
+            var client = new RestClient(options);
+            var request = new RestRequest("");
+            request.AddHeader("accept", "application/json");
+            request.AddHeader("content-type", "application/json");
+            request.AddHeader("authorization", "Basic UDVwdkFsdzo4OTcyYTA3MjZhMWE0NDJmYjVhMzZiZWU0ZWVjYzE3NQ==");
+            request.AddJsonBody(jsonBody, false);
+            try
+            {
+                var response = await client.PostAsync(request);
+                return Json(new
+                {
+                    StatusCode = (int)HttpStatusCode.OK,
+                    Message = "Boost Initaited",
+                    Data = JsonConvert.SerializeObject(response),
+                    Success = true
+                });
+            }
+            catch (Exception err)
+            {
+                return Json(new
+                {
+                    StatusCode = (int)HttpStatusCode.InternalServerError,
+                    Message = Lookup.ResponseMessages[1],
+                    Data = "Internal Server Error",
+                    Success = false
+                });
+            }
+        }
+
+        public IActionResult Success(string productId = "", string checokutId = "")
+        {
+            ProductModel product = _unitOfWork.Product.Get(u=>u.ProductId ==  productId);
+            product.Premium = true;
+            product.PremiumExpiry = DateTime.UtcNow.AddDays(30);
+            _unitOfWork.Product.Update(product);
+            _unitOfWork.Save();
+            TempData["Success"] = "Boost for product" + product.Name + "was successful";
+            return RedirectToAction(nameof(Index));
         }
     }
 }

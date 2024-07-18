@@ -1,4 +1,5 @@
 ﻿using RentWise.DataAccess.Repository.IRepository;
+using RentWise.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,6 +33,8 @@ namespace RentWise.DataAccess.Repository
 
         public IStateRepository State{ get; private set; }
         public ICityRepository City { get; private set; }
+
+        public IDatabase<SettingModel> Setting { get; private set; }
         public UnitOfWork(ApplicationDbContext db)
         {
             _db = db;
@@ -48,6 +51,7 @@ namespace RentWise.DataAccess.Repository
             Otp = new OtpRepository(_db);
             State = new StateRepository(_db);
             City = new CityRepository(_db);
+            Setting = new Database<SettingModel>(_db);
         }
 
         public void Save()

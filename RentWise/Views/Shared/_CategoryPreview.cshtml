@@ -1,8 +1,19 @@
 ﻿<link rel="stylesheet" href="~/css/shared/_CategoryPreview.css" asp-append-version="true" />
 
 @model DisplayPreview
-<div class="category-preview col-lg-4 col-md-6 col-12 rounded p-3 border border-primary" >
-    <img src="@Model.Image" alt="" class="m-auto d-block rounded"/>
+
+@{
+    var boostClass = Model.Premium ? "boost" : "";
+}
+
+<div class="category-preview col-lg-4 col-md-6 col-12 rounded p-3 border border-primary @boostClass">
+    @if (Model.Premium)
+    {
+        <div class="boosted-icon text-primary d-flex align-items-center">
+            <i class="bi bi-lightning-fill mr-1"></i> Boosted
+        </div>
+    }
+    <img src="@Model.Image" alt="" class="m-auto d-block rounded" />
     <div class="content d-flex flex-column gap-2 mt-4">
         <h3 class="text-primary font-weight-bold m-0"><b>@Model.Name</b></h3>
         <p class="m-0">₵@Model.Price/Day</p>

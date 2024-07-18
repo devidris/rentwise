@@ -129,6 +129,17 @@ namespace RentWise.Controllers
             ViewBag.OtherProducts = OtherProducts;
             ViewBag.NoOfOtherProducts = OtherProducts.Count();
             ViewBag.Link = _config.Value.AgentWebsiteLink;
+            if (model.Premium)
+            {
+                UsersDetailsModel usersDetailsModel = _unitOfWork.UsersDetails.Get(u => u.Id == model.AgentId);
+                ViewBag.UsersDetails = usersDetailsModel;
+            } else
+            {
+                UsersDetailsModel usersDetailsModel = new UsersDetailsModel();
+                usersDetailsModel.Email = "";
+                usersDetailsModel.PhoneNumber = "";
+                ViewBag.UsersDetails = usersDetailsModel;
+            }
             return View(model);
         }
 
@@ -515,7 +526,7 @@ namespace RentWise.Controllers
                 var request = new RestRequest("");
                 request.AddHeader("accept", "application/json");
                 request.AddHeader("content-type", "application/json");
-                request.AddHeader("authorization", "Basic RDBvUXpPbjo3YTFkYWI0M2I1MTQ0Y2Q3OTFjMjMwNGU2N2UzNTJjOQ==");
+                request.AddHeader("authorization", "Basic UDVwdkFsdzo4OTcyYTA3MjZhMWE0NDJmYjVhMzZiZWU0ZWVjYzE3NQ==");
                 request.AddJsonBody(jsonBody, false);
                 try
                 {
@@ -637,6 +648,11 @@ namespace RentWise.Controllers
             {
                 products = products.FindAll(product => product.Name.ToLower().Contains(Name.ToLower())).ToList();
             }
+
+            // Increase visibility for premium products
+            Random random = new Random();
+            products = products.OrderBy(product => product.Premium ? random.NextDouble() * 0.5 : random.NextDouble()).ToList();
+
             if (Sort == 2)
             {
                 products = products.OrderBy(product => product.PriceDay).ToList();
@@ -649,6 +665,7 @@ namespace RentWise.Controllers
             {
                 products = products.OrderByDescending(product => product.Rating).ToList();
             }
+
             List<DisplayPreview> displayPreviews = new List<DisplayPreview>();
             if (products != null && products.Count > 0)
             {
@@ -663,11 +680,13 @@ namespace RentWise.Controllers
                     Price = product?.PriceDay ?? 0,
                     Rating = product?.Rating ?? 0,
                     Location = product?.Agent?.City ?? "Unknown",
-                    ProductId = product?.ProductId ?? ""
+                    ProductId = product?.ProductId ?? "",
+                    Premium = product?.Premium ?? false
                 }).ToList();
-            ViewBag.Pager = pager;
+                ViewBag.Pager = pager;
             }
-            ViewBag.CategoryName =Lookup.Categories[Category];
+
+            ViewBag.CategoryName = Lookup.Categories[Category];
             return View(displayPreviews);
         }
 

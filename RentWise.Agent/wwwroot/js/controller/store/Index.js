@@ -51,3 +51,28 @@ function pauseProduct(id) {
         }
     });
 }
+
+function boostNow(id) {
+    let pageLink = location.href
+    $.ajax({
+        url: '/Store/BoostNow/'+id,
+        type: 'POST',
+        data: {
+            pageLink
+        },
+        success: function (data) {
+            if (data.success) {
+                const message = JSON.parse(data.data)
+                const content = JSON.parse(message.Content)
+                location.href = content.data.checkoutUrl;
+                Swal.fire('Boost Your Product', 'Boosting your product can significantly increase its reach and visibility to a wider audience. Click Yes to proceed with the payment.', 'info');
+            }
+            else {
+                Swal.fire('Error', 'Something went wrong', 'error');
+            }
+        },
+        error: function (data) {
+            Swal.fire('Error', 'Something went wrong', 'error');
+        }
+    })
+}

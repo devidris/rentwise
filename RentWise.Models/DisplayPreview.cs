@@ -21,5 +21,7 @@ namespace RentWise.Models
 
         public string ProductId { get; set; } = string.Empty;
 
+        public bool Premium { get; set; } = false;
+
     }
 }
