@@ -194,6 +194,7 @@ function hideLoading() {
 
 try {
     $(document).ready(function () {
+        if (!$('.jsonstate').text()) return
         const JSONstates = JSON.parse($('.jsonstate').text());
         $(".jsonstate").remove();
 
@@ -217,3 +218,20 @@ try {
 
     });
 } catch (err) { }
+
+function showInfoModal(title, description, url) {
+    Swal.fire({
+        title: title,
+        text: description,
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            showLoading()
+            window.location.href = url;
+        }
+    });
+}

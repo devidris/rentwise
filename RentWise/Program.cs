@@ -51,6 +51,7 @@ namespace RentWise
                 options.LogoutPath = $"/Auth/Logout";
                 options.AccessDeniedPath = $"/Auth/AccessDenied";
             });
+            //builder.Services.AddHostedService<DailyTaskService>();
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

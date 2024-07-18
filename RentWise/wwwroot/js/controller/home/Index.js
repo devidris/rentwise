@@ -132,3 +132,5 @@ localStorage.setItem('canStore', true)
 if (!localStorage.getItem('canStore') || localStorage.getItem('canStore').length < 1) {
     window.location.href = "/store/category"
 }
+
+

@@ -1,6 +1,7 @@
 ﻿.category-preview {
     background: #fff;
     width:25rem;
+    position:relative;
 }
 
     .category-preview img {
@@ -8,3 +9,20 @@
         height: 15rem !important;
         object-fit: cover;
     }
+
+.boost {
+    background-color: #f8f9fa; /* Light background color for premium items */
+    border: 2px solid #ff9800; /* Highlight border for premium items */
+}
+
+.boosted-icon {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background-color: #ffffff;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-weight: bold;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+

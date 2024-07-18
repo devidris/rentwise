@@ -268,6 +268,12 @@
                 <p>
                     Member since @Model.Agent.CreatedAt.ToString("dd/MM/yy")
                 </p>
+                @if (Model.Premium)
+                {
+                    <button type="button" class="btn btn-primary mt-3" onclick="openModal('contactModal')">
+                        Show Contact Info
+                    </button>
+                }
             </div>
             <section class="ftco-section">
                 <div class="">
@@ -345,9 +351,30 @@
                 </div>
             </div>
         </div>
-
-
     </div>
+
+    <!-- Contact Info -->
+    @{
+        UsersDetailsModel usersDetails = ViewBag.UsersDetails;
+    }
+    <div class="modal fade" id="contactModal" tabindex="-1" aria-labelledby="contactModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="contactModalLabel">Contact Information</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="closeModal('contactModal')"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Email: @usersDetails.Email</p>
+                    <p>Phone Number: @usersDetails.PhoneNumber</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="closeModal('contactModal')">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 </div>
 
 @section Scripts{
