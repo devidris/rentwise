@@ -180,7 +180,7 @@
 
         let isActiveApplied = false
         const currentPage = (window.location.pathname + window.location.search).toLowerCase();
-        $('.page_footer a').each(function () {
+        $('.page_footer_mobile a').each(function () {
             const href = $(this).attr('href').toLowerCase();
             if (href === currentPage) {
                 $(this).addClass('link-primary');

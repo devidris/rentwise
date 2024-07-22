@@ -312,41 +312,39 @@ div.loading {
     display: grid;
     place-items: center;
     font-size: .7rem;
+    font-weight: bolder;
 }
 
     .tab i {
         font-size: 1.7rem;
     }
 
-@media screen and (max-width: 767px) {
-    .page {
-        height: 100vh;
-        display: grid;
-        grid-template-rows: 1fr auto;
-        grid-template-columns: 1fr;
-        width: 100vw;
-        overflow: hidden
-    }
-
-    .page_content {
-        overflow-y: scroll;
-        height: auto;
-        grid-column: 1/2;
-        grid-row: 1/2;
-        /*height: 100vh;*/
-    }
-
-    .page_footer {
-        overflow: hidden;
-        height: 70px;
-        display: grid;
-        justify-content: space-evenly;
-        align-items: center;
-        border-top: 1px solid #eee;
-        grid-auto-flow: column;
-    }
+.page_mobile {
+    height: 100vh;
+    display: grid;
+    grid-template-rows: 1fr auto;
+    grid-template-columns: 1fr;
+    width: 100vw;
+    overflow: hidden
 }
 
+.page_content_mobile {
+    overflow-y: scroll;
+    height: auto;
+    grid-column: 1/2;
+    grid-row: 1/2;
+    /*height: 100vh;*/
+}
+
+.page_footer_mobile {
+    overflow: hidden;
+    height: 70px;
+    display: grid;
+    justify-content: space-evenly;
+    align-items: center;
+    border-top: 1px solid #eee;
+    grid-auto-flow: column;
+}
 .hidden {
     display: none !important;
 }
