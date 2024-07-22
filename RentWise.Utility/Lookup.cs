@@ -11,18 +11,14 @@ namespace RentWise.Utility
         public static Dictionary<int, string> Categories = new Dictionary<int, string>
         {
             {0, "All Product" },
-            {1, "Construction Equipments" },
-            {2, "Car Rentals"},
-            {3, "Office Items/Personal Items"},
-            {4, "Events/ Equipment Rentals"},
-            {5, "Guest House"},
-            {6, "Bill board" },
-            {7,"Shot Stay Rooms" },
-            {8,"Motel" },
-            {9,"Boat/Yacht" },
+            {2, "Car Rental"},
+            {1, "Construction Equipment" },
+            {4, "Events"},
             {10,"Games" },
-            {11,"Hotels" },
-            {12,"Guest Houses" }
+            {11,"Hotel" },
+            {5, "Guest House"},
+            {8,"Motel" },
+            {7,"Shot Stay" }
         };
 
         public static Dictionary<int, string> Roles = new Dictionary<int, string>
