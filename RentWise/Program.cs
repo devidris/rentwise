@@ -80,7 +80,7 @@ namespace RentWise
             app.MapRazorPages();
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Store}/{action=Category}/{id?}");
+                pattern: "{controller=Home}/{action=Index}/{id?}");
              app.MapHub<SignalRHub>("/signalhub");
             app.Run();
 
