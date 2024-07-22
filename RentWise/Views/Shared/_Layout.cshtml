@@ -218,7 +218,7 @@ nav: true,
 
             const currentPage = window.location.pathname.toLowerCase()
             let isActiveApplied = false
-            $('.page_footer a').each(function () {
+            $('.page_footer_mobile a').each(function () {
                 const href = $(this).attr('href').toLowerCase();
                 if (href === currentPage) {
                     $(this).addClass('link-primary');

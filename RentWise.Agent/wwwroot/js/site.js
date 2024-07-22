@@ -235,3 +235,26 @@ function showInfoModal(title, description, url) {
         }
     });
 }
+
+showLoading()
+$(document).ready(function () {
+    checkIfTabIsNeeded()
+    hideLoading()
+});
+
+
+function checkIfTabIsNeeded() {
+    var userAgent = navigator.userAgent.toLowerCase();
+    var isMobile = /iphone|ipod|android|ie|blackberry|fennec/.test(userAgent);
+    var isTablet = /ipad|android 3.0|xoom|sch-i800|playbook|tablet|kindle/.test(userAgent);
+
+    if (isMobile || isTablet) {
+        $('.page').removeClass('page').addClass('page_mobile');
+        $('.page_content').removeClass('page_content').addClass('page_content_mobile');
+        $('.page_footer').removeClass('page_footer').addClass('page_footer_mobile')
+    } else {
+        $('.page_mobile').removeClass('page_mobile').addClass('page');
+        $('.page_content_mobile').removeClass('page_content_mobile').addClass('page_content');
+        $('.page_footer_mobile').removeClass('page_footer_mobile').addClass('page_footer');
+    }
+}
