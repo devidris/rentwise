@@ -113,7 +113,8 @@ body, html {
 
 .page_mobile {
     width: 100%;
-    height: 100%;
+    height: 100vh;
+    height: calc(var(--vh, 1vh) * 100);
     display: grid;
     grid-template-rows: 1fr auto;
     grid-template-columns: 1fr;

@@ -112,6 +112,9 @@ namespace RentWise.Utility
         public static Dictionary<int, (string Name, string Value)> Settings = new Dictionary<int, (string Name, string Value)>
     {
         { 1, ("Product Premium Price", "120") },
+        { 2, ("Product Premium Price Weekly", "1200") },
+        { 3, ("Product Premium Price Monthly", "12000") },
+        { 4, ("Product Premium Price Yearly", "120000") },
     };
     }
 
