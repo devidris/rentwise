@@ -1,7 +1,6 @@
 ﻿@model ProductModel;
 <style href="~/css/store/Upsert.css"></style>
 <div>
-    <partial name="_Nav2" />
     <form class="p-5" method="post"  enctype="multipart/form-data">
         <div class="d-none jsonstate">@ViewBag.JSONStates</div>
        @* <input value="@Model.ProductId" class="product-id" hidden /> *@
@@ -181,7 +180,7 @@
                          <label class="form-label" asp-for="@Model.PriceDay">Daily Rental Price</label>
                         <div class="input-group mb-3">
                             <div class="input-group-prepend ">
-                                <span class="input-group-text text-white">₵</span>
+                                <span class="input-group-text text-primary">₵</span>
                             </div>
                             <input class="form-control" aria-label="Price / Day" asp-for="@Model.PriceDay" placeholder="Price / Day">
                             <span class="text-danger" asp-validation-for="@Model.PriceDay"></span>
