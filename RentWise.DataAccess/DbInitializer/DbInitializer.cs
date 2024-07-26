@@ -55,8 +55,11 @@ namespace RentWise.DataAccess.DbInitializer
 
             foreach (var setting in Lookup.Settings)
             {
-                if (!existingSettings.Any(s => s.LookupId == setting.Key))
+                var existingSetting = existingSettings.FirstOrDefault(s => s.LookupId == setting.Key);
+
+                if (existingSetting == null)
                 {
+                    // Setting does not exist, add it
                     SettingModel settingModel = new SettingModel
                     {
                         LookupId = setting.Key,
@@ -66,9 +69,17 @@ namespace RentWise.DataAccess.DbInitializer
 
                     _unitOfWork.Setting.Add(settingModel);
                 }
+                else if (existingSetting.Name != setting.Value.Name)
+                {
+                    existingSetting.Name = setting.Value.Name;
+                    existingSetting.Value = setting.Value.Value;
+
+                    _unitOfWork.Setting.Update(existingSetting);
+                }
             }
 
             _unitOfWork.Save();
         }
+
     }
 }

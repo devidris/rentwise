@@ -52,27 +52,37 @@ function pauseProduct(id) {
     });
 }
 
-function boostNow(id) {
-    let pageLink = location.href
+function openBoostModal(productId) {
+    $('#boostModal').data('productId', productId).modal('show');
+}
+function boostNow() {
+    const productId = $('#boostModal').data('productId');
+    const duration = $('input[name="boostDuration"]:checked').val();
+    if (!duration) {
+        Swal.fire('Error', 'Please select a duration', 'error');
+        return;
+    }
+
+    let pageLink = location.href;
     $.ajax({
-        url: '/Store/BoostNow/'+id,
+        url: '/Store/BoostNow/' + productId,
         type: 'POST',
         data: {
-            pageLink
+            pageLink,
+            duration: duration
         },
         success: function (data) {
             if (data.success) {
-                const message = JSON.parse(data.data)
-                const content = JSON.parse(message.Content)
+                const message = JSON.parse(data.data);
+                const content = JSON.parse(message.Content);
                 location.href = content.data.checkoutUrl;
                 Swal.fire('Boost Your Product', 'Boosting your product can significantly increase its reach and visibility to a wider audience. Click Yes to proceed with the payment.', 'info');
-            }
-            else {
+            } else {
                 Swal.fire('Error', 'Something went wrong', 'error');
             }
         },
         error: function (data) {
             Swal.fire('Error', 'Something went wrong', 'error');
         }
-    })
+    });
 }

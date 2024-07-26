@@ -34,8 +34,7 @@
         <h2 class="m-0">
             <b>@SharedFunctions.CapitalizeAllWords(Model.Agent.StoreName)</b>  <svg xmlns="http://www.w3.org/2000/svg" height="30" viewBox="0 -960 960 960" width="30" fill="#212529" id="shareButton" class="cursor-pointer" onclick="shareOrCopy('@Model.Name')"><path d="M240-40q-33 0-56.5-23.5T160-120v-440q0-33 23.5-56.5T240-640h120v80H240v440h480v-440H600v-80h120q33 0 56.5 23.5T800-560v440q0 33-23.5 56.5T720-40H240Zm200-280v-447l-64 64-56-57 160-160 160 160-56 57-64-64v447h-80Z" /></svg>
         </h2>
-        <p class="m-0"><span class="fs-3 font-weight-bold"><b>₵@Model.PriceDay</b>/</span><span>day</span></p>
-
+        <p class="m-0"><span class="fs-3 font-weight-bold"><b>₵@Model.PriceDay</b>/</span><span>day</span></p>    
     </div>
     <div class="d-flex align-items-center px-lg-5 px-1 justify-content-between mb-3">
         @if (!String.IsNullOrEmpty(Model.Agent.Region) && !String.IsNullOrEmpty(Model.Agent.City))
@@ -71,8 +70,7 @@
                 <i class="bi bi-play-circle-fill" onclick="resumeProduct('@Model.ProductId')"></i>
             }         
             }
-             <i class="bi bi-chat-left fs-4 cursor-pointer" onclick="openModal('chatModal')"></i>
-            <button class="btn btn-primary text-decoration-none book-now">Book Now</button>
+            <button class="btn btn-primary text-decoration-none" onclick="openModal('chatModal')">Message Renter</button>
         </div>
     </div>
     @{
@@ -89,7 +87,7 @@
                 <div class="text-white">
                     <h1 class="mb-3 display-3">WELCOME TO</h1>
                     <h1 class="mb-3">@SharedFunctions.CapitalizeAllWords(Model.Agent.StoreName)</h1>
-                    <button class="btn btn-primary btn-lg text-white book-now" role="button">Check Availiability</button>
+                    <button class="btn btn-primary btn-lg text-white" role="button" onclick="openModal('chatModal')">Message Renter</button>
                 </div>
             </div>
         </div>
@@ -268,61 +266,15 @@
                 <p>
                     Member since @Model.Agent.CreatedAt.ToString("dd/MM/yy")
                 </p>
-                @if (Model.Premium)
-                {
-                    <button type="button" class="btn btn-primary mt-3" onclick="openModal('contactModal')">
-                        Show Contact Info
-                    </button>
-                }
-            </div>
-            <section class="ftco-section">
-                <div class="">
-                    <div class="calendar calendar-first" id="calendar_first">
-                        <div class="calendar_header">
-                            <button class="switch-month switch-left"> <i class="fa fa-chevron-left"></i></button>
-                            <h2></h2>
-                            <button class="switch-month switch-right"> <i class="fa fa-chevron-right"></i></button>
-                        </div>
-                        <div class="calendar_weekdays"></div>
-                        <div class="calendar_content"></div>
-                    </div>
+                <div class="d-flex flex-column">
+                        <button type="button" class="btn btn-primary mt-3" onclick="openModal('contactModal')">
+        Show Renter Info
+    </button>
+<button class="btn btn-primary mt-3" onclick="openModal('chatModal')">
+    Message Renter
+</button>
                 </div>
-
-
-            </section>
-            <div class="price-breakdown w-100 m-auto p-4 mt-5 rounded-1">
-                <h3 class="mb-3">Price Breakdown</h3>
-                <div class="fw-bold">
-                    <div class="d-flex justify-content-between day">
-                        <p>$42/Day * 10 Day * 1 Product</p>
-                        <p>$420</p>
-                    </div>
-                </div>
-                <div class="d-flex gap-3 align-items-center">
-                    <i class="bi bi-file-plus-fill fs-3 text-primary cursor-pointer" onclick="setNoOfProduct('add')"></i>
-                    <p class="m-0 no-of-product">1</p>
-                    <i class="bi bi-file-minus-fill fs-3 text-primary cursor-pointer" onclick="setNoOfProduct('minus')"></i>
-                    <p class="m-0 no-of-product-2">(1 item(s) added)</p>
-                </div>
-                <hr />
-                <div class="d-flex justify-content-between fw-bold">
-                    <p class="m-0">Total</p>
-                    <p class="m-0 total-price">$420</p>
-                </div>
-                <hr />
-                <div class="d-flex justify-content-between">
-                    <div>
-                        <p><b>Pickup Pickup Date</b></p>
-                        <p class="start-date">May 5th,2023</p>
-                    </div>
-                    <div>
-                        <p><b>Return Pickup Date</b></p>
-                        <p class="end-date">May 5th,2023</p>
-                    </div>
-                </div>
-                <hr />
-                <button class="btn btn-primary w-100" onclick="addToCart()">Add To Cart</button>
-            </div>
+            </div>  
             <div>
                 @{
                     string policy = $"{ViewBag.Link}/pdf/Rentwise-Cancellation-Policy.pdf";
@@ -375,7 +327,7 @@
         </div>
     </div>
 </div>
-</div>
+
 
 @section Scripts{
     <script src="~/js/jCarousel.js" asp-append-version="true"></script>

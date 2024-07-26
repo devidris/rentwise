@@ -1,11 +1,12 @@
-﻿using Microsoft.Extensions.Hosting;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using RentWise.DataAccess.Repository;
 using RentWise.DataAccess.Repository.IRepository;
 using RentWise.Models;
 using RentWise.Models.Identity;
 using RentWise.Utility;
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -13,20 +14,18 @@ public class DailyTaskService : IHostedService, IDisposable
 {
     private Timer _timer;
     private readonly ILogger<DailyTaskService> _logger;
-    private readonly IUnitOfWork _unitOfWork;
+    private readonly IServiceScopeFactory _serviceScopeFactory;
 
     // Constructor with dependency injection
-    public DailyTaskService(ILogger<DailyTaskService> logger, IUnitOfWork unitOfWork)
+    public DailyTaskService(ILogger<DailyTaskService> logger, IServiceScopeFactory serviceScopeFactory)
     {
         _logger = logger;
-        _unitOfWork = unitOfWork;
-}
+        _serviceScopeFactory = serviceScopeFactory;
+    }
 
     public Task StartAsync(CancellationToken cancellationToken)
     {
-        _timer = new Timer(DoWork, null, TimeSpan.Zero,
-            TimeSpan.FromDays(1)); // Run daily
-
+        _timer = new Timer(DoWork, null, TimeSpan.Zero, TimeSpan.FromDays(1)); // Run daily
         return Task.CompletedTask;
     }
 
@@ -48,37 +47,41 @@ public class DailyTaskService : IHostedService, IDisposable
         _timer?.Dispose();
     }
 
-    public void CheckAndUpdatePremiumStatus()
+    private void CheckAndUpdatePremiumStatus()
     {
-        IEnumerable<ProductModel> products = _unitOfWork.Product.GetAll(u => u.Premium == true, "Agent");
-
-        foreach (ProductModel product in products)
+        using (var scope = _serviceScopeFactory.CreateScope())
         {
-            if (product.PremiumExpiry <= DateTime.UtcNow)
-            {
-                // Premium has expired
-                product.Premium = false;
-                _unitOfWork.Product.Update(product);
-            }
-            else
-            {
-                // Calculate the days until the premium expires
-                int daysUntilExpiry = (product.PremiumExpiry - DateTime.UtcNow).Days;
+            var unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
+            IEnumerable<ProductModel> products = unitOfWork.Product.GetAll(u => u.Premium == true, "Agent");
 
-                // Check if the premium is expiring in 7 days or 3 days
-                if (daysUntilExpiry == 7 || daysUntilExpiry == 3)
+            foreach (ProductModel product in products)
+            {
+                if (product.PremiumExpiry <= DateTime.UtcNow)
                 {
-                    // Prepare the email content
-                    string subject = $"Your product's premium status will expire in {daysUntilExpiry} days";
-                    string body = $"Hello, <br/><br/> Your product '{product.Name}' will lose its premium status in {daysUntilExpiry} days.<br/> Please take necessary action if needed.<br/><br/>Regards,<br/>Rentwise";
-                    AgentRegistrationModel agentRegistration = _unitOfWork.AgentRegistration.Get(u=>u.Id == product.AgentId,"User");
-                    // Send email notification
-                    SharedFunctions.SendEmail(agentRegistration.User.NormalizedUserName, subject, body);
+                    // Premium has expired
+                    product.Premium = false;
+                    unitOfWork.Product.Update(product);
+                }
+                else
+                {
+                    // Calculate the days until the premium expires
+                    int daysUntilExpiry = (product.PremiumExpiry - DateTime.UtcNow).Days;
+
+                    // Check if the premium is expiring in 7 days or 3 days
+                    if (daysUntilExpiry == 7 || daysUntilExpiry == 3)
+                    {
+                        // Prepare the email content
+                        string subject = $"Your product's premium status will expire in {daysUntilExpiry} days";
+                        string body = $"Hello, <br/><br/> Your product '{product.Name}' will lose its premium status in {daysUntilExpiry} days.<br/> Please take necessary action if needed.<br/><br/>Regards,<br/>Rentwise";
+                        AgentRegistrationModel agentRegistration = unitOfWork.AgentRegistration.Get(u => u.Id == product.AgentId, "User");
+                        // Send email notification
+                        SharedFunctions.SendEmail(agentRegistration.User.NormalizedUserName, subject, body);
+                    }
                 }
             }
-        }
 
-        // Save changes to the database after updating the products
-        _unitOfWork.Save();
+            // Save changes to the database after updating the products
+            unitOfWork.Save();
+        }
     }
 }

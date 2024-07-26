@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using RentWise.DataAccess.Repository.IRepository;
@@ -191,25 +192,33 @@ namespace RentWise.Agent.Controllers
         public async Task<IActionResult> Preview(string? id)
         {
             string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            ProductModel model = new ProductModel();
-            if (String.IsNullOrEmpty(id))
+
+            ProductModel model = _unitOfWork.Product.Get(u => u.ProductId == id, "Agent,ProductImages");
+            LikeModel like = _unitOfWork.Like.Get(u => u.UserId == userId && u.ProductId == id);
+            ViewBag.IsLike = like != null;
+            if (userId != null)
             {
-                model = _unitOfWork.Product.Get(u => u.AgentId == userId, "Agent,ProductImages");
+                IEnumerable<ReviewModel> Reviews = _unitOfWork.Review.GetAll(u => u.ProductId == model.ProductId, "UserDetails");
+                ViewBag.Reviews = Reviews;
+                ViewBag.HasAddRating = Reviews.FirstOrDefault(u => u.UserId == userId) != null;
+                ViewBag.NoOfRating = Reviews.Count();
+            }
+            IEnumerable<ProductModel> OtherProducts = _unitOfWork.Product.GetAll(u => u.AgentId == model.Agent.Id && u.ProductId != model.ProductId);
+            ViewBag.OtherProducts = OtherProducts;
+            ViewBag.NoOfOtherProducts = OtherProducts.Count();
+            ViewBag.Link = _config.Value.AgentWebsiteLink;
+            if (model.Premium)
+            {
+                UsersDetailsModel usersDetailsModel = _unitOfWork.UsersDetails.Get(u => u.Id == model.AgentId);
+                ViewBag.UsersDetails = usersDetailsModel;
             }
             else
             {
-                model = _unitOfWork.Product.Get(u => u.ProductId == id, "Agent,ProductImages");
-
+                UsersDetailsModel usersDetailsModel = new UsersDetailsModel();
+                usersDetailsModel.Email = "";
+                usersDetailsModel.PhoneNumber = "";
+                ViewBag.UsersDetails = usersDetailsModel;
             }
-            IEnumerable<ReviewModel> Reviews = _unitOfWork.Review.GetAll(u => u.ProductId == model.ProductId);
-            ViewBag.Reviews = Reviews;
-            ViewBag.HasAddRating = Reviews.FirstOrDefault(u => u.UserId == userId) != null;
-            ViewBag.NoOfRating = Reviews.Count();
-            IEnumerable<ProductModel> OtherProducts = _unitOfWork.Product.GetAll(u => u.AgentId == userId && u.ProductId != model.ProductId);
-            ViewBag.OtherProducts = OtherProducts;
-            ViewBag.NoOfOtherProducts = OtherProducts.Count();
-            LikeModel like = _unitOfWork.Like.Get(u => u.UserId == userId && u.ProductId == id);
-            ViewBag.IsLike = like != null;
             return View(model);
         }
 
@@ -302,14 +311,15 @@ namespace RentWise.Agent.Controllers
             });
         }
 
-        public async Task<IActionResult> BoostNow(string Id,string pageLink)
+        [HttpPost]
+        public async Task<IActionResult> BoostNow(string Id, string pageLink, int duration)
         {
             Random random = new Random();
             int randomNumber = random.Next(1, 100);
             string currentDate = DateTime.Now.ToString("yyyy-MM-dd");
             string reference =  $"{randomNumber}-{currentDate}";
             // Create variables for amount, description, and reference
-            SettingModel setting = _unitOfWork.Setting.Get(u => u.LookupId == 1);
+            SettingModel setting = _unitOfWork.Setting.Get(u => u.LookupId == duration);
             double totalAmount = double.TryParse(setting.Value, out var value) ? value : 0.0;
             string description = "Boosting your product is an effective way to increase its visibility and reach a larger audience.";
             string clientReference = reference;
@@ -327,6 +337,14 @@ namespace RentWise.Agent.Controllers
             try
             {
                 var response = await client.PostAsync(request);
+                ProductModel product = _unitOfWork.Product.Get(u => u.ProductId == Id);
+                if (product != null)
+                {
+                    int monthsToAdd = duration == 1 ? 1 : duration == 2 ? 3 : duration == 3 ? 6 : 12;
+                    product.PremiumExpiry = DateTime.UtcNow.AddMonths(monthsToAdd);
+                    _unitOfWork.Product.Update(product);
+                    _unitOfWork.Save();
+                }
                 return Json(new
                 {
                     StatusCode = (int)HttpStatusCode.OK,
@@ -351,7 +369,6 @@ namespace RentWise.Agent.Controllers
         {
             ProductModel product = _unitOfWork.Product.Get(u=>u.ProductId ==  productId);
             product.Premium = true;
-            product.PremiumExpiry = DateTime.UtcNow.AddDays(30);
             _unitOfWork.Product.Update(product);
             _unitOfWork.Save();
             TempData["Success"] = "Boost for product" + product.Name + "was successful";

@@ -19,21 +19,16 @@
 <ul class="navbar-nav align-items-center gap-4">
     @if (SignInManager.IsSignedIn(User))
     {
-        <li  class="nav-item m-0 position-relative">
-            <a asp-controller="Store" asp-action="Cart"> <i class="bi bi-cart-check-fill fs-4 text-white"></i></a>
-            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill badge-danger bg-light text-primary rounded-circle cart-count">
-                @usersDetailsModel.Carts
-            </span>
-        </li>
-        <li class="nav-item m-0 position-relative">
-            <a asp-controller="Store" asp-action="Orders"><i class="bi bi-shop-window fs-4 text-white"></i></a>
-            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill badge-danger bg-light text-primary rounded-circle cart-count">
-                @usersDetailsModel.Orders
-            </span>
-        </li>
-        <li class="nav-item m-0 position-relative">
+
+        <li class="nav-item m-0 position-relative hide-on-mobile">
             <a asp-controller="Auth" asp-action="Profile"> <i class="bi bi-person-circle fs-4 text-white"></i></a>
         </li>
+        <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Store", new { area = "" })">
+            <button id="logout" type="submit" class=" btn btn-light w-100">
+                <i class="bi bi-box-arrow-left p-md-0 px-sm-3"></i>
+                <span class="">Logout</span>
+            </button>
+        </form>
     }
     else
     {
