@@ -266,14 +266,17 @@
                 <p>
                     Member since @Model.Agent.CreatedAt.ToString("dd/MM/yy")
                 </p>
-                <div class="d-flex flex-column">
-                        <button type="button" class="btn btn-primary mt-3" onclick="openModal('contactModal')">
-        Show Renter Info
-    </button>
-<button class="btn btn-primary mt-3" onclick="openModal('chatModal')">
-    Message Renter
-</button>
+                <div class="d-flex flex-column align-items-start">
+                    <div class="btn btn-primary text-white w-100 text-left">
+                        <a href="tel:@Model.Agent.PhoneNumber"  style="text-decoration: none; color: inherit;">
+                            <strong>Call Agent: @Model.Agent.PhoneNumber</strong>
+                        </a>
+                    </div>
+                    <button class="btn btn-primary mt-3 w-100" onclick="openModal('chatModal')">
+                        Message Renter
+                    </button>
                 </div>
+
             </div>  
             <div>
                 @{
@@ -305,27 +308,6 @@
         </div>
     </div>
 
-    <!-- Contact Info -->
-    @{
-        UsersDetailsModel usersDetails = ViewBag.UsersDetails;
-    }
-    <div class="modal fade" id="contactModal" tabindex="-1" aria-labelledby="contactModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="contactModalLabel">Contact Information</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="closeModal('contactModal')"></button>
-                </div>
-                <div class="modal-body">
-                    <p>Email: @usersDetails.Email</p>
-                    <p>Phone Number: @usersDetails.PhoneNumber</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="closeModal('contactModal')">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>
 
 
