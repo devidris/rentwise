@@ -222,6 +222,11 @@ declareIncludes()
 declareRules()
 declareLocation()
 
+function capitalizeFirstWords(input) {
+    return input.replace(/\b\w/g, function (char) {
+        return char.toUpperCase();
+    });
+}
 $(document).ready(function () {
     const JSONstates = JSON.parse($('.jsonstate').text());
     $(".jsonstate").remove();
@@ -234,7 +239,7 @@ $(document).ready(function () {
 
         if (selectedState && selectedState.Cities.length > 0) {
             selectedState.Cities.forEach(function (city) {
-                $('#cityDropdown').append(new Option(city.Name, city.Name));
+                $('#cityDropdown').append(new Option(capitalizeFirstWords(city.Name), capitalizeFirstWords(city.Name)));
             });
             $('#cityDropdown').prop('disabled', false);
             $('#cityDropdown').addClass('text-capitalize');
