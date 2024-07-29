@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Azure;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
+using Org.BouncyCastle.Asn1.Ocsp;
 using RentWise.DataAccess.Repository.IRepository;
 using RentWise.Models;
 using RentWise.Models.Identity;
@@ -80,7 +82,7 @@ namespace RentWise.Agent.Controllers
             return View(product);
         }
         [HttpPost]
-        public async Task<IActionResult> Upsert(ProductModel model, IFormFile? mainImage, List<IFormFile>? otherImages)
+        public async Task<IActionResult> Upsert(ProductModel model, IFormFile? mainImage, List<IFormFile>? otherImages, int boostOption = 0)
         {
             string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             model.AgentId = userId;
@@ -138,7 +140,27 @@ namespace RentWise.Agent.Controllers
                 }
                 _unitOfWork.Save();
 
-                return RedirectToAction("Preview", "Store", new { id = model.ProductId, message = "Created successfully" });
+                if (boostOption == 0)
+                {
+                    return RedirectToAction("Preview", "Store", new { id = model.ProductId, message = "Created successfully" });
+                } else
+                {
+                    string pageLink = $"{_config.Value.AgentWebsiteLink}/store/preview/{model.ProductId}?message=Created%20successfully";
+                    var actionResult = await BoostNow(model.ProductId, pageLink, boostOption, false);
+                    if (actionResult is JsonResult jsonResult)
+                    {
+                        var jsonString = JsonConvert.SerializeObject(jsonResult.Value);
+                        dynamic data = JsonConvert.DeserializeObject<dynamic>(jsonString);
+
+                    string url = data.Data;
+                    int monthsToAdd = boostOption == 1 ? 1 : boostOption == 2 ? 3 : boostOption == 3 ? 6 : 12;
+                    model.PremiumExpiry = DateTime.UtcNow.AddMonths(monthsToAdd);
+                    _unitOfWork.Product.Update(model);
+                    _unitOfWork.Save();
+                        return Redirect(url);
+                    }
+
+                }
             }
             IEnumerable<State> states = _unitOfWork.State.GetAll(u => u.StateId != null, "Cities");
             JsonSerializerSettings settings = new JsonSerializerSettings
@@ -312,7 +334,7 @@ namespace RentWise.Agent.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> BoostNow(string Id, string pageLink, int duration)
+        public async Task<IActionResult> BoostNow(string Id, string pageLink, int duration, bool updateProduct = true)
         {
             Random random = new Random();
             int randomNumber = random.Next(1, 100);
@@ -337,6 +359,8 @@ namespace RentWise.Agent.Controllers
             try
             {
                 var response = await client.PostAsync(request);
+                if (updateProduct)
+                {
                 ProductModel product = _unitOfWork.Product.Get(u => u.ProductId == Id);
                 if (product != null)
                 {
@@ -344,6 +368,19 @@ namespace RentWise.Agent.Controllers
                     product.PremiumExpiry = DateTime.UtcNow.AddMonths(monthsToAdd);
                     _unitOfWork.Product.Update(product);
                     _unitOfWork.Save();
+                }
+                }
+                if (!updateProduct)
+                {
+                    var jsonResponse = JsonConvert.DeserializeObject<dynamic>(response.Content);
+                    var checkoutDirectUrl = jsonResponse.data.checkoutDirectUrl;
+                    return Json(new
+                    {
+                        StatusCode = (int)HttpStatusCode.OK,
+                        Message = "Boost Initaited",
+                        Data = checkoutDirectUrl,
+                        Success = true
+                    });
                 }
                 return Json(new
                 {

@@ -147,10 +147,6 @@ function declareLocation() {
 }
 let OldImageCount = $('.product-image-count').val()
 function saveChanges() {
-    //if (fileList.files.length + OldImageCount < 4) {
-    //    toastr.error('Minimum of 4 images')
-    //    return
-    //}
     let concatenatedInputIncludes = ''
     $('.include-input').each(function () {
         if (!$(this).val() || $(this).val() == '') return
@@ -166,6 +162,12 @@ function saveChanges() {
     });
     $('.rules-value').val('')
     $('.rules-value').val(concatenatedInputRules)
+
+    let boostOption = $('#boostOption').val();
+    if (boostOption === "") {
+        boostOption = 0;
+    }
+    $('form').append('<input type="hidden" name="boostOption" value="' + boostOption + '" />');
 
     $('.save').click()
 
