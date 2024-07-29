@@ -1,6 +1,9 @@
 ﻿@using Microsoft.Extensions.Options
 @model IEnumerable<ProductModel>
 @inject IOptions<RentWiseConfig> _config
+@{
+    IEnumerable<SettingModel> prices = ViewBag.Prices;
+}
 <link rel="stylesheet" href="~/css/controller/store/Index.css" />
 <div>
     <partial name="_Nav" model="'a'" />
@@ -144,19 +147,19 @@
             <div class="modal-body">
                 <div class="form-check">
                     <input class="form-check-input" type="radio" name="boostDuration" id="oneMonth" value="1">
-                    <label class="form-check-label" for="oneMonth">1 Month</label>
+                    <label class="form-check-label" for="oneMonth">1 Month (₵@prices.FirstOrDefault(p=>p.LookupId == 1).Value)</label>
                 </div>
                 <div class="form-check">
                     <input class="form-check-input" type="radio" name="boostDuration" id="threeMonths" value="2">
-                    <label class="form-check-label" for="threeMonths">3 Months</label>
+                    <label class="form-check-label" for="threeMonths">3 Months (₵@prices.FirstOrDefault(p=>p.LookupId == 2).Value)</label>
                 </div>
                 <div class="form-check">
                     <input class="form-check-input" type="radio" name="boostDuration" id="sixMonths" value="3">
-                    <label class="form-check-label" for="sixMonths">6 Months</label>
+                    <label class="form-check-label" for="sixMonths">6 Months (₵@prices.FirstOrDefault(p=>p.LookupId == 3).Value)</label>
                 </div>
                 <div class="form-check">
                     <input class="form-check-input" type="radio" name="boostDuration" id="oneYear" value="4">
-                    <label class="form-check-label" for="oneYear">1 Year</label>
+                    <label class="form-check-label" for="oneYear">1 Year (₵@prices.FirstOrDefault(p=>p.LookupId == 4).Value)</label>
                 </div>
             </div>
             <div class="modal-footer">
