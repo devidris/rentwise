@@ -21,6 +21,7 @@
     </div>
     <div class="page">
         <input class="id" hidden/>
+        <input class="browser" value="" />
         <div class="page_content">
             <header>
                 <partial name="_Nav" />
@@ -318,6 +319,29 @@ nav: true,
                 $('.hide-on-mobile').removeClass('d-none')
             }
         }
+
+        function getBrowserName() {
+            var userAgent = navigator.userAgent;
+
+            // Detect browser name
+            if (userAgent.match(/chrome|chromium|crios/i)) {
+                return "Chrome";
+            } else if (userAgent.match(/firefox|fxios/i)) {
+                return "Firefox";
+            } else if (userAgent.match(/safari/i)) {
+                return "Safari";
+            } else if (userAgent.match(/opr\//i)) {
+                return "Opera";
+            } else if (userAgent.match(/edg/i)) {
+                return "Edge";
+            } else if (userAgent.match(/msie|trident/i)) {
+                return "Internet Explorer";
+            } else {
+                return "Unknown";
+            }
+        }
+
+        $('.browser').val(getBrowserName());
     </script>
 </body>
 </html>
