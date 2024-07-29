@@ -147,10 +147,6 @@ function declareLocation() {
 }
 let OldImageCount = $('.product-image-count').val()
 function saveChanges() {
-    //if (fileList.files.length + OldImageCount < 4) {
-    //    toastr.error('Minimum of 4 images')
-    //    return
-    //}
     let concatenatedInputIncludes = ''
     $('.include-input').each(function () {
         if (!$(this).val() || $(this).val() == '') return
@@ -166,6 +162,12 @@ function saveChanges() {
     });
     $('.rules-value').val('')
     $('.rules-value').val(concatenatedInputRules)
+
+    let boostOption = $('#boostOption').val();
+    if (boostOption === "") {
+        boostOption = 0;
+    }
+    $('form').append('<input type="hidden" name="boostOption" value="' + boostOption + '" />');
 
     $('.save').click()
 
@@ -222,6 +224,11 @@ declareIncludes()
 declareRules()
 declareLocation()
 
+function capitalizeFirstWords(input) {
+    return input.replace(/\b\w/g, function (char) {
+        return char.toUpperCase();
+    });
+}
 $(document).ready(function () {
     const JSONstates = JSON.parse($('.jsonstate').text());
     $(".jsonstate").remove();
@@ -234,7 +241,7 @@ $(document).ready(function () {
 
         if (selectedState && selectedState.Cities.length > 0) {
             selectedState.Cities.forEach(function (city) {
-                $('#cityDropdown').append(new Option(city.Name, city.Name));
+                $('#cityDropdown').append(new Option(capitalizeFirstWords(city.Name), capitalizeFirstWords(city.Name)));
             });
             $('#cityDropdown').prop('disabled', false);
             $('#cityDropdown').addClass('text-capitalize');
