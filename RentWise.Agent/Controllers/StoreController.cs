@@ -56,6 +56,8 @@ namespace RentWise.Agent.Controllers
             }
             ViewBag.Categories = Lookup.Categories;
             ViewBag.TotalFilterCount = userProducts.Count();
+            IEnumerable<SettingModel> prices = _unitOfWork.Setting.GetAll(u => u.LookupId > 0 && u.LookupId < 5);
+            ViewBag.Prices = prices;
             return View(userProducts);
 
         }
@@ -79,6 +81,8 @@ namespace RentWise.Agent.Controllers
             ViewBag.States = states;
             ViewBag.JSONStates = JsonConvert.SerializeObject(states, settings);
             ViewBag.Categories = Lookup.Categories;
+            IEnumerable<SettingModel> prices = _unitOfWork.Setting.GetAll(u => u.LookupId > 0 && u.LookupId < 5);
+            ViewBag.Prices = prices;
             return View(product);
         }
         [HttpPost]
@@ -170,6 +174,8 @@ namespace RentWise.Agent.Controllers
             ViewBag.States = states;
             ViewBag.JSONStates = JsonConvert.SerializeObject(states, settings);
             ViewBag.Categories = Lookup.Categories;
+            IEnumerable<SettingModel> prices = _unitOfWork.Setting.GetAll(u => u.LookupId > 0 && u.LookupId < 5);
+            ViewBag.Prices = prices;
             return View(model);
         }
 

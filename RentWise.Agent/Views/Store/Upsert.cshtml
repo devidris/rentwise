@@ -1,5 +1,8 @@
 ﻿@using RentWise.Utility;
 @model ProductModel;
+@{
+    IEnumerable<SettingModel> prices = ViewBag.Prices;
+}
 <style href="~/css/store/Upsert.css"></style>
 <div>
     <form class="p-md-5 p-2 pt-5" method="post"  enctype="multipart/form-data">
@@ -278,11 +281,11 @@
             </div>
                 <div class="form-floating mb-3">
                     <select class="form-control" name="boostOption" id="boostOption">
-                        <option value="0">No Boost</option>
-                        <option value="1">1 Month</option>
-                        <option value="2">3 Months</option>
-                        <option value="3">6 Months</option>
-                        <option value="4">1 Year</option>
+                        <option value="0">No Boost (Free) </option>
+                        <option value="1">1 Month (₵@prices.FirstOrDefault(p=>p.LookupId == 1).Value)</option>
+                        <option value="2">3 Months (₵@prices.FirstOrDefault(p=>p.LookupId == 2).Value)</option>
+                        <option value="3">6 Months (₵@prices.FirstOrDefault(p=>p.LookupId == 3).Value)</option>
+                        <option value="4">1 Year (₵@prices.FirstOrDefault(p=>p.LookupId == 4).Value)</option>
                     </select>
                     <label for="boostOption">
                         Boost
