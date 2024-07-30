@@ -243,7 +243,7 @@ function capitalizeFirstWords(input) {
     });
 }
 $(document).ready(function () {
-    const JSONstates = JSON.parse($('.jsonstate').text());
+    const JSONstates = JSON.parse($('.jsonstate').val());
     $(".jsonstate").remove();
 
     // Set up a change listener for the state dropdown to populate cities

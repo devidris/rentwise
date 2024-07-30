@@ -6,8 +6,7 @@
 <style href="~/css/store/Upsert.css"></style>
 <div>
     <form class="p-md-5 p-2 pt-5" method="post"  enctype="multipart/form-data">
-        <div class="d-none jsonstate">@ViewBag.JSONStates</div>
-       @* <input value="@Model.ProductId" class="product-id" hidden /> *@
+        <input value="@ViewBag.JSONStates" class="jsonstate" hidden />
         <input  value="@Model.Includes" class="includes" hidden/>
         <input  value="@Model.Rules" class="rules" hidden/>
         <input  value="@Model.Address" class="location" hidden />
