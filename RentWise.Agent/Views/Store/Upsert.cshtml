@@ -279,19 +279,54 @@
             <div class="rulesContainer mb-3">
                 <div class="fs-5 cursor-pointer" onclick="addRules()">  <i class="bi bi-plus-circle-fill"></i> Add More</div>
             </div>
-                <div class="form-floating mb-3">
-                    <select class="form-control" name="boostOption" id="boostOption">
-                        <option value="0">No Boost (Free) </option>
-                        <option value="1">1 Month (₵@prices.FirstOrDefault(p=>p.LookupId == 1).Value)</option>
-                        <option value="2">3 Months (₵@prices.FirstOrDefault(p=>p.LookupId == 2).Value)</option>
-                        <option value="3">6 Months (₵@prices.FirstOrDefault(p=>p.LookupId == 3).Value)</option>
-                        <option value="4">1 Year (₵@prices.FirstOrDefault(p=>p.LookupId == 4).Value)</option>
-                    </select>
-                    <label for="boostOption">
-                        Boost
-                    </label>
-                </div>
+                <style>
+                    .nav-tabs .nav-link {
+                        background-color: #06ababfc;
+                        color: white;
+                    }
 
+                        .nav-tabs .nav-link.active {
+                            background-color: #008080; 
+                            color: white;
+                        }
+                </style>
+
+                <div class="form-floating mb-3">
+                    <ul class="nav nav-tabs gap-1" id="boostTab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="no-boost-tab" data-bs-toggle="tab" data-bs-target="#no-boost" type="button" role="tab" aria-controls="no-boost" aria-selected="true">No Boost (Free)</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="one-month-tab" data-bs-toggle="tab" data-bs-target="#one-month" type="button" role="tab" aria-controls="one-month" aria-selected="false">1 Month (₵@prices.FirstOrDefault(p => p.LookupId == 1).Value)</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="three-months-tab" data-bs-toggle="tab" data-bs-target="#three-months" type="button" role="tab" aria-controls="three-months" aria-selected="false">3 Months (₵@prices.FirstOrDefault(p => p.LookupId == 2).Value)</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="six-months-tab" data-bs-toggle="tab" data-bs-target="#six-months" type="button" role="tab" aria-controls="six-months" aria-selected="false">6 Months (₵@prices.FirstOrDefault(p => p.LookupId == 3).Value)</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="one-year-tab" data-bs-toggle="tab" data-bs-target="#one-year" type="button" role="tab" aria-controls="one-year" aria-selected="false">1 Year (₵@prices.FirstOrDefault(p => p.LookupId == 4).Value)</button>
+                        </li>
+                    </ul>
+                    <div class="tab-content" id="boostTabContent">
+                        <div class="tab-pane fade show active" id="no-boost" role="tabpanel" aria-labelledby="no-boost-tab">
+                            <input type="hidden" name="boostOption" value="0" />
+                        </div>
+                        <div class="tab-pane fade" id="one-month" role="tabpanel" aria-labelledby="one-month-tab">
+                            <input type="hidden" name="boostOption" value="1" />
+                        </div>
+                        <div class="tab-pane fade" id="three-months" role="tabpanel" aria-labelledby="three-months-tab">
+                            <input type="hidden" name="boostOption" value="2" />
+                        </div>
+                        <div class="tab-pane fade" id="six-months" role="tabpanel" aria-labelledby="six-months-tab">
+                            <input type="hidden" name="boostOption" value="3" />
+                        </div>
+                        <div class="tab-pane fade" id="one-year" role="tabpanel" aria-labelledby="one-year-tab">
+                            <input type="hidden" name="boostOption" value="4" />
+                        </div>
+                    </div>
+                </div>
             <div class="mt-3">
                 <button class="btn btn-outline-primary" type="button" onclick="onToggle(3)">Back</button>
                     <button class="btn btn-primary text-white" type="button" onclick="saveChanges()">Save changes and Preview</button>
