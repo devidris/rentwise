@@ -266,8 +266,10 @@ nav: true,
             event.preventDefault();
            
             const originalUrl = $(this).attr('href');
+            if (!$(this).hasClass('dont-load')) {
             if (originalUrl && !originalUrl.startsWith('#')){
                 showLoading()
+            }
             }
             const separator = originalUrl.indexOf('?') !== -1 ? '&' : '?';
 

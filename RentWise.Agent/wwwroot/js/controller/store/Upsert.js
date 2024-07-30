@@ -146,6 +146,19 @@ function declareLocation() {
     }
 }
 let OldImageCount = $('.product-image-count').val()
+
+
+let boostValue = 0
+document.querySelectorAll('#boostTab .nav-link').forEach(function (tab) {
+    tab.addEventListener('shown.bs.tab', function (event) {
+        let selectedBoost = event.target.dataset.bsTarget;
+         boostValue = selectedBoost === '#no-boost' ? 0 :
+            selectedBoost === '#one-month' ? 1 :
+                selectedBoost === '#three-months' ? 2 :
+                    selectedBoost === '#six-months' ? 3 : 4;
+        document.querySelector('input[name="boostOption"]').value = boostValue;
+    });
+});
 function saveChanges() {
     let concatenatedInputIncludes = ''
     $('.include-input').each(function () {
@@ -167,7 +180,7 @@ function saveChanges() {
     if (boostOption === "") {
         boostOption = 0;
     }
-    $('form').append('<input type="hidden" name="boostOption" value="' + boostOption + '" />');
+    $('form').append('<input type="hidden" name="boostOption" value="' + boostValue ?? boostOption + '" />');
 
     $('.save').click()
 
@@ -230,7 +243,7 @@ function capitalizeFirstWords(input) {
     });
 }
 $(document).ready(function () {
-    const JSONstates = JSON.parse($('.jsonstate').text());
+    const JSONstates = JSON.parse($('.jsonstate').val());
     $(".jsonstate").remove();
 
     // Set up a change listener for the state dropdown to populate cities

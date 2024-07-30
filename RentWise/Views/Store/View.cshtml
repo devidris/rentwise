@@ -15,7 +15,9 @@
 <input value="@Model.ProductId" class="product-id" hidden />
 <input value="@Model.Name" class="product-name" hidden />
 <input value="@Model.AgentId" class="agent-id" hidden />
-
+@{
+    string imagePath = $"{ViewBag.Link}/images/products/{Model.AgentId}/{Model.ProductId}/MainImage.webp";
+}
 <div class="preview">
     <p class="px-5 py-2 fs-5 m-0 d-none d-md-block">
         <span>
@@ -32,7 +34,7 @@
     </p>
     <div class="d-flex align-items-center px-lg-5 px-1 justify-content-between my-3 my-lg-0">
         <h2 class="m-0">
-            <b>@SharedFunctions.CapitalizeAllWords(Model.Agent.StoreName)</b>  <svg xmlns="http://www.w3.org/2000/svg" height="30" viewBox="0 -960 960 960" width="30" fill="#212529" id="shareButton" class="cursor-pointer" onclick="shareOrCopy('@Model.Name')"><path d="M240-40q-33 0-56.5-23.5T160-120v-440q0-33 23.5-56.5T240-640h120v80H240v440h480v-440H600v-80h120q33 0 56.5 23.5T800-560v440q0 33-23.5 56.5T720-40H240Zm200-280v-447l-64 64-56-57 160-160 160 160-56 57-64-64v447h-80Z" /></svg>
+            <b>@SharedFunctions.CapitalizeAllWords(Model.Agent.StoreName)</b>  <svg xmlns="http://www.w3.org/2000/svg" height="30" viewBox="0 -960 960 960" width="30" fill="#212529" id="shareButton" class="cursor-pointer" onclick="shareOrCopy('@Model.Name','@imagePath')"><path d="M240-40q-33 0-56.5-23.5T160-120v-440q0-33 23.5-56.5T240-640h120v80H240v440h480v-440H600v-80h120q33 0 56.5 23.5T800-560v440q0 33-23.5 56.5T720-40H240Zm200-280v-447l-64 64-56-57 160-160 160 160-56 57-64-64v447h-80Z" /></svg>
         </h2>
         <p class="m-0"><span class="fs-3 font-weight-bold"><b>₵@Model.PriceDay</b>/</span><span>day</span></p>    
     </div>
@@ -73,9 +75,7 @@
             <button class="btn btn-primary text-decoration-none" onclick="openModal('chatModal')">Message Renter</button>
         </div>
     </div>
-    @{
-        string imagePath = $"{ViewBag.Link}/images/products/{Model.AgentId}/{Model.ProductId}/MainImage.webp";
-    }
+    
     <div class="p-5 text-center bg-image rounded-3" style="
     background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('@Url.Content(imagePath)');
     height: 700px;
@@ -268,7 +268,7 @@
                 </p>
                 <div class="d-flex flex-column align-items-start">
                     <div class="btn btn-primary text-white w-100 text-left">
-                        <a href="tel:@Model.Agent.PhoneNumber"  style="text-decoration: none; color: inherit;">
+                        <a href="tel:@Model.Agent.PhoneNumber" style="text-decoration: none; color: inherit;" class="dont-load">
                             <strong>Call Agent: @Model.Agent.PhoneNumber</strong>
                         </a>
                     </div>
@@ -278,13 +278,6 @@
                 </div>
 
             </div>  
-            <div>
-                @{
-                    string policy = $"{ViewBag.Link}/pdf/Rentwise-Cancellation-Policy.pdf";
-                    string fileName = $"Rentwise-Cancellation-Policy.pdf";
-                }
-                <a class="btn btn-primary d-block w-100 m-auto my-3 py-2 " href="@policy" download="@fileName">Cancellation Policy</a>
-            </div>
         </div>
     </div>
     @* Chat Modal *@
