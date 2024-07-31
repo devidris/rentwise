@@ -239,3 +239,8 @@ bookNowButtons.forEach(bookNowButton => {
         }
     });
 })
+$('.jcrousel-image').click(function () {
+    var src = $(this).attr('src');
+    $('#modalImage').attr('src', src);
+    $('#imageModal').modal('show');
+});
