@@ -613,7 +613,7 @@ namespace RentWise.Controllers
             });
         }
 
-        public IActionResult Category(string Name, string City, int Category = 0, int MinPrice = 0, int MaxPrice = 0, int MinDays = 0, int MaxDays = 0, int Sort = 0, int page = 1, int pageSize = 10)
+        public IActionResult Category(string Name, string City, int Category = 0, int MinPrice = 0, int MaxPrice = 0, int MinDays = 0, int MaxDays = 0, int Sort = 0, int page = 1, int pageSize = 30)
         {
             List<ProductModel> products;
             if (Category > 0)
