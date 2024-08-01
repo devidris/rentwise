@@ -687,7 +687,7 @@ namespace RentWise.Controllers
             }
 
             ViewBag.CategoryName = Lookup.Categories[Category];
-            return View(displayPreviews.OrderByDescending(p=>p.Premium));
+            return View(displayPreviews.OrderByDescending(p=>p.Premium).ToList());
         }
 
         public IActionResult Cart()
