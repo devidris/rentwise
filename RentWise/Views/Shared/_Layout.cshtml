@@ -160,6 +160,7 @@ nav: true,
         exemptions.forEach(exemption => {
             const link = exemption.link;
             const currentPageLink = window.location.pathname;
+            console.log(currentPageLink)
             const isCurrPage = (currentPageLink.toLowerCase().includes(link.toLowerCase())) && link != "/";
             if (isCurrPage || link == currentPageLink) {
                 if (exemption.footer) {
@@ -323,7 +324,7 @@ nav: true,
         function checkIfTabIsNeeded() {
             var userAgent = navigator.userAgent.toLowerCase();
             var isMobile = /iphone|ipod|android|ie|blackberry|fennec/.test(userAgent);
-            var isTablet = /ipad|android 3.0|xoom|sch-i800|playbook|tablet|kindle/.test(userAgent);
+            var isTablet = /ipad|android 3.0|xoom|sch-i800|playbook|tablet|kindle|macintosh/.test(userAgent) && navigator.maxTouchPoints && navigator.maxTouchPoints > 1;
             const broswerName = getBrowserName();
             if (isMobile || isTablet || broswerName == "Unknown") {
                 if (window.location.pathname === '/') {
