@@ -14,6 +14,7 @@ using RentWise.Models.Identity;
 using RentWise.Utility;
 using RestSharp;
 using System.Drawing.Printing;
+using System.Linq;
 using System.Net;
 using System.Security.Claims;
 using System.Text;
@@ -649,9 +650,6 @@ namespace RentWise.Controllers
                 products = products.FindAll(product => product.Name.ToLower().Contains(Name.ToLower())).ToList();
             }
 
-            // Increase visibility for premium products
-            Random random = new Random();
-            products = products.OrderBy(product => product.Premium ? random.NextDouble() * 0.5 : random.NextDouble()).ToList();
 
             if (Sort == 2)
             {
@@ -665,15 +663,17 @@ namespace RentWise.Controllers
             {
                 products = products.OrderByDescending(product => product.Rating).ToList();
             }
-
             List<DisplayPreview> displayPreviews = new List<DisplayPreview>();
             if (products != null && products.Count > 0)
             {
                 int totalProducts = products.Count;
                 var pager = new Pager(totalProducts, page, pageSize);
-                var viewModel = products.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+            int requiredPremiums = (int)(pageSize * 0.4);
+            var premiums = SharedFunctions.ShuffleList(products.Where(p => p.Premium).Take(requiredPremiums).ToList());
+            var nonPremiums = products.Where(p => !p.Premium).ToList();
+            var pageProducts = premiums.Concat(nonPremiums).Skip((page - 1) * pageSize).Take(pageSize).ToList();
 
-                displayPreviews = viewModel.Select(product => new DisplayPreview
+                displayPreviews = pageProducts.Select(product => new DisplayPreview
                 {
                     Image = product.ProductImages.FirstOrDefault()?.Name != null ? _config.Value.AgentWebsiteLink + "/images/products/" + product.AgentId + "/" + product.ProductId + "/" + product.ProductImages.FirstOrDefault()?.Name : Url.Content("~/img/default-product.jpg"),
                     Name = product?.Name ?? "Unknown",
@@ -687,7 +687,7 @@ namespace RentWise.Controllers
             }
 
             ViewBag.CategoryName = Lookup.Categories[Category];
-            return View(displayPreviews);
+            return View(displayPreviews.OrderByDescending(p=>p.Premium));
         }
 
         public IActionResult Cart()
