@@ -40,7 +40,6 @@
                 string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             }
             <input value="@userId" class="user-id" hidden />
-            <input value="" class="test"  />
             <footer class="bg-primary p-md-5 py-4 text-white text-center main-footer hide-mobile">
                 <div class="container-fluid">
                     <div class="row">
@@ -327,10 +326,14 @@ nav: true,
             var isMobile = /iphone|ipod|android|ie|blackberry|fennec/.test(userAgent);
             var isTablet = /ipad|android 3.0|xoom|sch-i800|playbook|tablet|kindle|macintosh/.test(userAgent) && navigator.maxTouchPoints && navigator.maxTouchPoints > 1;
             const broswerName = getBrowserName();
-            $(".test").val(isMobile + "," + isTablet + "," + getBrowserName() + ","+ (isMobile || isTablet || broswerName == "Unknown"))
             if (isMobile || isTablet || broswerName == "Unknown") {
                 if (window.location.pathname === '/') {
-                    window.location.href = "/store/category"
+                    if (id) {
+                        window.location.href = "/store/category?onesignalId=" + id
+                    } else {
+                        window.location.href = "/store/category"
+                    }
+                   
                 }
                 $('.home').attr('href', '/store/category');
                 $('.page').removeClass('page').addClass('page_mobile');
