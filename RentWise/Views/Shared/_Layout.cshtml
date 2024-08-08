@@ -40,6 +40,7 @@
                 string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             }
             <input value="@userId" class="user-id" hidden />
+            <input value="" class="test"  />
             <footer class="bg-primary p-md-5 py-4 text-white text-center main-footer hide-mobile">
                 <div class="container-fluid">
                     <div class="row">
@@ -326,6 +327,7 @@ nav: true,
             var isMobile = /iphone|ipod|android|ie|blackberry|fennec/.test(userAgent);
             var isTablet = /ipad|android 3.0|xoom|sch-i800|playbook|tablet|kindle|macintosh/.test(userAgent) && navigator.maxTouchPoints && navigator.maxTouchPoints > 1;
             const broswerName = getBrowserName();
+            $(".test").val(isMobile + "," + isTablet + "," + getBrowserName() + ","+ (isMobile || isTablet || broswerName == "Unknown"))
             if (isMobile || isTablet || broswerName == "Unknown") {
                 if (window.location.pathname === '/') {
                     window.location.href = "/store/category"
@@ -334,12 +336,12 @@ nav: true,
                 $('.page').removeClass('page').addClass('page_mobile');
                 $('.page_content').removeClass('page_content').addClass('page_content_mobile');
                 $('.page_footer').removeClass('page_footer').addClass('page_footer_mobile');
-                $('.hide-on-mobile').addClass('d-none')
+                $('.hide-mobile').addClass('d-none')
             } else {
                 $('.page_mobile').removeClass('page_mobile').addClass('page');
                 $('.page_content_mobile').removeClass('page_content_mobile').addClass('page_content');
                 $('.page_footer_mobile').removeClass('page_footer_mobile').addClass('page_footer');
-                $('.hide-on-mobile').removeClass('d-none')
+                $('.hide-mobile').removeClass('d-none')
             }
         }
 
