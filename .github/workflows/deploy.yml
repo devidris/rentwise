@@ -32,10 +32,10 @@ jobs:
 
     - name: Deploy RentWise to VPS
       run: |
-        DEPLOY_PATH="C:/rentwise"
-        ssh sethoo@92.205.231.160 "mkdir -p $DEPLOY_PATH"
-        scp -r ./publish/* sethoo@92.205.231.160:$DEPLOY_PATH
-        ssh sethoo@92.205.231.160 "cd $DEPLOY_PATH && dotnet RentWise.dll"
+        $env:DEPLOY_PATH="C:/rentwise"
+        ssh sethoo@92.205.231.160 "mkdir -p $env:DEPLOY_PATH"
+        scp -r ./publish/* sethoo@92.205.231.160:$env:DEPLOY_PATH
+        ssh sethoo@92.205.231.160 "cd $env:DEPLOY_PATH && dotnet RentWise.dll"
       env:
         SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
 
@@ -62,9 +62,9 @@ jobs:
 
     - name: Deploy RentWise.Agent to VPS
       run: |
-        DEPLOY_PATH="C:/rentwise"
-        ssh sethoo@92.205.231.160 "mkdir -p $DEPLOY_PATH"
-        scp -r ./publish/* sethoo@92.205.231.160:$DEPLOY_PATH
-        ssh sethoo@92.205.231.160 "cd $DEPLOY_PATH && dotnet RentWise.Agent.dll"
+        $env:DEPLOY_PATH="C:/rentwise"
+        ssh sethoo@92.205.231.160 "mkdir -p $env:DEPLOY_PATH"
+        scp -r ./publish/* sethoo@92.205.231.160:$env:DEPLOY_PATH
+        ssh sethoo@92.205.231.160 "cd $env:DEPLOY_PATH && dotnet RentWise.Agent.dll"
       env:
         SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
