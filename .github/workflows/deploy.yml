@@ -30,10 +30,9 @@ jobs:
     - name: Publish RentWise
       run: dotnet publish -c Release -o ./publish RentWise/RentWise.csproj
 
-    - name: Deploy RentWise to VPS with Versioning
+    - name: Deploy RentWise to VPS
       run: |
-        VERSION=$(git rev-parse --short HEAD)
-        DEPLOY_PATH="C:/rentwise/RentWise_$VERSION"
+        DEPLOY_PATH="C:/rentwise"
         ssh sethoo@92.205.231.160 "mkdir -p $DEPLOY_PATH"
         scp -r ./publish/* sethoo@92.205.231.160:$DEPLOY_PATH
         ssh sethoo@92.205.231.160 "cd $DEPLOY_PATH && dotnet RentWise.dll"
@@ -61,10 +60,9 @@ jobs:
     - name: Publish RentWise.Agent
       run: dotnet publish -c Release -o ./publish RentWise.Agent/RentWise.Agent.csproj
 
-    - name: Deploy RentWise.Agent to VPS with Versioning
+    - name: Deploy RentWise.Agent to VPS
       run: |
-        VERSION=$(git rev-parse --short HEAD)
-        DEPLOY_PATH="C:/rentwise/RentWiseAgent_$VERSION"
+        DEPLOY_PATH="C:/rentwise"
         ssh sethoo@92.205.231.160 "mkdir -p $DEPLOY_PATH"
         scp -r ./publish/* sethoo@92.205.231.160:$DEPLOY_PATH
         ssh sethoo@92.205.231.160 "cd $DEPLOY_PATH && dotnet RentWise.Agent.dll"
