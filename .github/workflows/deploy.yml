@@ -11,7 +11,7 @@ on:
 jobs:
   build-and-deploy-rentwise:
     runs-on: windows-latest
-    name: Build and Deploy RentWise
+    name: Build and Deploy RentWise (Client)
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
@@ -30,18 +30,22 @@ jobs:
     - name: Publish RentWise
       run: dotnet publish -c Release -o ./publish RentWise/RentWise.csproj
 
-    - name: Deploy RentWise to VPS
+    - name: Stop existing RentWise Client instance on VPS
       run: |
-        $env:DEPLOY_PATH="C:/rentwise"
-        ssh sethoo@92.205.231.160 "mkdir -p $env:DEPLOY_PATH"
-        scp -r ./publish/* sethoo@92.205.231.160:$env:DEPLOY_PATH
-        ssh sethoo@92.205.231.160 "cd $env:DEPLOY_PATH && dotnet RentWise.dll"
+        ssh sethoo@92.205.231.160 "taskkill /IM RentWise.dll /F || echo 'No existing RentWise Client process running'"
+
+    - name: Deploy RentWise Client to VPS
+      run: |
+        $DEPLOY_PATH="C:/rentwise/client"
+        ssh sethoo@92.205.231.160 "mkdir -p $DEPLOY_PATH"
+        scp -r ./publish/* sethoo@92.205.231.160:$DEPLOY_PATH
+        ssh sethoo@92.205.231.160 "cd $DEPLOY_PATH && dotnet RentWise.dll"
       env:
         SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
 
   build-and-deploy-agent:
     runs-on: windows-latest
-    name: Build and Deploy RentWise.Agent
+    name: Build and Deploy RentWise.Agent (Admin)
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
@@ -60,11 +64,15 @@ jobs:
     - name: Publish RentWise.Agent
       run: dotnet publish -c Release -o ./publish RentWise.Agent/RentWise.Agent.csproj
 
-    - name: Deploy RentWise.Agent to VPS
+    - name: Stop existing RentWise Admin instance on VPS
       run: |
-        $env:DEPLOY_PATH="C:/rentwise"
-        ssh sethoo@92.205.231.160 "mkdir -p $env:DEPLOY_PATH"
-        scp -r ./publish/* sethoo@92.205.231.160:$env:DEPLOY_PATH
-        ssh sethoo@92.205.231.160 "cd $env:DEPLOY_PATH && dotnet RentWise.Agent.dll"
+        ssh sethoo@92.205.231.160 "taskkill /IM RentWise.Agent.dll /F || echo 'No existing RentWise Admin process running'"
+
+    - name: Deploy RentWise Admin to VPS
+      run: |
+        $DEPLOY_PATH="C:/rentwise/admin"
+        ssh sethoo@92.205.231.160 "mkdir -p $DEPLOY_PATH"
+        scp -r ./publish/* sethoo@92.205.231.160:$DEPLOY_PATH
+        ssh sethoo@92.205.231.160 "cd $DEPLOY_PATH && dotnet RentWise.Agent.dll"
       env:
         SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
