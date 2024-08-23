@@ -9,9 +9,9 @@ on:
       - master
 
 jobs:
-  build-and-deploy-rentwise:
+  build-and-deploy:
     runs-on: windows-latest
-    name: Build and Deploy RentWise
+    name: Build and Deploy Applications
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
@@ -22,49 +22,45 @@ jobs:
         dotnet-version: '7.0.x'
 
     - name: Restore dependencies
-      run: dotnet restore RentWise/RentWise.csproj
-
-    - name: Build RentWise
-      run: dotnet build --configuration Release --no-restore RentWise/RentWise.csproj
-
-    - name: Publish RentWise
-      run: dotnet publish -c Release -o ./publish RentWise/RentWise.csproj
-
-    - name: Deploy RentWise to VPS
       run: |
-        $DEPLOY_PATH="C:/rentwise/client"
-        ssh sethoo@92.205.231.160 "mkdir -p $env:DEPLOY_PATH"
-        scp -r ./publish/* sethoo@92.205.231.160:$env:DEPLOY_PATH
-        ssh sethoo@92.205.231.160 "cd $env:DEPLOY_PATH && dotnet RentWise.dll"
-      env:
-        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        dotnet restore RentWise/RentWise.csproj
+        dotnet restore RentWise.Agent/RentWise.Agent.csproj
 
-  build-and-deploy-agent:
-    runs-on: windows-latest
-    name: Build and Deploy RentWise.Agent
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
-
-    - name: Setup .NET Core
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: '7.0.x'
-
-    - name: Restore dependencies
-      run: dotnet restore RentWise.Agent/RentWise.Agent.csproj
-
-    - name: Build RentWise.Agent
-      run: dotnet build --configuration Release --no-restore RentWise.Agent/RentWise.Agent.csproj
-
-    - name: Publish RentWise.Agent
-      run: dotnet publish -c Release -o ./publish RentWise.Agent/RentWise.Agent.csproj
-
-    - name: Deploy RentWise.Agent to VPS
+    - name: Build projects
       run: |
-        $DEPLOY_PATH="C:/rentwise/admin"
-        ssh sethoo@92.205.231.160 "mkdir -p $env:DEPLOY_PATH"
-        scp -r ./publish/* sethoo@92.205.231.160:$env:DEPLOY_PATH
-        ssh sethoo@92.205.231.160 "cd $env:DEPLOY_PATH && dotnet RentWise.Agent.dll"
+        dotnet build --configuration Release --no-restore RentWise/RentWise.csproj &
+        dotnet build --configuration Release --no-restore RentWise.Agent/RentWise.Agent.csproj
+      wait
+
+    - name: Publish projects
+      run: |
+        dotnet publish RentWise/RentWise.csproj -c Release -o ./publish/rentwise &
+        dotnet publish RentWise.Agent/RentWise.Agent.csproj -c Release -o ./publish/rentwise-agent
+      wait
+
+    - name: Compress Published Files
+      run: |
+        Compress-Archive -Path ./publish/rentwise/* -DestinationPath ./publish/rentwise.zip
+        Compress-Archive -Path ./publish/rentwise-agent/* -DestinationPath ./publish/rentwise-agent.zip
+
+    - name: Deploy to VPS using rsync
+      run: |
+        $DEPLOY_PATH_RENTWISE="C:/rentwise/client"
+        $DEPLOY_PATH_AGENT="C:/rentwise/admin"
+        
+        ssh sethoo@92.205.231.160 "mkdir -p $DEPLOY_PATH_RENTWISE $DEPLOY_PATH_AGENT"
+
+        # Transfer files using rsync for incremental deployment
+        rsync -avz -e "ssh -i $env:SSH_PRIVATE_KEY" ./publish/rentwise.zip sethoo@92.205.231.160:$DEPLOY_PATH_RENTWISE &
+        rsync -avz -e "ssh -i $env:SSH_PRIVATE_KEY" ./publish/rentwise-agent.zip sethoo@92.205.231.160:$DEPLOY_PATH_AGENT
+        wait
+
+        # Unzip on the server and deploy
+        ssh sethoo@92.205.231.160 "Expand-Archive -Path $DEPLOY_PATH_RENTWISE/rentwise.zip -DestinationPath $DEPLOY_PATH_RENTWISE"
+        ssh sethoo@92.205.231.160 "Expand-Archive -Path $DEPLOY_PATH_AGENT/rentwise-agent.zip -DestinationPath $DEPLOY_PATH_AGENT"
+
+        # Start the applications concurrently
+        ssh sethoo@92.205.231.160 "cd $DEPLOY_PATH_RENTWISE && dotnet RentWise.dll &"
+        ssh sethoo@92.205.231.160 "cd $DEPLOY_PATH_AGENT && dotnet RentWise.Agent.dll"
       env:
         SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
