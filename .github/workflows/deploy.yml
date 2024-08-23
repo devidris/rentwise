@@ -13,54 +13,53 @@ jobs:
     runs-on: windows-latest
     name: Build and Deploy Applications
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-    - name: Setup .NET Core
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: '7.0.x'
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '7.0.x'
 
-    - name: Restore dependencies
-      run: |
-        dotnet restore RentWise/RentWise.csproj
-        dotnet restore RentWise.Agent/RentWise.Agent.csproj
+      - name: Restore dependencies
+        run: |
+          dotnet restore RentWise/RentWise.csproj
+          dotnet restore RentWise.Agent/RentWise.Agent.csproj
 
-    - name: Build projects
-      run: |
-        dotnet build --configuration Release --no-restore RentWise/RentWise.csproj &
-        dotnet build --configuration Release --no-restore RentWise.Agent/RentWise.Agent.csproj
-      wait
+      - name: Build projects
+        run: |
+          Start-Job -ScriptBlock { dotnet build --configuration Release --no-restore RentWise/RentWise.csproj }
+          Start-Job -ScriptBlock { dotnet build --configuration Release --no-restore RentWise.Agent/RentWise.Agent.csproj }
+          Get-Job | Wait-Job | Receive-Job
 
-    - name: Publish projects
-      run: |
-        dotnet publish RentWise/RentWise.csproj -c Release -o ./publish/rentwise &
-        dotnet publish RentWise.Agent/RentWise.Agent.csproj -c Release -o ./publish/rentwise-agent
-      wait
+      - name: Publish projects
+        run: |
+          Start-Job -ScriptBlock { dotnet publish RentWise/RentWise.csproj -c Release -o ./publish/rentwise }
+          Start-Job -ScriptBlock { dotnet publish RentWise.Agent/RentWise.Agent.csproj -c Release -o ./publish/rentwise-agent }
+          Get-Job | Wait-Job | Receive-Job
 
-    - name: Compress Published Files
-      run: |
-        Compress-Archive -Path ./publish/rentwise/* -DestinationPath ./publish/rentwise.zip
-        Compress-Archive -Path ./publish/rentwise-agent/* -DestinationPath ./publish/rentwise-agent.zip
+      - name: Compress Published Files
+        run: |
+          Compress-Archive -Path ./publish/rentwise/* -DestinationPath ./publish/rentwise.zip
+          Compress-Archive -Path ./publish/rentwise-agent/* -DestinationPath ./publish/rentwise-agent.zip
 
-    - name: Deploy to VPS using rsync
-      run: |
-        $DEPLOY_PATH_RENTWISE="C:/rentwise/client"
-        $DEPLOY_PATH_AGENT="C:/rentwise/admin"
-        
-        ssh sethoo@92.205.231.160 "mkdir -p $DEPLOY_PATH_RENTWISE $DEPLOY_PATH_AGENT"
+      - name: Deploy to VPS using rsync
+        run: |
+          $Env:DEPLOY_PATH_RENTWISE = "C:/rentwise/client"
+          $Env:DEPLOY_PATH_AGENT = "C:/rentwise/admin"
+          
+          ssh sethoo@92.205.231.160 "mkdir -p $Env:DEPLOY_PATH_RENTWISE $Env:DEPLOY_PATH_AGENT"
 
-        # Transfer files using rsync for incremental deployment
-        rsync -avz -e "ssh -i $env:SSH_PRIVATE_KEY" ./publish/rentwise.zip sethoo@92.205.231.160:$DEPLOY_PATH_RENTWISE &
-        rsync -avz -e "ssh -i $env:SSH_PRIVATE_KEY" ./publish/rentwise-agent.zip sethoo@92.205.231.160:$DEPLOY_PATH_AGENT
-        wait
+          # Transfer files using rsync for incremental deployment
+          rsync -avz -e "ssh -i ${Env:SSH_PRIVATE_KEY}" ./publish/rentwise.zip sethoo@92.205.231.160:${Env:DEPLOY_PATH_RENTWISE}
+          rsync -avz -e "ssh -i ${Env:SSH_PRIVATE_KEY}" ./publish/rentwise-agent.zip sethoo@92.205.231.160:${Env:DEPLOY_PATH_AGENT}
 
-        # Unzip on the server and deploy
-        ssh sethoo@92.205.231.160 "Expand-Archive -Path $DEPLOY_PATH_RENTWISE/rentwise.zip -DestinationPath $DEPLOY_PATH_RENTWISE"
-        ssh sethoo@92.205.231.160 "Expand-Archive -Path $DEPLOY_PATH_AGENT/rentwise-agent.zip -DestinationPath $DEPLOY_PATH_AGENT"
+          # Unzip on the server and deploy
+          ssh sethoo@92.205.231.160 "Expand-Archive -Path ${Env:DEPLOY_PATH_RENTWISE}/rentwise.zip -DestinationPath ${Env:DEPLOY_PATH_RENTWISE}"
+          ssh sethoo@92.205.231.160 "Expand-Archive -Path ${Env:DEPLOY_PATH_AGENT}/rentwise-agent.zip -DestinationPath ${Env:DEPLOY_PATH_AGENT}"
 
-        # Start the applications concurrently
-        ssh sethoo@92.205.231.160 "cd $DEPLOY_PATH_RENTWISE && dotnet RentWise.dll &"
-        ssh sethoo@92.205.231.160 "cd $DEPLOY_PATH_AGENT && dotnet RentWise.Agent.dll"
-      env:
-        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          # Start the applications
+          ssh sethoo@92.205.231.160 "cd ${Env:DEPLOY_PATH_RENTWISE} && dotnet RentWise.dll"
+          ssh sethoo@92.205.231.160 "cd ${Env:DEPLOY_PATH_AGENT} && dotnet RentWise.Agent.dll"
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
