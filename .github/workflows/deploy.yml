@@ -30,6 +30,10 @@ jobs:
       - name: Publish project
         run: dotnet publish RentWise/RentWise.csproj -c Release -o ./publish/rentwise
 
+      - name: List published files
+        run: Get-ChildItem -Path ./publish/rentwise/*
+        shell: pwsh
+
       - name: Compress Published Files
         run: Compress-Archive -Path ./publish/rentwise/* -DestinationPath ./publish/rentwise.zip
 
