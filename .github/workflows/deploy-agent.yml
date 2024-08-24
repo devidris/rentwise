@@ -1,4 +1,4 @@
-name: Deploy RentWise Client
+name: Deploy RentWise Admin
 
 on:
   push:
@@ -9,9 +9,9 @@ on:
       - master
 
 jobs:
-  build-and-deploy-client:
+  build-and-deploy-admin:
     runs-on: windows-latest
-    name: Build and Deploy RentWise Client
+    name: Build and Deploy RentWise Agent
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -22,26 +22,26 @@ jobs:
           dotnet-version: '7.0.x'
 
       - name: Restore dependencies
-        run: dotnet restore RentWise/RentWise.csproj
+        run: dotnet restore RentWise.Agent/RentWise.Agent.csproj
 
       - name: Build project
-        run: dotnet build --configuration Release --no-restore RentWise/RentWise.csproj
+        run: dotnet build --configuration Release --no-restore RentWise.Agent/RentWise.Agent.csproj
 
       - name: Publish project
-        run: dotnet publish RentWise/RentWise.csproj -c Release -o ./publish/rentwise
+        run: dotnet publish RentWise.Agent/RentWise.Agent.csproj -c Release -o ./publish/rentwise-agent
 
       - name: Compress Published Files
-        run: Compress-Archive -Path ./publish/rentwise/* -DestinationPath ./publish/rentwise.zip
+        run: Compress-Archive -Path ./publish/rentwise-agent/* -DestinationPath ./publish/rentwise-agent.zip
 
       - name: Deploy to VPS
         run: |
           $cred = New-Object System.Management.Automation.PSCredential (${{ secrets.DEPLOY_USER }}, (ConvertTo-SecureString ${{ secrets.DEPLOY_PASS }} -AsPlainText -Force))
           $session = New-PSSession -ComputerName 92.205.231.160 -Credential $cred
-          Copy-Item -Path "./publish/rentwise.zip" -Destination "C:\\rentwise\\client" -ToSession $session
+          Copy-Item -Path "./publish/rentwise-agent.zip" -Destination "C:\\rentwise\\admin" -ToSession $session
           Invoke-Command -Session $session -ScriptBlock {
-            Expand-Archive -Path "C:\\rentwise\\client\\rentwise.zip" -DestinationPath "C:\\rentwise\\client"
-            cd "C:\\rentwise\\client" 
-            dotnet RentWise.dll
+            Expand-Archive -Path "C:\\rentwise\\admin\\rentwise-agent.zip" -DestinationPath "C:\\rentwise\\admin"
+            cd "C:\\rentwise\\admin" 
+            dotnet RentWise.Agent.dll
           }
         env:
           DEPLOY_USER: ${{ secrets.VPS_USER }}
