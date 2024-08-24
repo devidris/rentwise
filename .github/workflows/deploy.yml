@@ -19,7 +19,7 @@ jobs:
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: '8.0.401'
+          dotnet-version: '7.0.x'
 
       - name: Restore dependencies
         run: dotnet restore RentWise/RentWise.csproj
@@ -46,6 +46,8 @@ jobs:
           Copy-Item -Path "./publish/rentwise.zip" -Destination "C:\\rentwise\\client" -ToSession $session
           Invoke-Command -Session $session -ScriptBlock {
             Expand-Archive -Path "C:\\rentwise\\client\\rentwise.zip" -DestinationPath "C:\\rentwise\\client"
+            # List the contents of the client directory to verify the presence of RentWise.dll
+            Get-ChildItem -Path "C:\\rentwise\\client"
             cd "C:\\rentwise\\client" 
             dotnet RentWise.dll
           }
