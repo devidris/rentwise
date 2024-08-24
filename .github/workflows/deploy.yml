@@ -3,7 +3,7 @@ name: Deploy RentWise Application
 on:
   push:
     branches:
-      - main  # Set this to the branch you want to deploy from
+      - master  # Set this to the branch you want to deploy from
 
 jobs:
   build-and-deploy:
