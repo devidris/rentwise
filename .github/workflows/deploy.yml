@@ -25,7 +25,7 @@ jobs:
         run: dotnet restore RentWise/RentWise.csproj
 
       - name: Build project
-        run: dotnet build --configuration Release --no-restore RentWise/RentWise.csproj
+        run: dotnet build RentWise/RentWise.csproj --configuration Release --no-restore
 
       - name: Publish project
         run: dotnet publish RentWise/RentWise.csproj -c Release -o ./publish/rentwise
@@ -35,7 +35,9 @@ jobs:
 
       - name: Deploy to VPS
         run: |
-          $cred = New-Object System.Management.Automation.PSCredential (${{ secrets.DEPLOY_USER }}, (ConvertTo-SecureString ${{ secrets.DEPLOY_PASS }} -AsPlainText -Force))
+          $pass = "${{ secrets.DEPLOY_PASS }}" | ConvertTo-SecureString -AsPlainText -Force
+          $user = "${{ secrets.DEPLOY_USER }}"
+          $cred = New-Object System.Management.Automation.PSCredential ($user, $pass)
           $session = New-PSSession -ComputerName 92.205.231.160 -Credential $cred
           Copy-Item -Path "./publish/rentwise.zip" -Destination "C:\\rentwise\\client" -ToSession $session
           Invoke-Command -Session $session -ScriptBlock {
@@ -43,6 +45,9 @@ jobs:
             cd "C:\\rentwise\\client" 
             dotnet RentWise.dll
           }
-        env:
-          DEPLOY_USER: ${{ secrets.VPS_USER }}
-          DEPLOY_PASS: ${{ secrets.VPS_PASSWORD }}
+          Remove-PSSession $session
+        shell: pwsh
+
+      - name: Clean up local artifacts
+        run: Remove-Item -Path ./publish/rentwise.zip
+        shell: pwsh
