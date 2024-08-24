@@ -11,7 +11,7 @@ on:
 jobs:
   build-and-deploy-admin:
     runs-on: windows-latest
-    name: Build and Deploy RentWise Agent
+    name: Build and Deploy RentWise Admin
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -25,7 +25,7 @@ jobs:
         run: dotnet restore RentWise.Agent/RentWise.Agent.csproj
 
       - name: Build project
-        run: dotnet build --configuration Release --no-restore RentWise.Agent/RentWise.Agent.csproj
+        run: dotnet build RentWise.Agent/RentWise.Agent.csproj --configuration Release --no-restore
 
       - name: Publish project
         run: dotnet publish RentWise.Agent/RentWise.Agent.csproj -c Release -o ./publish/rentwise-agent
@@ -35,7 +35,9 @@ jobs:
 
       - name: Deploy to VPS
         run: |
-          $cred = New-Object System.Management.Automation.PSCredential (${{ secrets.DEPLOY_USER }}, (ConvertTo-SecureString ${{ secrets.DEPLOY_PASS }} -AsPlainText -Force))
+          $password = "${{ secrets.DEPLOY_PASS }}" | ConvertTo-SecureString -AsPlainText -Force
+          $username = "${{ secrets.DEPLOY_USER }}"
+          $cred = New-Object System.Management.Automation.PSCredential ($username, $password)
           $session = New-PSSession -ComputerName 92.205.231.160 -Credential $cred
           Copy-Item -Path "./publish/rentwise-agent.zip" -Destination "C:\\rentwise\\admin" -ToSession $session
           Invoke-Command -Session $session -ScriptBlock {
@@ -43,6 +45,9 @@ jobs:
             cd "C:\\rentwise\\admin" 
             dotnet RentWise.Agent.dll
           }
-        env:
-          DEPLOY_USER: ${{ secrets.VPS_USER }}
-          DEPLOY_PASS: ${{ secrets.VPS_PASSWORD }}
+          Remove-PSSession $session
+        shell: pwsh
+
+      - name: Clean up local artifacts
+        run: Remove-Item -Path ./publish/rentwise-agent.zip
+        shell: pwsh
