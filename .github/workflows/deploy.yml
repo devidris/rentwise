@@ -1,47 +1,69 @@
-name: Deploy RentWise Application
+name: CI/CD Pipeline for RentWise
 
 on:
   push:
     branches:
-      - master  # Adjust this to your deployment branch
+      - master  # Trigger deployment on pushes to the main branch
 
 jobs:
   build-and-deploy:
-    runs-on: windows-latest
+    runs-on: windows-latest  # Use a Windows runner
+
     steps:
-    - name: Checkout code
+    - name: Checkout Repository
       uses: actions/checkout@v2
 
-    - name: Set up MSBuild path
+    - name: Set up MSBuild
       uses: microsoft/setup-msbuild@v1.0.2
 
-    - name: Restore NuGet packages
+    - name: Restore NuGet Packages
       run: nuget restore RentWise.sln
 
-    - name: Build Solution
+    - name: Build the Solution
       run: msbuild RentWise.sln /p:Configuration=Release /p:DeployOnBuild=true /p:PublishProfile=FolderProfile
 
     - name: Install WinSCP
       run: choco install winscp
 
-    - name: Upload RentWise files
+    - name: Upload RentWise Files
       shell: powershell
       run: |
         $scpPath = "C:\Program Files (x86)\WinSCP\WinSCP.com"
-        & $scpPath /ini=nul /log="C:\deploy.log" /command `
-          "open sftp://$env:VPS_USERNAME:$env:VPS_PASSWORD@$env:VPS_ADDRESS/ -hostkey=`"*`"" `
-          "put RentWise/bin/Release/netcoreapp3.1/publish/* /rentwise/client/ -preservetime" `
+        $logFile = "C:\deploy.log"
+        $localPath = "RentWise/bin/Release/netcoreapp3.1/publish/*"
+        $remotePath = "/rentwise/client/"
+        $sessionOptions = @(
+          "/log=`"$logFile`"",
+          "/ini=nul",
+          "/command",
+          "open sftp://$env:VPS_USERNAME:$env:VPS_PASSWORD@$env:VPS_ADDRESS/ -hostkey=`"actual_host_key_here`"",
+          "put $localPath $remotePath -preservetime",
           "exit"
-
-    - name: Upload RentWise.Agent files
-      shell: powershell
-      run: |
-        $scpPath = "C:\Program Files (x86)\WinSCP\WinSCP.com"
-        & $scpPath /ini=nul /log="C:\deploy.log" /command `
-          "open sftp://$env:VPS_USERNAME:$env:VPS_PASSWORD@$env:VPS_ADDRESS/ -hostkey=`"*`"" `
-          "put RentWise.Agent/bin/Release/netcoreapp3.1/publish/* /rentwise/admin/ -preservetime" `
-          "exit"
+        )
+        & $scpPath $sessionOptions
       env:
         VPS_USERNAME: ${{ secrets.VPS_USERNAME }}
         VPS_PASSWORD: ${{ secrets.VPS_PASSWORD }}
         VPS_ADDRESS: ${{ secrets.VPS_ADDRESS }}
+
+    - name: Upload RentWise.Agent Files
+      shell: powershell
+      run: |
+        $scpPath = "C:\Program Files (x86)\WinSCP\WinSCP.com"
+        $logFile = "C:\deploy_agent.log"
+        $localPath = "RentWise.Agent/bin/Release/netcoreapp3.1/publish/*"
+        $remotePath = "/rentwise/admin/"
+        $sessionOptions = @(
+          "/log=`"$logFile`"",
+          "/ini=nul",
+          "/command",
+          "open sftp://$env:VPS_USERNAME:$env:VPS_PASSWORD@$env:VPS_ADDRESS/ -hostkey=`"actual_host_key_here`"",
+          "put $localPath $remotePath -preservetime",
+          "exit"
+        )
+        & $scpPath $sessionOptions
+      env:
+        VPS_USERNAME: ${{ secrets.VPS_USERNAME }}
+        VPS_PASSWORD: ${{ secrets.VPS_PASSWORD }}
+        VPS_ADDRESS: ${{ secrets.VPS_ADDRESS }}
+
