@@ -46,9 +46,12 @@ jobs:
           Copy-Item -Path "./publish/rentwise.zip" -Destination "C:\\rentwise\\client" -ToSession $session
           Invoke-Command -Session $session -ScriptBlock {
             Expand-Archive -Path "C:\\rentwise\\client\\rentwise.zip" -DestinationPath "C:\\rentwise\\client"
-            # Check for RentWise.dll in the client directory or subdirectories
+            # List all files to find where RentWise.dll is located
+            Get-ChildItem -Path "C:\\rentwise\\client" -Recurse
+            # Check for RentWise.dll
             $dllPath = Get-ChildItem -Path "C:\\rentwise\\client" -Filter "RentWise.dll" -Recurse | Select-Object -First 1
             if ($dllPath) {
+              Write-Host "RentWise.dll found at: $($dllPath.FullName)"
               cd $dllPath.DirectoryName
               dotnet RentWise.dll
             } else {
