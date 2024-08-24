@@ -1,66 +1,42 @@
-name: Deploy RentWise Client
+name: Deploy RentWise Application
 
 on:
   push:
     branches:
-      - master
-  pull_request:
-    branches:
-      - master
+      - main  # Set this to the branch you want to deploy from
 
 jobs:
-  build-and-deploy-client:
+  build-and-deploy:
     runs-on: windows-latest
-    name: Build and Deploy RentWise Client
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+    - name: Checkout code
+      uses: actions/checkout@v2
 
-      - name: Setup .NET Core
-        uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: '7.0.x'
+    - name: Set up MSBuild path
+      uses: microsoft/setup-msbuild@v1.0.2
 
-      - name: Restore dependencies
-        run: dotnet restore RentWise/RentWise.csproj
+    - name: Restore dependencies
+      run: nuget restore RentWise.sln
 
-      - name: Build project
-        run: dotnet build RentWise/RentWise.csproj --configuration Release --no-restore
+    - name: Build Solution
+      run: msbuild RentWise.sln /p:Configuration=Release /p:DeployOnBuild=true /p:PublishProfile=FolderProfile
 
-      - name: Publish project
-        run: dotnet publish RentWise/RentWise.csproj -c Release -o ./publish/rentwise
+    - name: Deploy RentWise
+      uses: appleboy/scp-action@master
+      with:
+        host: ${{ secrets.VPS_ADDRESS }}
+        username: ${{ secrets.VPS_USERNAME }}
+        password: ${{ secrets.VPS_PASSWORD }}
+        port: 22
+        source: "RentWise/bin/Release/netcoreapp3.1/publish/*"
+        target: "C:/rentwise/client/"
 
-      - name: List published files
-        run: Get-ChildItem -Path ./publish/rentwise/*
-        shell: pwsh
-
-      - name: Compress Published Files
-        run: Compress-Archive -Path ./publish/rentwise/* -DestinationPath ./publish/rentwise.zip
-
-      - name: Deploy to VPS
-        run: |
-          $pass = "${{ secrets.DEPLOY_PASS }}" | ConvertTo-SecureString -AsPlainText -Force
-          $user = "${{ secrets.DEPLOY_USER }}"
-          $cred = New-Object System.Management.Automation.PSCredential ($user, $pass)
-          $session = New-PSSession -ComputerName "92.205.231.160" -Credential $cred -UseSSL -SessionOption (New-PSSessionOption -SkipCACheck -SkipCNCheck)
-          Copy-Item -Path "./publish/rentwise.zip" -Destination "C:\\rentwise\\client" -ToSession $session
-          Invoke-Command -Session $session -ScriptBlock {
-            Expand-Archive -Path "C:\\rentwise\\client\\rentwise.zip" -DestinationPath "C:\\rentwise\\client"
-            # List all files to find where RentWise.dll is located
-            Get-ChildItem -Path "C:\\rentwise\\client" -Recurse
-            # Check for RentWise.dll
-            $dllPath = Get-ChildItem -Path "C:\\rentwise\\client" -Filter "RentWise.dll" -Recurse | Select-Object -First 1
-            if ($dllPath) {
-              Write-Host "RentWise.dll found at: $($dllPath.FullName)"
-              cd $dllPath.DirectoryName
-              dotnet RentWise.dll
-            } else {
-              Write-Error "RentWise.dll not found in the expected location."
-            }
-          }
-          Remove-PSSession $session
-        shell: pwsh
-
-      - name: Clean up local artifacts
-        run: Remove-Item -Path ./publish/rentwise.zip
-        shell: pwsh
+    - name: Deploy RentWise.Agent
+      uses: appleboy/scp-action@master
+      with:
+        host: ${{ secrets.VPS_ADDRESS }}
+        username: ${{ secrets.VPS_USERNAME }}
+        password: ${{ secrets.VPS_PASSWORD }}
+        port: 22
+        source: "RentWise.Agent/bin/Release/netcoreapp3.1/publish/*"
+        target: "C:/rentwise/admin/"
