@@ -38,7 +38,7 @@ jobs:
           $pass = "${{ secrets.DEPLOY_PASS }}" | ConvertTo-SecureString -AsPlainText -Force
           $user = "${{ secrets.DEPLOY_USER }}"
           $cred = New-Object System.Management.Automation.PSCredential ($user, $pass)
-          $session = New-PSSession -ComputerName 92.205.231.160 -Credential $cred
+          $session = New-PSSession -ComputerName "RentwiseGh" -Credential $cred -UseSSL -SessionOption (New-PSSessionOption -SkipCACheck -SkipCNCheck)
           Copy-Item -Path "./publish/rentwise.zip" -Destination "C:\\rentwise\\client" -ToSession $session
           Invoke-Command -Session $session -ScriptBlock {
             Expand-Archive -Path "C:\\rentwise\\client\\rentwise.zip" -DestinationPath "C:\\rentwise\\client"
