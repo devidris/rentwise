@@ -46,10 +46,14 @@ jobs:
           Copy-Item -Path "./publish/rentwise.zip" -Destination "C:\\rentwise\\client" -ToSession $session
           Invoke-Command -Session $session -ScriptBlock {
             Expand-Archive -Path "C:\\rentwise\\client\\rentwise.zip" -DestinationPath "C:\\rentwise\\client"
-            # List the contents of the client directory to verify the presence of RentWise.dll
-            Get-ChildItem -Path "C:\\rentwise\\client"
-            cd "C:\\rentwise\\client" 
-            dotnet RentWise.dll
+            # Check for RentWise.dll in the client directory or subdirectories
+            $dllPath = Get-ChildItem -Path "C:\\rentwise\\client" -Filter "RentWise.dll" -Recurse | Select-Object -First 1
+            if ($dllPath) {
+              cd $dllPath.DirectoryName
+              dotnet RentWise.dll
+            } else {
+              Write-Error "RentWise.dll not found in the expected location."
+            }
           }
           Remove-PSSession $session
         shell: pwsh
