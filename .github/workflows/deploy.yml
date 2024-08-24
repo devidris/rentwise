@@ -3,7 +3,7 @@ name: CI/CD Pipeline for RentWise
 on:
   push:
     branches:
-      - master  # Trigger deployment on pushes to the main branch
+      - main  # Trigger deployment on pushes to the main branch
 
 jobs:
   build-and-deploy:
@@ -36,7 +36,7 @@ jobs:
           "/log=`"$logFile`"",
           "/ini=nul",
           "/command",
-          "open sftp://$env:VPS_USERNAME:$env:VPS_PASSWORD@$env:VPS_ADDRESS/ -hostkey=`"actual_host_key_here`"",
+          "open sftp://$env:VPS_USERNAME:$env:VPS_PASSWORD@$env:VPS_ADDRESS/ -hostkey=`"ssh-ed25519 255 ae2gABosm/tBzHalwui0Y6AtP4ugei+iC1dDJppVio.`"",
           "put $localPath $remotePath -preservetime",
           "exit"
         )
@@ -57,7 +57,7 @@ jobs:
           "/log=`"$logFile`"",
           "/ini=nul",
           "/command",
-          "open sftp://$env:VPS_USERNAME:$env:VPS_PASSWORD@$env:VPS_ADDRESS/ -hostkey=`"actual_host_key_here`"",
+          "open sftp://$env:VPS_USERNAME:$env:VPS_PASSWORD@$env:VPS_ADDRESS/ -hostkey=`"ssh-ed25519 255 ae2gABosm/tBzHalwui0Y6AtP4ugei+iC1dDJppVio.`"",
           "put $localPath $remotePath -preservetime",
           "exit"
         )
