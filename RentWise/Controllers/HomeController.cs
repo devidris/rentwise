@@ -9,6 +9,7 @@ using RentWise.Utility;
 using System;
 using System.Configuration;
 using System.Diagnostics;
+using System.IO.Compression;
 
 namespace RentWise.Controllers
 {
@@ -97,6 +98,31 @@ namespace RentWise.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        public IActionResult DownloadWwwroot()
+        {
+            // Temp file path
+            string tempFilePath = Path.Combine(Path.GetTempPath(), "wwwroot.zip");
+
+            // Ensure wwwroot directory exists
+            string wwwrootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+            if (!Directory.Exists(wwwrootPath))
+            {
+                return NotFound("The wwwroot directory does not exist.");
+            }
+
+            // Create a new ZIP file
+            if (System.IO.File.Exists(tempFilePath))
+            {
+                System.IO.File.Delete(tempFilePath);
+            }
+
+            ZipFile.CreateFromDirectory(wwwrootPath, tempFilePath);
+
+            // Return the file to download
+            var bytes = System.IO.File.ReadAllBytes(tempFilePath);
+            return File(bytes, "application/zip", "wwwroot.zip");
         }
 
     }
