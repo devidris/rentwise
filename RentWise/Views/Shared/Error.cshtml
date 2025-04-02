@@ -6,3 +6,17 @@
 <img src="~/img/error.png" alt="Error" class="d-block m-auto vh-50 vw-50" />
 <h1 class="text-danger text-center">Error.</h1>
 <p class="text-danger text-center">An error occurred while processing your request.</p>
+
+@if (Model.ErrorMessage != null)
+{
+    <div class="text-center mt-4">
+        <h4 class="text-danger">Error Details</h4>
+        <p>@Model.ErrorMessage</p>
+
+        @if (Model.StackTrace != null)
+        {
+            <h5 class="text-danger">Stack Trace</h5>
+            <pre>@Model.StackTrace</pre>
+        }
+    </div>
+}
